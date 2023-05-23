@@ -4,22 +4,94 @@ import { logoutUser } from "../../redux/slices/authSlice";
 import "./Layout.css";
 import { Link } from "react-router-dom";
 import { logoutMentor } from "../../redux/slices/mentorSlice";
+import { Dropdown } from "semantic-ui-react";
+import { API_URL } from "../../config";
+import { setMentors } from "../../redux/slices/mentorsSlice";
+import axios from "axios";
 
 export const Layout = ({ children }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const mentors = useSelector((state) => state.mentors.mentors);
+
+  const [countries, setCountries] = useState([]);
+  const [names, setNames] = useState(mentors.map((mentor) => mentor.name));
+  const [languages, setLanguages] = useState([]);
+  const [skills, setSkills] = useState([]);
+
+  //   const [mentorskills, setMentorsSkills] = useState([]);
+  //   const [languages, setLanguages] = useState(null);
+
+  const [spokenLanguage, setSpokenLanguage] = useState("");
+  const [country, setCountry] = useState("");
+  const [technology, setTechnology] = useState("");
+  const [name, setName] = useState("");
 
   const [menu, setmenu] = useState(false);
-  console.log(user);
+
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/data/countries`);
+        setCountries(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const fetchLanguages = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/data/languages`);
+        setLanguages(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const fetchSkills = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/data/skills`);
+        setSkills(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchCountries();
+    fetchLanguages();
+    fetchSkills();
+  }, []);
 
   const handleLogout = () => {
     dispatch(logoutUser());
-    dispatch(logoutMentor());
     setmenu((prevstate) => !prevstate);
   };
 
   const handleShowMenu = () => {
     setmenu((prevstate) => !prevstate);
+  };
+
+  if (!mentors) {
+    return <h1>loading</h1>;
+  }
+
+  const handleFilterSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.get(`${API_URL}/mentors`, {
+        params: {
+          technology: technology,
+          country: country,
+          name: name,
+          spokenLanguage: spokenLanguage,
+        },
+      });
+
+      setMentors(response.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -52,7 +124,9 @@ export const Layout = ({ children }) => {
                     </li>
                     {user && !user.isMentor && (
                       <li>
-                        <a href="javascript:void(0)">Become a mentor</a>
+                        <Link to={`/me/${user.id}/become`}>
+                          Become a mentor
+                        </Link>
                       </li>
                     )}
                   </ul>
@@ -105,19 +179,46 @@ export const Layout = ({ children }) => {
               <div class="fillter-cover">
                 <div class="filter-input">
                   <label for="text">TECHNOLOGY</label>
-                  <input type="text" />
+                  <input
+                    type="text"
+                    value={technology}
+                    onChange={(e) => setTechnology(e.target.value)}
+                  />
+                  {/* <select name="selectList" id="selectList">
+                      <option value="option 1">Option 1</option> 
+                    <option value="option 2">Option 2</option>
+                  </select> */}
+                  {/* <Dropdown
+                    placeholder="Select Country"
+                    fluid
+                    search
+                    selection
+                    options={skills}
+                  /> */}
                 </div>
                 <div class="filter-input">
                   <label for="text">COUNTRY</label>
-                  <input type="text" />
+                  <input
+                    type="text"
+                    value={country}
+                    onChange={(e) => setCountry(e.target.value)}
+                  />
                 </div>
                 <div class="filter-input">
                   <label for="text">NAME</label>
-                  <input type="text" />
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
                 </div>
                 <div class="filter-input">
                   <label for="text">LANGUAGE </label>
-                  <input type="text" />
+                  <input
+                    type="text"
+                    value={spokenLanguage}
+                    onChange={(e) => setSpokenLanguage(e.target.value)}
+                  />
                 </div>
               </div>
             </form>

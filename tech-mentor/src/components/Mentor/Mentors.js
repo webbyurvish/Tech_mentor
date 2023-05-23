@@ -7,12 +7,10 @@ export default function Mentors({ mentors }) {
 
   return (
     <Layout>
-      {mentors.length < 1 && <h3>There is no mentors to show</h3>}
-      {mentors.length > 0 && (
+      {mentors && mentors.length < 1 && <h3>There is no mentors to show</h3>}
+      {mentors && mentors.length > 0 && (
         <div className="row">
-          {mentors.map((mentor) => (
-            <Mentor mentor={mentor} />
-          ))}
+          {mentors && mentors.map((mentor) => <Mentor mentor={mentor} />)}
         </div>
       )}
     </Layout>

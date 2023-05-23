@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 export default function Account({ mentor }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const user = useSelector((state) => state.auth.user);
 
   console.log(mentor);
@@ -77,7 +78,14 @@ export default function Account({ mentor }) {
                     <div className="profile-details details-cover">
                       <div className="row align-items-center justify-content-between detail-name">
                         <a href="javascript:void(0)">My Profile</a>
-                        <Link to={`/me/${mentor.id}/edit`}>Edit</Link>
+                        <Link
+                          to={{
+                            pathname: `/me/${mentor.id}/edit`,
+                            state: { mentor },
+                          }}
+                        >
+                          Edit
+                        </Link>
                       </div>
                       <div className="profiles-details-cover">
                         <ul>

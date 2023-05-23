@@ -1,36 +1,28 @@
 import React, { useEffect, useState } from "react";
-import "./EditMentor.css";
-import Multiselect from "multiselect-react-dropdown";
-import { API_URL } from "../../config";
+import "../../components/MentorPanel/EditMentor.css";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { API_URL } from "../../config";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router";
+import Multiselect from "multiselect-react-dropdown";
+import { useSelector, useDispatch } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useDispatch } from "react-redux";
-import {
-  setMentorDetails,
-  updateMentorDetails,
-} from "../../redux/slices/mentorSlice";
-import { getMentorDetails } from "../../redux/APIs/mentorApi";
 
-export default function EditMentor() {
-  const dispatch = useDispatch();
-
+export default function BecomeMentor() {
   const user = useSelector((state) => state.auth.user);
-  console.log(user);
-  const mentor = useSelector((state) => state.mentor.details);
+  const message = useSelector((state) => state.mentor.addmessage);
 
   const [name, setName] = useState(user.name);
-  const [title, setTitle] = useState(mentor.title);
-  const [country, setCountry] = useState(mentor.country);
-  const [about, setAbout] = useState(mentor.about);
+  const [title, setTitle] = useState("");
+  const [country, setCountry] = useState("");
+  const [about, setAbout] = useState("");
   const [isChecked, setIsChecked] = useState(true);
   const [countries, setCountries] = useState(null);
   const [skills, setSkills] = useState(null);
   const [languages, setLanguages] = useState(null);
-  const [selectedLanguages, setSelectedLanguages] = useState([]);
-  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [selectedLanguages, setSelectedLanguages] = useState(null);
+  const [selectedSkills, setSelectedSkills] = useState(null);
 
   const handleCheckboxChange = (event) => {
     setIsChecked(event.target.checked);
@@ -51,18 +43,6 @@ export default function EditMentor() {
   };
 
   useEffect(() => {
-    // Fetch mentor details from API
-    const fetchMentorDetails = async () => {
-      try {
-        const response = await axios.get(
-          `${API_URL}/mentors/get/${user.email}`
-        );
-        dispatch(setMentorDetails(response.data));
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
     const fetchCountries = async () => {
       try {
         const response = await axios.get(`${API_URL}/data/countries`);
@@ -90,42 +70,32 @@ export default function EditMentor() {
       }
     };
 
-    fetchMentorDetails();
     fetchCountries();
     fetchLanguages();
     fetchSkills();
-  }, [user.email]);
+  }, []);
 
   if (!countries || !skills || !languages) {
     return <h6>Loading...</h6>;
   }
 
-  if (!mentor) {
-    return <h1>Loading...</h1>;
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const mentorData = {
-      id: user.id,
       name: name,
-      title: title.length > 0 ? title : null,
-      about: about.length > 0 ? about : null,
+      title: title,
+      about: about,
       email: user.email,
       country: country,
-      languageIds: selectedLanguages.length > 0 ? selectedLanguages : null,
-      skillIds: selectedSkills.length > 0 ? selectedSkills : null,
+      languageIds: selectedLanguages,
+      skillIds: selectedSkills,
       available: isChecked,
     };
 
-    console.log(mentorData);
+    // dispatch(addMentorRequest(mentorData));
 
-    try {
-      dispatch(updateMentorDetails(mentorData));
-      toast.success("details updated successfully");
-    } catch (error) {
-      toast.error(error);
-    }
+    toast.success(message);
+    // navigate(`/me/${user.id}`);
   };
 
   return (
@@ -134,7 +104,7 @@ export default function EditMentor() {
       <div className="editprofile">
         <div className="container">
           <div className="edit-profile">
-            <h2>Update Profile</h2>
+            <h2>Become a Mentor</h2>
             <form onSubmit={handleSubmit}>
               <div className="row">
                 <div className="col-lg-6">
@@ -143,6 +113,7 @@ export default function EditMentor() {
                       <p>Name </p>(Please use your real name)
                     </label>
                     <input
+                      disabled
                       type="text"
                       value={name}
                       onChange={(event) => setName(event.target.value)}
@@ -249,11 +220,8 @@ export default function EditMentor() {
                     Available for new mentees
                   </label>
                 </div>
-                <div className="deleted-btn">
-                  <a href="javascript:void(0)">Delete my account</a>
-                </div>
                 <div className="saveorclose-btn">
-                  <button type="submit">Save</button>
+                  <button type="submit">send request</button>
                   <Link
                     to="javascriopt:void(0)"
                     onClick={() => window.history.back()}

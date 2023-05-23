@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { login, signup } from "../APIs/authApi";
+import { logoutMentor } from "./mentorSlice";
 
 const authSlice = createSlice({
   name: "auth",
@@ -55,6 +56,7 @@ const authSlice = createSlice({
       state.user = null;
       state.loading = false;
       state.error = null;
+
       localStorage.removeItem("token");
       localStorage.removeItem("user");
     },
@@ -94,6 +96,7 @@ export const signupUser = (userData) => async (dispatch) => {
 
 export const logoutUser = () => (dispatch) => {
   dispatch(logout());
+  //   dispatch(logoutMentor());
 };
 
 export default authSlice.reducer;
