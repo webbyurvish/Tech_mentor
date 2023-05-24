@@ -12,7 +12,6 @@ import {
   setMentorDetails,
   updateMentorDetails,
 } from "../../redux/slices/mentorSlice";
-import { getMentorDetails } from "../../redux/APIs/mentorApi";
 
 export default function EditMentor() {
   const dispatch = useDispatch();
@@ -57,6 +56,7 @@ export default function EditMentor() {
         const response = await axios.get(
           `${API_URL}/mentors/get/${user.email}`
         );
+        console.log(response);
         dispatch(setMentorDetails(response.data));
       } catch (error) {
         console.log(error);
@@ -129,10 +129,10 @@ export default function EditMentor() {
   };
 
   return (
-    <div>
+    <div className="mainwrapper">
       <ToastContainer />
       <div className="editprofile">
-        <div className="container">
+        <div>
           <div className="edit-profile">
             <h2>Update Profile</h2>
             <form onSubmit={handleSubmit}>

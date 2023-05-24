@@ -80,7 +80,7 @@ export default function Account({ mentor }) {
                         <a href="javascript:void(0)">My Profile</a>
                         <Link
                           to={{
-                            pathname: `/me/${mentor.id}/edit`,
+                            pathname: `/me/${user.id}/edit`,
                             state: { mentor },
                           }}
                         >

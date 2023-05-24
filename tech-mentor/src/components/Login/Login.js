@@ -2,17 +2,19 @@ import React, { useEffect, useState } from "react";
 // import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser, signupUser } from "../../redux/slices/authSlice";
-import { useNavigate } from "react-router-dom";
-// import "./Login.css";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "./Login.css";
 
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
   // const router = useRouter()
 
   const user = useSelector((state) => state.auth.user);
-
-  console.log(user);
+  const error = useSelector((state) => state.auth.error);
 
   const [name, setName] = useState("");
   const [image, setImage] = useState(null);
@@ -56,71 +58,105 @@ export default function Login() {
     signInButton.addEventListener("click", () => {
       container.classList.remove("right-panel-active");
     });
-  });
+
+    if (location.state && location.state.successMessage) {
+      toast.success(location.state.successMessage);
+    }
+  }, [location.state]);
 
   return (
-    <div>
+    <div className="wrapper">
+      <ToastContainer />
       <div className="container" id="container">
         <div className="form-container sign-up-container">
-          <form onSubmit={handleSignup}>
-            <h1>Create Account</h1>
+          <form className="form" onSubmit={handleSignup}>
+            <h1 className="h1">Create Account</h1>
             <input
+              className="input"
               type="text"
               placeholder="Name"
+              required
               onChange={(event) => setName(event.target.value)}
             />
             <input
+              className="input"
               type="email"
               placeholder="Email"
+              required
               onChange={(event) => setEmail(event.target.value)}
             />
             <input
+              className="input"
               type="password"
               placeholder="Password"
+              required
+              minLength={6}
               onChange={(event) => setPassword(event.target.value)}
             />
+            {password.length > 0 && password.length < 6 && (
+              <p className="error">
+                Password must be at least 6 characters long
+              </p>
+            )}
             <input
+              className="input"
               type="file"
               id="img"
               name="img"
               accept="image/*"
+              required
               onChange={(event) => setImage(event.target.files[0])}
             />
-            <button type="submit">Sign Up</button>
+            <button className="button" type="submit">
+              Sign Up
+            </button>
           </form>
         </div>
         <div className="form-container sign-in-container">
-          <form onSubmit={handleLogin}>
-            <h1>Sign in</h1>
+          <form className="form" onSubmit={handleLogin}>
+            <h1 className="h1">Sign in</h1>
             <input
+              className="input"
               type="email"
               placeholder="Email"
+              required
               onChange={(event) => setEmail(event.target.value)}
             />
             <input
+              className="input"
               type="password"
               placeholder="Password"
+              required
               onChange={(event) => setPassword(event.target.value)}
             />
-            <a href="#">Forgot your password?</a>
-            <button type="submit">Sign In</button>
+            <Link to={"/mailrequest"} className="a">
+              Forgot your password?
+            </Link>
+            <button className="button" type="submit">
+              Sign In
+            </button>
+            <Link className="a" to={"/"}>
+              Go back
+            </Link>
           </form>
         </div>
         <div className="overlay-container">
           <div className="overlay">
             <div className="overlay-panel overlay-left">
-              <h1>Welcome Back!</h1>
-              <p>
+              <h1 className="h1">Welcome Back!</h1>
+              <p className="p">
                 To keep connected with us please login with your personal info
               </p>
-              <button className="ghost" id="signIn">
+              <button className="button ghost" id="signIn">
                 Sign In
               </button>
             </div>
             <div className="overlay-panel overlay-right">
-              <h1>Hello, Friend!</h1>
-              <p>Enter your personal details and start journey with us</p>
-              <button className="ghost" id="signUp">
+              <h1 className="h1">Hello, Friend!</h1>
+              <p className="p">
+                Enter your personal details and start journey with us
+              </p>
+              <button className="button ghost" id="signUp">
                 Sign Up
               </button>
             </div>

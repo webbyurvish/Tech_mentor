@@ -1,16 +1,46 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { login, signup } from "../APIs/authApi";
-import { logoutMentor } from "./mentorSlice";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
+import { getMentorDetails } from "../APIs/mentorApi";
+
+import jwtDecode from "jwt-decode";
+
+const initialState = {
+  user: null,
+  mentor: null,
+  loading: false,
+  error: null,
+  message: "",
+};
+
+const token =
+  typeof localStorage !== "undefined" ? localStorage.getItem("token") : null;
+
+if (token) {
+  const decodedToken = jwtDecode(token);
+  initialState.user = decodedToken;
+
+  //   if (initialState.user.isMentor == "True") {
+  //     try {
+  //       initialState.mentor = getMentorDetails(initialState.user.email);
+  //     } catch (error) {
+  //       initialState.mentor = null;
+  //     }
+  //   }
+}
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: {
-    user:
-      typeof localStorage !== "undefined" ? localStorage.getItem("user") : null,
-    loading: false,
-    error: null,
-    message: "",
-  },
+  initialState,
+  // user:
+  //   typeof localStorage !== "undefined"
+  //     ? jwtDecode(localStorage.getItem("token"))
+  //     : null,
+  // loading: false,
+  // error: null,
+  // message: "",
+
   reducers: {
     loginStart: (state) => {
       state.loading = true;
@@ -20,9 +50,9 @@ const authSlice = createSlice({
 
     loginSuccess: (state, action) => {
       state.loading = false;
-      state.user = action.payload.user;
+      state.user = jwtDecode(action.payload.token);
       state.message = "login success";
-      localStorage.setItem("user", JSON.stringify(action.payload.user));
+      //   localStorage.setItem("user", JSON.stringify(action.payload.user));
       localStorage.setItem("token", action.payload.token);
     },
 
@@ -38,9 +68,9 @@ const authSlice = createSlice({
     },
     signupSuccess: (state, action) => {
       state.loading = false;
-      state.user = action.payload.user;
+      state.user = jwtDecode(action.payload.token);
       state.message = "signup success";
-      localStorage.setItem("user", JSON.stringify(action.payload.user));
+      //   localStorage.setItem("user", JSON.stringify(action.payload.user));
       localStorage.setItem("token", action.payload.token);
 
       // state.user = action.payload.user;
@@ -58,7 +88,7 @@ const authSlice = createSlice({
       state.error = null;
 
       localStorage.removeItem("token");
-      localStorage.removeItem("user");
+      //   localStorage.removeItem("user");
     },
   },
 });
@@ -76,21 +106,39 @@ export const {
 export const loginUser = (credentials) => async (dispatch) => {
   try {
     dispatch(loginStart());
-    const { token, user } = await login(JSON.stringify(credentials));
-    console.log(token, user);
-    dispatch(loginSuccess({ token, user }));
+    const { token } = await login(JSON.stringify(credentials));
+    dispatch(loginSuccess({ token }));
   } catch (error) {
-    dispatch(loginFailure(error.message));
+    if (error.response && error.response.data) {
+      // Error response received from the backend
+      dispatch(loginFailure(error.response.data));
+      toast.error(error.response.data);
+    } else {
+      // Generic error message
+      dispatch(loginFailure("An error occurred while logging in"));
+      toast.error("An error occurred while logging in");
+    }
+    // dispatch(loginFailure(error.response?.data || error.message));
+    // toast.error(error.response?.data || error.message);
   }
 };
 
 export const signupUser = (userData) => async (dispatch) => {
   try {
     dispatch(signupStart());
-    const { token, user } = await signup(userData);
-    dispatch(signupSuccess({ token, user }));
+    const { token } = await signup(userData);
+    dispatch(signupSuccess({ token }));
+    toast.success("Signup successful!");
   } catch (error) {
-    dispatch(signupFailure(error.message));
+    if (error.response && error.response.data) {
+      // Error response received from the backend
+      dispatch(signupFailure(error.response.data.message));
+      toast.error(error.response.data.message);
+    } else {
+      // Generic error message
+      dispatch(signupFailure("An error occurred while signing in"));
+      toast.error("An error occurred while signing in");
+    }
   }
 };
 

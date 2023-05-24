@@ -2,9 +2,10 @@ import { Children, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../redux/slices/authSlice";
 import "./Layout.css";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
-import { logoutMentor } from "../../redux/slices/mentorSlice";
-import { Dropdown } from "semantic-ui-react";
+
 import { API_URL } from "../../config";
 import { setMentors } from "../../redux/slices/mentorsSlice";
 import axios from "axios";
@@ -13,6 +14,8 @@ export const Layout = ({ children }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const mentors = useSelector((state) => state.mentors.mentors);
+
+  //   console.log(user.isMentor);
 
   const [countries, setCountries] = useState([]);
   const [names, setNames] = useState(mentors.map((mentor) => mentor.name));
@@ -96,6 +99,7 @@ export const Layout = ({ children }) => {
 
   return (
     <div>
+      <ToastContainer />
       <header className="header">
         <div className="container-fluid">
           <div className="row align-items-center justify-content-between">
@@ -122,7 +126,7 @@ export const Layout = ({ children }) => {
                     <li>
                       <a href="javascript:void(0)">Sessions Calendar</a>
                     </li>
-                    {user && !user.isMentor && (
+                    {user && user.isMentor == "False" && (
                       <li>
                         <Link to={`/me/${user.id}/become`}>
                           Become a mentor
@@ -149,13 +153,12 @@ export const Layout = ({ children }) => {
 
                 {menu && (
                   <div className="manageandlogin">
-                    {user.isMentor && (
-                      <Link to={`/me/${user.id}`}>Manage Account</Link>
+                    {user && user.isMentor == "True" && (
+                      <Link to={`/me/${Number(user.id)}`}>Manage Account</Link>
                     )}
 
-                    {!user.isMentor && (
-                      <Link to={`/me/${user.id}`}>MentorShips</Link>
-                    )}
+                    <Link to={`/me/${Number(user.id)}`}>MentorShips</Link>
+
                     <a onClick={handleLogout} href="javascript:void(0)">
                       Logout
                     </a>

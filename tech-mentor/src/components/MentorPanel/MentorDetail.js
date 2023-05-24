@@ -8,6 +8,7 @@ export default function MentorDetail() {
   const [mentor, setMentor] = useState(null);
 
   const user = useSelector((state) => state.auth.user);
+  console.log(user);
 
   useEffect(() => {
     // Fetch mentor details from API

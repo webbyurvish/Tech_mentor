@@ -1,7 +1,7 @@
-/* @import url("https://fonts.googleapis.com/css?family=Quicksand:400,500,700&subset=latin-ext"); */
+@import url("https://fonts.googleapis.com/css?family=Quicksand:400,500,700&subset=latin-ext");
 
-/* body {
-  font-family: "Quicksand", sans-serif;
+.mainwrapper {
+  /* font-family: "Quicksand", sans-serif; */
   font-weight: 450;
   min-height: 100vh;
   color: #adafb6;
@@ -10,7 +10,7 @@
   align-items: center;
   background: #fff;
   transition: all 0.2s ease;
-} */
+}
 
 .multiSelect {
   width: 100%;

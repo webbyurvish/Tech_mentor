@@ -12,6 +12,8 @@ import BecomeMentor from "./components/User/BecomeMentor";
 import { setMentors } from "./redux/slices/mentorsSlice";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import ForgotPassword from "./components/Login/ForgotPassword";
+import MailRequest from "./components/Login/MailRequest";
 
 function App() {
   // const [mentors, setMentors] = useState([]);
@@ -46,8 +48,10 @@ function App() {
         <Route path="/" element={<Mentors mentors={mentors} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/me/:id" element={<MentorDetail />} />
-        <Route path="/me/:id/edit" element={<EditMentor />} />
         <Route path="/mentor/:id" element={<UserPage />} />
+        <Route path="/forgotpassword" element={<ForgotPassword />} />
+        <Route path="/mailrequest" element={<MailRequest />} />
+        <Route path="/me/:id/edit" element={<EditMentor />} />
         <Route path="/me/:id/become" element={<BecomeMentor />} />
       </Routes>
     </div>

@@ -99,10 +99,10 @@ export default function BecomeMentor() {
   };
 
   return (
-    <div>
+    <div className="mainwrapper">
       <ToastContainer />
       <div className="editprofile">
-        <div className="container">
+        <div>
           <div className="edit-profile">
             <h2>Become a Mentor</h2>
             <form onSubmit={handleSubmit}>
