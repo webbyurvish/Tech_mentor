@@ -126,7 +126,7 @@ export const Layout = ({ children }) => {
                     <li>
                       <a href="javascript:void(0)">Sessions Calendar</a>
                     </li>
-                    {user && user.isMentor == "False" && (
+                    {user && user.role == "user" && (
                       <li>
                         <Link to={`/me/${user.id}/become`}>
                           Become a mentor
@@ -153,11 +153,15 @@ export const Layout = ({ children }) => {
 
                 {menu && (
                   <div className="manageandlogin">
-                    {user && user.isMentor == "True" && (
-                      <Link to={`/me/${Number(user.id)}`}>Manage Account</Link>
-                    )}
+                    {user && (user.role == "mentor") && (
 
-                    <Link to={`/me/${Number(user.id)}`}>MentorShips</Link>
+                      <Link to={`/me/${Number(user.id)}`}>Dashboard</Link>
+                    )}{
+                      user && user.role == "admin" &&
+                      <Link to={`/admin/${Number(user.id)}`}>Dashboard</Link>
+                    }
+
+                    {user && user.role !== "admin" && <Link to={`/me/${Number(user.id)}`}>MentorShips</Link>}
 
                     <a onClick={handleLogout} href="javascript:void(0)">
                       Logout

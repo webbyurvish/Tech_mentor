@@ -34,10 +34,11 @@ export default function Account({ mentor }) {
                 <i className="fa-solid fa-house-user"></i>
                 <div className="sc-bqiRlB bfSpmb">Home</div>
               </a>
-              <a className="sc-crHmcD layWKW">
+              {user && user.role !== "admin" && <a className="sc-crHmcD layWKW">
                 <i className="fa-solid fa-file-lines"></i>
                 <div className="sc-bqiRlB bfSpmb">Mentorships</div>
-              </a>
+              </a>}
+
               <a className="sc-crHmcD layWKW">
                 <i className="fas fa-comments"></i>
                 <div className="sc-bqiRlB bfSpmb">Conversations</div>

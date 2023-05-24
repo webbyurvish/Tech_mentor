@@ -14,6 +14,8 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import ForgotPassword from "./components/Login/ForgotPassword";
 import MailRequest from "./components/Login/MailRequest";
+import Admin from "./components/admin/Dashboard";
+import Requests from "./components/admin/Requests";
 
 function App() {
   // const [mentors, setMentors] = useState([]);
@@ -53,6 +55,8 @@ function App() {
         <Route path="/mailrequest" element={<MailRequest />} />
         <Route path="/me/:id/edit" element={<EditMentor />} />
         <Route path="/me/:id/become" element={<BecomeMentor />} />
+        <Route path="/admin/:id" element={<Admin />} />
+        <Route path="/admin/:id/requests" element={<Requests />} />
       </Routes>
     </div>
   );
