@@ -23,7 +23,7 @@ export default function UserPage() {
   return (
     <Layout>
       <div className="row justify-content-center">
-        <Link to="/">Back to mentors list</Link>
+        <Link style={{ "margin-top": "40px" }} to="/">Back to mentors list</Link>
       </div>
 
       <div className="row justify-content-center">
@@ -34,7 +34,7 @@ export default function UserPage() {
                 <div className="location-cover">
                   <a href="javascript:void(0)">
                     <i className="fa-solid fa-location-dot"></i>
-                    <p>IN</p>
+                    <p>{mentor && mentor.country}</p>
                   </a>
                 </div>
                 <a href="javascript:void(0)">
