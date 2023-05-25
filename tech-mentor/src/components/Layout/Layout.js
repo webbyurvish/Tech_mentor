@@ -2,37 +2,51 @@ import { Children, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../redux/slices/authSlice";
 import "./Layout.css";
+// import "./Pagination.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
-
 import { API_URL } from "../../config";
 import { setMentors } from "../../redux/slices/mentorsSlice";
 import axios from "axios";
+import CustomPagination from "./Pagination";
+import { Header } from "./Header";
 
 export const Layout = ({ children }) => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
-  const mentors = useSelector((state) => state.mentors.mentors);
-
-  //   console.log(user.isMentor);
+  const mentors = useSelector((state) => state.mentors.mentors.items);
 
   const [countries, setCountries] = useState([]);
-  const [names, setNames] = useState(mentors.map((mentor) => mentor.name));
   const [languages, setLanguages] = useState([]);
   const [skills, setSkills] = useState([]);
-
-  //   const [mentorskills, setMentorsSkills] = useState([]);
-  //   const [languages, setLanguages] = useState(null);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [spokenLanguage, setSpokenLanguage] = useState("");
   const [country, setCountry] = useState("");
   const [technology, setTechnology] = useState("");
   const [name, setName] = useState("");
 
-  const [menu, setmenu] = useState(false);
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/mentors`, {
+          params: {
+            technology: technology,
+            country: country,
+            name: name,
+            spokenLanguage: spokenLanguage,
+            pageNumber: currentPage,
+            pageSize: 3, // Number of items per page
+          },
+        });
+
+        dispatch(setMentors(response.data));
+        setTotalPages(response.data.totalPages);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     const fetchCountries = async () => {
       try {
         const response = await axios.get(`${API_URL}/data/countries`);
@@ -60,127 +74,49 @@ export const Layout = ({ children }) => {
       }
     };
 
+    fetchData();
     fetchCountries();
     fetchLanguages();
     fetchSkills();
-  }, []);
+  }, [technology, country, name, spokenLanguage, currentPage]);
 
-  const handleLogout = () => {
-    dispatch(logoutUser());
-    setmenu((prevstate) => !prevstate);
-  };
-
-  const handleShowMenu = () => {
-    setmenu((prevstate) => !prevstate);
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   if (!mentors) {
     return <h1>loading</h1>;
   }
 
-  const handleFilterSubmit = async (e) => {
-    e.preventDefault();
+  const handleTechnologyChange = (e) => {
+    setTechnology(e.target.value);
+    console.log(e);
+  };
 
-    try {
-      const response = await axios.get(`${API_URL}/mentors`, {
-        params: {
-          technology: technology,
-          country: country,
-          name: name,
-          spokenLanguage: spokenLanguage,
-        },
-      });
+  const handleCountryChange = (e) => {
+    setCountry(e.target.value);
+    console.log(e);
+  };
 
-      setMentors(response.data);
-    } catch (error) {
-      console.error(error);
-    }
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+  };
+
+  const handleSpokenLanguageChange = (e) => {
+    setSpokenLanguage(e.target.value);
   };
 
   return (
     <div>
       <ToastContainer />
-      <header className="header">
-        <div className="container-fluid">
-          <div className="row align-items-center justify-content-between">
-            <div className="col-lg-8">
-              <div className="logo-and-navbar">
-                <div className="logo">
-                  <a href="javascript:void(0)">
-                    <img
-                      src="/images/circle.png"
-                      width={120}
-                      height={40}
-                      alt=""
-                    />
-                  </a>
-                </div>
-                <div className="nav-bar">
-                  <ul>
-                    <li>
-                      <a href="/about">About</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0)">Mentorship Guidelines</a>
-                    </li>
-                    <li>
-                      <a href="javascript:void(0)">Sessions Calendar</a>
-                    </li>
-                    {user && user.role == "user" && (
-                      <li>
-                        <Link to={`/me/${user.id}/become`}>
-                          Become a mentor
-                        </Link>
-                      </li>
-                    )}
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4">
-              <div className="login-register">
-                {user && (
-                  <a>
-                    <img
-                      onClick={handleShowMenu}
-                      src="/images/user.png"
-                      width={50}
-                      height={50}
-                      alt=""
-                    />
-                  </a>
-                )}
 
-                {menu && (
-                  <div className="manageandlogin">
-                    {user && (user.role == "mentor") && (
-
-                      <Link to={`/me/${Number(user.id)}`}>Dashboard</Link>
-                    )}{
-                      user && user.role == "admin" &&
-                      <Link to={`/admin/${Number(user.id)}`}>Dashboard</Link>
-                    }
-
-                    {user && user.role !== "admin" && <Link to={`/me/${Number(user.id)}`}>MentorShips</Link>}
-
-                    <a onClick={handleLogout} href="javascript:void(0)">
-                      Logout
-                    </a>
-                  </div>
-                )}
-
-                {!user && <a href="/login"> "Login / Register"</a>}
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header />
       <div className="main-cover">
         <div className="container-fluid">
           <div class="fixed-menu">
             <div class="title-text">
               <h3>FILTER</h3>
-              <p>1038 MENTORS</p>
+              <p>{mentors.length} MENTORS</p>
             </div>
             <form>
               <div class="fillter-cover">
@@ -188,44 +124,50 @@ export const Layout = ({ children }) => {
                   <label for="text">TECHNOLOGY</label>
                   <input
                     type="text"
-                    value={technology}
-                    onChange={(e) => setTechnology(e.target.value)}
+                    list="skills"
+                    onChange={handleTechnologyChange}
                   />
-                  {/* <select name="selectList" id="selectList">
-                      <option value="option 1">Option 1</option> 
-                    <option value="option 2">Option 2</option>
-                  </select> */}
-                  {/* <Dropdown
-                    placeholder="Select Country"
-                    fluid
-                    search
-                    selection
-                    options={skills}
-                  /> */}
+                  <datalist id="skills">
+                    {skills.map((skill) => {
+                      return <option value={skill.name} />;
+                    })}
+                  </datalist>
                 </div>
+
                 <div class="filter-input">
                   <label for="text">COUNTRY</label>
                   <input
                     type="text"
-                    value={country}
-                    onChange={(e) => setCountry(e.target.value)}
+                    list="countries"
+                    onChange={handleCountryChange}
                   />
+                  <datalist id="countries">
+                    {countries.map((country) => {
+                      return <option value={country.name} />;
+                    })}
+                  </datalist>
                 </div>
                 <div class="filter-input">
                   <label for="text">NAME</label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
+                  <input type="text" list="names" onChange={handleNameChange} />
+                  <datalist id="names">
+                    {mentors.map((mentor) => {
+                      return <option value={mentor.name} />;
+                    })}
+                  </datalist>
                 </div>
                 <div class="filter-input">
                   <label for="text">LANGUAGE </label>
                   <input
                     type="text"
-                    value={spokenLanguage}
-                    onChange={(e) => setSpokenLanguage(e.target.value)}
+                    list="languages"
+                    onChange={handleSpokenLanguageChange}
                   />
+                  <datalist id="languages">
+                    {languages.map((language) => {
+                      return <option value={language.name} />;
+                    })}
+                  </datalist>
                 </div>
               </div>
             </form>
@@ -281,7 +223,16 @@ export const Layout = ({ children }) => {
             <div className="row">
               <div className="col-lg-12">
                 <div className="mentor-card">
-                  <div>{children}</div>
+                  <div>
+                    {children}
+                    <div>
+                      <CustomPagination
+                        totalPages={totalPages}
+                        currentPage={currentPage}
+                        handlePageChange={(page) => handlePageChange(page)}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

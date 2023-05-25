@@ -22,32 +22,10 @@ function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
 
-  const mentors = useSelector((state) => state.mentors.mentors);
-  console.log(mentors);
-
-  useEffect(() => {
-    const fetchMentors = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/mentors/all`);
-
-        dispatch(setMentors(response.data));
-        setMentors(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.error("Error fetching mentors:", error);
-        dispatch(setMentors([])); // Set mentors to an empty array on error
-        // setMentors([]);
-      }
-    };
-    fetchMentors();
-  }, []);
-
-  console.log(mentors);
-
   return (
     <div>
       <Routes>
-        <Route path="/" element={<Mentors mentors={mentors} />} />
+        <Route path="/" element={<Mentors />} />
         <Route path="/login" element={<Login />} />
         <Route path="/me/:id" element={<MentorDetail />} />
         <Route path="/mentor/:id" element={<UserPage />} />

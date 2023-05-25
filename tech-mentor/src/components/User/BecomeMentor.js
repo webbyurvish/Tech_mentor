@@ -92,9 +92,20 @@ export default function BecomeMentor() {
       available: isChecked,
     };
 
+    try {
+      const response = await axios.post(`${API_URL}/mentors/add`, mentorData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      toast.success("request sent successfully");
+    } catch (error) {
+      toast.error(error);
+    }
+
     // dispatch(addMentorRequest(mentorData));
 
-    toast.success(message);
     // navigate(`/me/${user.id}`);
   };
 

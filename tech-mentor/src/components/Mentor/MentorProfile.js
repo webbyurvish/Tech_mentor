@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 export default function UserPage() {
   const { id } = useParams();
-  const [mentor, setMentor] = useState({});
+  const [mentor, setMentor] = useState(null);
 
   useEffect(() => {
     async function fetchMentor() {
@@ -19,6 +19,7 @@ export default function UserPage() {
   }, []);
 
   console.log(mentor);
+
   return (
     <Layout>
       <div className="row justify-content-center">
@@ -46,26 +47,30 @@ export default function UserPage() {
                   alt=""
                 />
               </div>
-              <h2>{mentor.name}</h2>
-              <span>{mentor.title}</span>
-              <p>{mentor.about}</p>
+              <h2>{mentor && mentor.name}</h2>
+              <span>{mentor && mentor.title}</span>
+              <p>{mentor && mentor.about}</p>
+              <i
+                style={{ marginRight: "7px" }}
+                class="fa-solid fa-language"
+              ></i>
+              <span>
+                {mentor &&
+                  mentor.languages.map((language, index) => (
+                    <React.Fragment key={index}>
+                      {language}
+                      {index !== mentor.languages.length - 1 && ", "}
+                    </React.Fragment>
+                  ))}
+              </span>
               <div className="technology">
                 <ul>
-                  <li>
-                    <a href="javascript:void(0)">nodejs</a>
-                  </li>
-                  <li>
-                    <a href="javascript:void(0)">reactjs</a>
-                  </li>
-                  <li>
-                    <a href="javascript:void(0)">react native</a>
-                  </li>
-                  <li>
-                    <a href="javascript:void(0)">redux</a>
-                  </li>
-                  <li>
-                    <a href="javascript:void(0)">git</a>
-                  </li>
+                  {mentor &&
+                    mentor.skills.map((skill, index) => (
+                      <li key={index}>
+                        <a href="javascript:void(0)">{skill}</a>
+                      </li>
+                    ))}
                 </ul>
               </div>
             </div>
