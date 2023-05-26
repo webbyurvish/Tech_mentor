@@ -1,122 +1,113 @@
-import { Children, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutUser } from "../../redux/slices/authSlice";
+import {
+  setTechnology,
+  setCountry,
+  setSpokenLanguage,
+  setName,
+  setLiked,
+} from "../../redux/slices/filterSlice";
 import "./Layout.css";
-// import "./Pagination.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link } from "react-router-dom";
-import { API_URL } from "../../config";
-import { setMentors } from "../../redux/slices/mentorsSlice";
-import axios from "axios";
 import CustomPagination from "./Pagination";
 import { Header } from "./Header";
+import {
+  fetchCountries,
+  fetchLanguages,
+  fetchSkills,
+} from "../../redux/slices/dataSlice";
+import { fetchData } from "../../redux/slices/resultSlice";
+import { useNavigate } from "react-router";
 
 export const Layout = ({ children }) => {
   const dispatch = useDispatch();
-  const mentors = useSelector((state) => state.mentors.mentors.items);
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.user);
+  const result = useSelector((state) => state.result);
+  const countries = useSelector((state) => state.data.countries);
+  const skills = useSelector((state) => state.data.skills);
+  const languages = useSelector((state) => state.data.languages);
+  const filters = useSelector((state) => state.filters);
 
-  const [countries, setCountries] = useState([]);
-  const [languages, setLanguages] = useState([]);
-  const [skills, setSkills] = useState([]);
+  const userId = user !== null ? Number(user.id) : null;
+
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [spokenLanguage, setSpokenLanguage] = useState("");
-  const [country, setCountry] = useState("");
-  const [technology, setTechnology] = useState("");
-  const [name, setName] = useState("");
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/mentors`, {
-          params: {
-            technology: technology,
-            country: country,
-            name: name,
-            spokenLanguage: spokenLanguage,
-            pageNumber: currentPage,
-            pageSize: 3, // Number of items per page
-          },
-        });
+    dispatch(
+      fetchData(
+        filters.technology,
+        filters.country,
+        filters.name,
+        filters.spokenLanguage,
+        currentPage,
+        filters.isLiked,
+        userId
+      )
+    );
 
-        dispatch(setMentors(response.data));
-        setTotalPages(response.data.totalPages);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    const fetchCountries = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/data/countries`);
-        setCountries(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    const fetchLanguages = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/data/languages`);
-        setLanguages(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    const fetchSkills = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/data/skills`);
-        setSkills(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
-    fetchCountries();
-    fetchLanguages();
-    fetchSkills();
-  }, [technology, country, name, spokenLanguage, currentPage]);
+    dispatch(fetchCountries);
+    dispatch(fetchLanguages);
+    dispatch(fetchSkills);
+  }, [filters, currentPage, dispatch]);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
-  if (!mentors) {
+  if (!result.mentors) {
     return <h1>loading</h1>;
   }
 
   const handleTechnologyChange = (e) => {
-    setTechnology(e.target.value);
-    console.log(e);
+    const selectedTechnology = e.target.value;
+    navigate("/");
+    dispatch(
+      setTechnology(selectedTechnology !== "" ? selectedTechnology : null)
+    );
   };
 
   const handleCountryChange = (e) => {
-    setCountry(e.target.value);
-    console.log(e);
+    const selectedCountry = e.target.value;
+    navigate("/");
+    dispatch(setCountry(selectedCountry !== "" ? selectedCountry : null));
   };
 
   const handleNameChange = (e) => {
-    setName(e.target.value);
+    const selectedName = e.target.value;
+    navigate("/");
+    dispatch(setName(selectedName !== "" ? selectedName : null));
+  };
+
+  const handleLikedChange = (e) => {
+    const checked = e.target.checked; // Use checked instead of value
+    navigate("/");
+
+    console.log(checked);
+    dispatch(setLiked(checked));
   };
 
   const handleSpokenLanguageChange = (e) => {
-    setSpokenLanguage(e.target.value);
+    const selectedSpokenLanguage = e.target.value;
+    navigate("/");
+    dispatch(
+      setSpokenLanguage(
+        selectedSpokenLanguage !== "" ? selectedSpokenLanguage : null
+      )
+    );
   };
 
   return (
     <div>
       <ToastContainer />
-
       <Header />
       <div className="main-cover">
         <div className="container-fluid">
           <div class="fixed-menu">
             <div class="title-text">
               <h3>FILTER</h3>
-              <p>{mentors.length} MENTORS</p>
+              <p>{result.mentors.length} MENTORS</p>
             </div>
             <form>
               <div class="fillter-cover">
@@ -125,6 +116,7 @@ export const Layout = ({ children }) => {
                   <input
                     type="text"
                     list="skills"
+                    value={filters.technology}
                     onChange={handleTechnologyChange}
                   />
                   <datalist id="skills">
@@ -139,6 +131,7 @@ export const Layout = ({ children }) => {
                   <input
                     type="text"
                     list="countries"
+                    value={filters.country}
                     onChange={handleCountryChange}
                   />
                   <datalist id="countries">
@@ -149,9 +142,14 @@ export const Layout = ({ children }) => {
                 </div>
                 <div class="filter-input">
                   <label for="text">NAME</label>
-                  <input type="text" list="names" onChange={handleNameChange} />
+                  <input
+                    type="text"
+                    value={filters.name}
+                    list="names"
+                    onChange={handleNameChange}
+                  />
                   <datalist id="names">
-                    {mentors.map((mentor) => {
+                    {result.mentors.map((mentor) => {
                       return <option value={mentor.name} />;
                     })}
                   </datalist>
@@ -161,6 +159,7 @@ export const Layout = ({ children }) => {
                   <input
                     type="text"
                     list="languages"
+                    value={filters.spokenLanguage}
                     onChange={handleSpokenLanguageChange}
                   />
                   <datalist id="languages">
@@ -174,7 +173,11 @@ export const Layout = ({ children }) => {
             <div class="myfavourits">
               <p>MY FAVORITES</p>
               <label class="switch">
-                <input type="checkbox" />
+                <input
+                  checked={filters.isLiked}
+                  onChange={handleLikedChange}
+                  type="checkbox"
+                />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -227,7 +230,7 @@ export const Layout = ({ children }) => {
                     {children}
                     <div>
                       <CustomPagination
-                        totalPages={totalPages}
+                        totalPages={result.totalPages}
                         currentPage={currentPage}
                         handlePageChange={(page) => handlePageChange(page)}
                       />

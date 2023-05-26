@@ -4,10 +4,12 @@ import axios from "axios";
 import { API_URL } from "../../config";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function UserPage() {
   const { id } = useParams();
   const [mentor, setMentor] = useState(null);
+  const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     async function fetchMentor() {
@@ -23,7 +25,9 @@ export default function UserPage() {
   return (
     <Layout>
       <div className="row justify-content-center">
-        <Link style={{ "margin-top": "40px" }} to="/">Back to mentors list</Link>
+        <Link style={{ "margin-top": "40px" }} to="/">
+          Back to mentors list
+        </Link>
       </div>
 
       <div className="row justify-content-center">
@@ -37,9 +41,24 @@ export default function UserPage() {
                     <p>{mentor && mentor.country}</p>
                   </a>
                 </div>
-                <a href="javascript:void(0)">
-                  <i className="fa-regular fa-heart"></i>
-                </a>
+                {/* <a
+                  onClick={() => handlelike(mentor.id)}
+                  href="javascript:void(0)"
+                >
+                  <i
+                    className={
+                      user !== null && mentor.likes.includes(Number(userId))
+                        ? "fa-solid fa-heart"
+                        : "fa-regular fa-heart"
+                    }
+                    style={{
+                      color:
+                        user !== null && mentor.likes.includes(Number(user.id))
+                          ? "#e91c1c"
+                          : "black",
+                    }}
+                  ></i>
+                </a> */}
               </div>
               <div className="card-img">
                 <img

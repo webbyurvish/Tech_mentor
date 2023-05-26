@@ -6,12 +6,12 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Login.css";
+import { CometChat } from "@cometchat-pro/chat";
 
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-  // const router = useRouter()
 
   const user = useSelector((state) => state.auth.user);
   const error = useSelector((state) => state.auth.error);
@@ -44,6 +44,22 @@ export default function Login() {
     };
     console.log(userData);
     dispatch(signupUser(userData));
+    if (user) {
+      let authKey = "1ac07ca05aafc7ebf4eec044a895c5451eadf638";
+      var uid = `user${Number(user.id)}`;
+      var name = user.name;
+
+      var user = new CometChat.User(uid);
+      user.setName(name);
+      CometChat.createUser(user, authKey).then(
+        (user) => {
+          console.log("user created", user);
+        },
+        (error) => {
+          console.log("error", error);
+        }
+      );
+    }
   };
 
   useEffect(() => {

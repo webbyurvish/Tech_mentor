@@ -3,6 +3,7 @@ import { login, signup } from "../APIs/authApi";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import { getMentorDetails } from "../APIs/mentorApi";
+import { CometChat } from "@cometchat-pro/chat";
 
 import jwtDecode from "jwt-decode";
 

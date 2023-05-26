@@ -1,27 +1,35 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import authReducer from "./slices/authSlice";
 import mentorReducer from "./slices/mentorSlice";
-import mentorsReducer from "./slices/mentorsSlice";
+import resultReducer from "./slices/resultSlice";
+import dataReducer from "./slices/dataSlice";
+import filterReducer from "./slices/filterSlice";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { combineReducers } from "@reduxjs/toolkit";
+import thunk from "redux-thunk";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   mentor: mentorReducer,
-  mentors: mentorsReducer,
+  result: resultReducer,
+  data: dataReducer,
+  filters: filterReducer,
 });
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth", "mentor", "mentors"], // Specify the reducers to persist
+  whitelist: ["auth", "mentor", "result", "data", "filters"], // Specify the reducers to persist
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
+const middleware = [...getDefaultMiddleware(), thunk]; // Include Redux Thunk middleware
+
 const store = configureStore({
   reducer: persistedReducer,
+  middleware,
 });
 
 const persistor = persistStore(store);
