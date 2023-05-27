@@ -3,12 +3,13 @@ import Account from "./Account";
 import axios from "axios";
 import { API_URL } from "../../config";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router";
 
 export default function MentorDetail() {
   const [mentor, setMentor] = useState(null);
+  const { mentorId } = useParams();
 
   const user = useSelector((state) => state.auth.user);
-  console.log(user);
 
   useEffect(() => {
     // Fetch mentor details from API

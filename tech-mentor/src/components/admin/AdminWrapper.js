@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logoutUser } from "../../redux/slices/authSlice";
 
-const Wrapper = ({ children }) => {
+const AdminWrapper = ({ children }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -14,6 +14,7 @@ const Wrapper = ({ children }) => {
     dispatch(logoutUser());
     navigate("/");
   };
+
   return (
     <div>
       <div className="managment-account">
@@ -32,16 +33,14 @@ const Wrapper = ({ children }) => {
                 <i className="fa-solid fa-house-user"></i>
                 <div className="sc-bqiRlB bfSpmb">Home</div>
               </Link>
+              <Link
+                to={`/admin/${user.id}/requests`}
+                className="sc-crHmcD layWKW"
+              >
+                <i class="fa-solid fa-user-plus"></i>
+                <div className="sc-bqiRlB bfSpmb">Requests</div>
+              </Link>
 
-              {user && user.role == "admin" && (
-                <Link
-                  to={`/admin/${user.id}/requests`}
-                  className="sc-crHmcD layWKW"
-                >
-                  <i class="fa-solid fa-user-plus"></i>
-                  <div className="sc-bqiRlB bfSpmb">Requests</div>
-                </Link>
-              )}
               <a className="sc-crHmcD layWKW">
                 <i className="fas fa-comments"></i>
                 <div className="sc-bqiRlB bfSpmb">Conversations</div>
@@ -66,4 +65,4 @@ const Wrapper = ({ children }) => {
   );
 };
 
-export default Wrapper;
+export default AdminWrapper;

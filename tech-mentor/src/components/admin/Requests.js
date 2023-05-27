@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import Wrapper from "./Wrapper";
 import "./admin.css";
 import axios from "axios";
 import { API_URL } from "../../config";
-import { Button, Modal } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AdminWrapper from "./AdminWrapper";
 
 const Requests = () => {
   const [requests, setRequests] = useState([]);
@@ -85,7 +84,7 @@ const Requests = () => {
 
   return (
     <>
-      <Wrapper>
+      <AdminWrapper>
         <ToastContainer />
         <div className="managment-account">
           <div className="container-fluid">
@@ -191,7 +190,7 @@ const Requests = () => {
             </div>
           </div>
         </div>
-      </Wrapper>
+      </AdminWrapper>
       {/* <!-- Modal --> */}
       <div
         className="modal fade"

@@ -7,19 +7,20 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { fetchData } from "../../redux/slices/resultSlice";
+import { setCurrentPage } from "../../redux/slices/dataSlice";
 
 export default function Mentor({ mentor }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const mentors = useSelector((state) => state.result.mentors);
   const filters = useSelector((state) => state.filters);
+  const currentPage = useSelector((state) => state.data.currentPage);
 
-  const [currentPage, setCurrentPage] = useState(1);
+  console.log(mentor.imageUrl.toString());
 
   const userId = user ? Number(user.id) : null;
 
   const handlelike = async (mentorId) => {
-    setCurrentPage(1);
+    // dispatch(setCurrentPage(1));
     try {
       await axios.post(
         `${API_URL}/like`,
@@ -49,6 +50,7 @@ export default function Mentor({ mentor }) {
 
   return (
     <div className="col-lg-4">
+      <ToastContainer />
       <div className="mentor-card-cover">
         <div className="card-inner">
           <div className="row align-items-center justify-content-between mentor-location">
@@ -57,7 +59,7 @@ export default function Mentor({ mentor }) {
                 <i
                   class="fa-solid fa-location-dot"
                   style={{ color: "#123268" }}
-                ></i>{" "}
+                ></i>
                 <p>{mentor.country}</p>
               </a>
             </div>
@@ -78,10 +80,7 @@ export default function Mentor({ mentor }) {
             </a>
           </div>
           <div className="card-img">
-            <img
-              src="https://api.codingcoach.io/avatars/tns/abcb24517b43bf54000984ef4b2291fd"
-              alt=""
-            />
+            <img src={`https://localhost:7022${mentor.imageUrl}`} alt="" />
           </div>
           <h2>{mentor.name}</h2>
           <span>{mentor.title}</span>
@@ -102,7 +101,7 @@ export default function Mentor({ mentor }) {
           </div>
         </div>
         <div className="go-to-profile">
-          <Link to={`/mentor/${mentor.id}`}>
+          <Link to={`/mentor/${mentor.id}/profile`}>
             <i class="fa-regular fa-hand-point-right"></i>
             <p>Go To Profile</p>
           </Link>

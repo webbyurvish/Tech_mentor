@@ -1,14 +1,14 @@
 import React from "react";
+import UserWrapper from "./UserWrapper";
 import { useSelector } from "react-redux";
-import "../MentorPanel/Account.css";
+import "../components/MentorPanel/Account.css";
 
-import AdminWrapper from "./AdminWrapper";
-
-export default function Admin() {
+export const UserHome = () => {
   const user = useSelector((state) => state.auth.user);
+  console.log(user);
 
   return (
-    <AdminWrapper>
+    <UserWrapper>
       <div className="account-right-side">
         <div className="accont-home">
           <h2>Home</h2>
@@ -26,12 +26,13 @@ export default function Admin() {
                 </div>
                 <img src="img/navlogo.jpg" alt="" />
                 <h2>{user.name}</h2>
-                <p>Admin of Tech-mentor</p>
+                {/* <p>Admin of Tech-mentor</p> */}
+                <img src={`https://localhost:7022${user.imageUrl}`} alt="" />
               </div>
             </div>
           </div>
         </div>
       </div>
-    </AdminWrapper>
+    </UserWrapper>
   );
-}
+};

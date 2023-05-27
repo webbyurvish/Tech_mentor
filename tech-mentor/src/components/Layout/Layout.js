@@ -16,6 +16,7 @@ import {
   fetchCountries,
   fetchLanguages,
   fetchSkills,
+  setCurrentPage,
 } from "../../redux/slices/dataSlice";
 import { fetchData } from "../../redux/slices/resultSlice";
 import { useNavigate } from "react-router";
@@ -32,7 +33,7 @@ export const Layout = ({ children }) => {
 
   const userId = user !== null ? Number(user.id) : null;
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const currentPage = useSelector((state) => state.data.currentPage);
 
   useEffect(() => {
     dispatch(
@@ -53,7 +54,11 @@ export const Layout = ({ children }) => {
   }, [filters, currentPage, dispatch]);
 
   const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+    if (pageNumber === currentPage) {
+      dispatch(setCurrentPage(1)); // Set the current page to null or a default value
+    } else {
+      dispatch(setCurrentPage(pageNumber));
+    }
   };
 
   if (!result.mentors) {
@@ -83,14 +88,13 @@ export const Layout = ({ children }) => {
   const handleLikedChange = (e) => {
     const checked = e.target.checked; // Use checked instead of value
     navigate("/");
-
     console.log(checked);
     dispatch(setLiked(checked));
   };
 
   const handleSpokenLanguageChange = (e) => {
     const selectedSpokenLanguage = e.target.value;
-    navigate("/");
+    // navigate("/");
     dispatch(
       setSpokenLanguage(
         selectedSpokenLanguage !== "" ? selectedSpokenLanguage : null

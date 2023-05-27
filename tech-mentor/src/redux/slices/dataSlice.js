@@ -8,6 +8,8 @@ const dataSlice = createSlice({
     countries: [],
     skills: [],
     languages: [],
+    currentPage: 1,
+    selectedStars: 0,
   },
   reducers: {
     setCountries: (state, action) => {
@@ -19,10 +21,22 @@ const dataSlice = createSlice({
     setSkills: (state, action) => {
       state.skills = action.payload;
     },
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+    },
+    setSelectedStars: (state, action) => {
+      state.selectedStars = action.payload;
+    },
   },
 });
 
-export const { setCountries, setLanguages, setSkills } = dataSlice.actions;
+export const {
+  setCountries,
+  setLanguages,
+  setSkills,
+  setCurrentPage,
+  setSelectedStars,
+} = dataSlice.actions;
 
 export const fetchCountries = async (dispatch) => {
   try {

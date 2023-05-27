@@ -11,7 +11,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 export default function BecomeMentor() {
   const user = useSelector((state) => state.auth.user);
-  const message = useSelector((state) => state.mentor.addmessage);
 
   const [name, setName] = useState(user.name);
   const [title, setTitle] = useState("");

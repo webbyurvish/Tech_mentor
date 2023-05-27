@@ -29,7 +29,7 @@ export const Header = () => {
                 <div className="logo">
                   <a href="javascript:void(0)">
                     <img
-                      src="/images/circle.png"
+                      src="/images/Tech-mentor.png"
                       width={120}
                       height={40}
                       alt=""
@@ -64,7 +64,7 @@ export const Header = () => {
                   <a>
                     <img
                       onClick={handleShowMenu}
-                      src="/images/user.png"
+                      src={`https://localhost:7022${user.imageUrl}`}
                       width={50}
                       height={50}
                       alt=""
@@ -75,14 +75,14 @@ export const Header = () => {
                 {menu && (
                   <div className="manageandlogin">
                     {user && user.role == "mentor" && (
-                      <Link to={`/me/${Number(user.id)}`}>Dashboard</Link>
+                      <Link to={`/mentor/${Number(user.id)}`}>Dashboard</Link>
                     )}
                     {user && user.role == "admin" && (
                       <Link to={`/admin/${Number(user.id)}`}>Dashboard</Link>
                     )}
 
-                    {user && user.role !== "admin" && (
-                      <Link to={`/me/${Number(user.id)}`}>MentorShips</Link>
+                    {user && user.role == "user" && (
+                      <Link to={`/me/${Number(user.id)}`}>Dashboard</Link>
                     )}
 
                     <a onClick={handleLogout} href="javascript:void(0)">

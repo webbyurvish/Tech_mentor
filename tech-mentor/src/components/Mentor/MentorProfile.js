@@ -2,14 +2,26 @@ import React, { useEffect, useState } from "react";
 import { Layout } from "../Layout/Layout";
 import axios from "axios";
 import { API_URL } from "../../config";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
+import { FeedBack } from "../Layout/FeedBack";
 import { useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+// import "./Rating.css";
 
-export default function UserPage() {
+export default function MentorProfile() {
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.user);
+
+  if (!user) {
+    navigate("/login");
+  }
   const { id } = useParams();
   const [mentor, setMentor] = useState(null);
-  const user = useSelector((state) => state.auth.user);
+  const selectedStars = useSelector((state) => state.data.selectedStars);
+
+  const [feedbackMessage, setFeedbackMessage] = useState("");
 
   useEffect(() => {
     async function fetchMentor() {
@@ -18,9 +30,35 @@ export default function UserPage() {
     }
 
     fetchMentor();
-  }, []);
+  }, [mentor]);
 
-  console.log(mentor);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const data = {
+      userId: Number(user.id),
+      mentorId: mentor.id,
+      comment: feedbackMessage,
+      stars: selectedStars,
+    };
+
+    try {
+      const response = await axios.post(`${API_URL}/rating`, data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      toast.success(response.data.message);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+
+    console.log(mentor.id, Number(user.id), feedbackMessage, selectedStars);
+  };
+  if (!user || !mentor) {
+    return <p>loading</p>;
+  }
 
   return (
     <Layout>
@@ -71,7 +109,7 @@ export default function UserPage() {
               <p>{mentor && mentor.about}</p>
               <i
                 style={{ marginRight: "7px" }}
-                class="fa-solid fa-language"
+                className="fa-solid fa-language"
               ></i>
               <span>
                 {mentor &&
@@ -98,7 +136,97 @@ export default function UserPage() {
                 <i className="fa-regular fa-hand-point-right"></i>
                 <p>Go To Profile</p>
               </a>
+              &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+              <a
+                href="javascript:vid(0)"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+              >
+                <i className="fa-sharp fa-solid fa-face-smile"></i>
+                <p>Rate mentor</p>
+              </a>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* modal */}
+      <div
+        className="modal fade"
+        id="exampleModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          <div className="modal-content">
+            {mentor &&
+              user &&
+              mentor.ratings.some((obj) => obj.userId === Number(user.id)) && (
+                <p
+                  style={{
+                    margin: "3rem",
+                    padding: "1rem",
+                    fontWeight: "bold",
+                    fontSize: "2rem",
+                  }}
+                >
+                  <span>
+                    <i
+                      class="fa-sharp fa-solid fa-face-smile"
+                      style={{ color: "#e7eb00" }}
+                    ></i>
+                  </span>
+                  &nbsp; You already rated this mentor !!!
+                </p>
+              )}
+            {mentor &&
+              !mentor.ratings.some((obj) => obj.userId === Number(user.id)) && (
+                <>
+                  <div className="modal-header">
+                    <h5 className="modal-title" id="exampleModalLabel">
+                      Add Rating
+                    </h5>
+                    <button
+                      type="button"
+                      className="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <FeedBack />
+                  <div className="modal-body">
+                    <div className="reject-reason">
+                      <label htmlFor="text">Give Feedback</label>
+                      <textarea
+                        type="text"
+                        value={feedbackMessage}
+                        onChange={(e) => setFeedbackMessage(e.target.value)}
+                        rows={4}
+                        cols={20}
+                      ></textarea>
+                    </div>
+                  </div>
+                  <div className="modal-footer">
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+
+                    <button
+                      type="submit"
+                      onClick={handleSubmit}
+                      className="btn btn-primary"
+                      data-bs-dismiss="modal"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </>
+              )}
           </div>
         </div>
       </div>

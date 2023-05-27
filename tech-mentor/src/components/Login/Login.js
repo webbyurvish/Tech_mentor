@@ -44,22 +44,21 @@ export default function Login() {
     };
     console.log(userData);
     dispatch(signupUser(userData));
-    if (user) {
-      let authKey = "1ac07ca05aafc7ebf4eec044a895c5451eadf638";
-      var uid = `user${Number(user.id)}`;
-      var name = user.name;
 
-      var user = new CometChat.User(uid);
-      user.setName(name);
-      CometChat.createUser(user, authKey).then(
-        (user) => {
-          console.log("user created", user);
-        },
-        (error) => {
-          console.log("error", error);
-        }
-      );
-    }
+    //     let authKey = "1ac07ca05aafc7ebf4eec044a895c5451eadf638";
+    //     var uid = `user2`;
+    //     var name = "Urvish";
+
+    //     var user = new CometChat.User(uid);
+    //     user.setName(name);
+    //     CometChat.createUser(user, authKey).then(
+    //       (user) => {
+    //         console.log("user created", user);
+    //       },
+    //       (error) => {
+    //         console.log("error", error);
+    //       }
+    //     );
   };
 
   useEffect(() => {
