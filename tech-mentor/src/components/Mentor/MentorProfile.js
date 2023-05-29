@@ -5,31 +5,72 @@ import { API_URL } from "../../config";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { FeedBack } from "../Layout/FeedBack";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setUsers } from "../../redux/slices/dataSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// import "./Rating.css";
 
 export default function MentorProfile() {
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
+  const selectedStars = useSelector((state) => state.data.selectedStars);
 
   if (!user) {
     navigate("/login");
   }
+
   const { id } = useParams();
   const [mentor, setMentor] = useState(null);
-  const selectedStars = useSelector((state) => state.data.selectedStars);
-
   const [feedbackMessage, setFeedbackMessage] = useState("");
 
-  useEffect(() => {
-    async function fetchMentor() {
-      const mentor = await axios.get(`${API_URL}/mentors/${id}`);
-      setMentor(mentor.data);
+  const countObjectsWithStars = (stars) => {
+    return (
+      mentor && mentor.ratings.filter((rating) => rating.stars === stars).length
+    );
+  };
+
+  const totalCount = mentor && mentor.ratings.length;
+
+  const calculatePercentage = (count) => {
+    if (totalCount === 0) return 0;
+    return (count / totalCount) * 100;
+  };
+
+  const ratingSum =
+    mentor && mentor.ratings.reduce((sum, rating) => sum + rating.stars, 0);
+
+  const averageRating = totalCount > 0 ? ratingSum / totalCount : 0;
+
+  const getActiveStars = () => {
+    const maxStars = 5;
+    const activeStars = Math.round(averageRating);
+    const stars = [];
+
+    for (let i = 0; i < maxStars; i++) {
+      if (i < activeStars) {
+        stars.push(
+          <span key={i} className="fa fa-star star-active mx-1"></span>
+        );
+      } else {
+        stars.push(
+          <span key={i} className="fa fa-star star-inactive mx-1"></span>
+        );
+      }
     }
 
-    fetchMentor();
+    return stars;
+  };
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const mentorResponse = await axios.get(`${API_URL}/mentors/${id}`);
+        setMentor(mentorResponse.data);
+      } catch (error) {
+        console.error("Error fetching mentor data:", error);
+      }
+    }
+    fetchData();
   }, [mentor]);
 
   const handleSubmit = async (e) => {
@@ -58,6 +99,14 @@ export default function MentorProfile() {
   };
   if (!user || !mentor) {
     return <p>loading</p>;
+  }
+
+  console.log(mentor);
+
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = { day: "numeric", month: "short" };
+    return date.toLocaleDateString("en-US", options);
   }
 
   return (
@@ -148,6 +197,194 @@ export default function MentorProfile() {
             </div>
           </div>
         </div>
+
+        <div className="ratingbody">
+          <div className="card">
+            <div className="row justify-content-left d-flex">
+              <div className="col-md-4 d-flex flex-column">
+                <div className="rating-box">
+                  <h1 className="pt-4" style={{ marginLeft: "30%" }}>
+                    {averageRating.toFixed(1)}
+                  </h1>
+                  <p style={{ marginLeft: "28%" }}>out of 5</p>
+                </div>
+                <div className="bar-container">{getActiveStars()}</div>
+              </div>
+              <div className="col-md-8">
+                <div className="rating-bar0 justify-content-center">
+                  <table className="text-left mx-auto">
+                    <tr>
+                      <td className="rating-label td">Excellent</td>
+                      <td className="rating-bar td">
+                        <div className="bar-container">
+                          <div
+                            style={{
+                              width: `${calculatePercentage(
+                                countObjectsWithStars(5)
+                              )}%`,
+                              height: "13px",
+                              backgroundColor: "#fbc02d",
+                              borderRadius: "20px",
+                            }}
+                          ></div>
+                        </div>
+                      </td>
+                      <td className="text-right td">
+                        {calculatePercentage(countObjectsWithStars(5)).toFixed(
+                          1
+                        )}
+                        %
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="rating-label td">Good</td>
+                      <td className="rating-bar td">
+                        <div className="bar-container">
+                          <div
+                            style={{
+                              width: `${calculatePercentage(
+                                countObjectsWithStars(4)
+                              )}%`,
+                              height: "13px",
+                              backgroundColor: "#fbc02d",
+                              borderRadius: "20px",
+                            }}
+                          ></div>
+                        </div>
+                      </td>
+                      <td className="text-right">
+                        {calculatePercentage(countObjectsWithStars(4)).toFixed(
+                          1
+                        )}
+                        %
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="rating-label td">Average</td>
+                      <td className="rating-bar td">
+                        <div className="bar-container">
+                          <div
+                            style={{
+                              width: `${calculatePercentage(
+                                countObjectsWithStars(3)
+                              )}%`,
+                              height: "13px",
+                              backgroundColor: "#fbc02d",
+                              borderRadius: "20px",
+                            }}
+                          ></div>
+                        </div>
+                      </td>
+                      <td className="text-right td">
+                        {calculatePercentage(countObjectsWithStars(3)).toFixed(
+                          1
+                        )}
+                        %
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="rating-label td">Poor</td>
+                      <td className="rating-bar td">
+                        <div className="bar-container">
+                          <div
+                            style={{
+                              width: `${calculatePercentage(
+                                countObjectsWithStars(2)
+                              )}%`,
+                              height: "13px",
+                              backgroundColor: "#fbc02d",
+                              borderRadius: "20px",
+                            }}
+                          ></div>
+                        </div>
+                      </td>
+                      <td className="text-right td">
+                        {calculatePercentage(countObjectsWithStars(2)).toFixed(
+                          1
+                        )}
+                        %
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="rating-label td">Terrible</td>
+                      <td className="rating-bar td">
+                        <div className="bar-container">
+                          <div
+                            style={{
+                              width: `${calculatePercentage(
+                                countObjectsWithStars(1)
+                              )}%`,
+                              height: "13px",
+                              backgroundColor: "#fbc02d",
+                              borderRadius: "20px",
+                            }}
+                          ></div>
+                        </div>
+                      </td>
+                      <td className="text-right td">
+                        {calculatePercentage(countObjectsWithStars(1)).toFixed(
+                          1
+                        )}
+                        %
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr />
+          {mentor &&
+            mentor.ratings.map((rating) => (
+              <div className="card">
+                <div className="row d-flex">
+                  <div className="">
+                    <img
+                      className="profile-pic"
+                      src={`https://localhost:7022${rating.user.imageUrl}`}
+                    />
+                  </div>
+                  <div className="d-flex flex-column">
+                    <h5 className="mt-2 mb-0">{rating.user.name}</h5>
+                    <div>
+                      <p className="text-left">
+                        <span className="text-muted">
+                          {rating.stars.toFixed(1)} &nbsp;
+                        </span>
+                        {[...Array(Math.floor(rating.stars))].map(
+                          (_, index) => (
+                            <span
+                              className="fa fa-star star-active"
+                              key={index}
+                            ></span>
+                          )
+                        )}
+                        {[...Array(5 - Math.floor(rating.stars))].map(
+                          (_, index) => (
+                            <span
+                              className="fa fa-star star-inactive"
+                              key={index}
+                            ></span>
+                          )
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="ml-auto">
+                    <p className="text-muted pt-5 pt-sm-3">
+                      {formatDate(rating.dateRated)}
+                    </p>
+                  </div>
+                </div>
+                <div className="row text-left">
+                  {/* <h4 className="blue-text mt-3">
+                "An awesome activity to experience"
+              </h4> */}
+                  <p className="content mt-3">{rating.comment}</p>
+                </div>
+              </div>
+            ))}
+        </div>
       </div>
 
       {/* modal */}
@@ -173,7 +410,7 @@ export default function MentorProfile() {
                 >
                   <span>
                     <i
-                      class="fa-sharp fa-solid fa-face-smile"
+                      className="fa-sharp fa-solid fa-face-smile"
                       style={{ color: "#e7eb00" }}
                     ></i>
                   </span>

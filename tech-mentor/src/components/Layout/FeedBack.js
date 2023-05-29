@@ -5,8 +5,8 @@ import { setSelectedStars } from "../../redux/slices/dataSlice";
 
 export const FeedBack = () => {
   const dispatch = useDispatch();
-  const selectedStars = useSelector((state) => state.data.selectedStars);
-  console.log(selectedStars);
+  // const selectedStars = useSelector((state) => state.data.selectedStars);
+  // console.log(selectedStars);
 
   const handleSelectedStars = (stars) => {
     dispatch(setSelectedStars(stars));

@@ -1,11 +1,23 @@
 import React from "react";
 import Mentor from "./Mentor";
 import { Layout } from "../Layout/Layout";
-import { useSelector } from "react-redux";
-import { CometChatUI } from "../../cometchat-pro-react-ui-kit/CometChatWorkspace/src/components";
+import { useSelector, useDispatch } from "react-redux";
+import CustomPagination from "../Layout/Pagination";
+import { setCurrentPage } from "../../redux/slices/dataSlice";
 
 export default function Mentors() {
+  const dispatch = useDispatch();
   const mentors = useSelector((state) => state.result.mentors);
+  const currentPage = useSelector((state) => state.data.currentPage);
+  const result = useSelector((state) => state.result);
+
+  const handlePageChange = (pageNumber) => {
+    if (pageNumber === currentPage) {
+      dispatch(setCurrentPage(1)); // Set the current page to null or a default value
+    } else {
+      dispatch(setCurrentPage(pageNumber));
+    }
+  };
 
   return (
     <Layout>
@@ -22,6 +34,13 @@ export default function Mentors() {
           </div>
         </div>
       )}
+      <div>
+        <CustomPagination
+          totalPages={result.totalPages}
+          currentPage={currentPage}
+          handlePageChange={(page) => handlePageChange(page)}
+        />
+      </div>
     </Layout>
   );
 }

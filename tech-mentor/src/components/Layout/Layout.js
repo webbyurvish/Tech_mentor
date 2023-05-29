@@ -53,14 +53,6 @@ export const Layout = ({ children }) => {
     dispatch(fetchSkills);
   }, [filters, currentPage, dispatch]);
 
-  const handlePageChange = (pageNumber) => {
-    if (pageNumber === currentPage) {
-      dispatch(setCurrentPage(1)); // Set the current page to null or a default value
-    } else {
-      dispatch(setCurrentPage(pageNumber));
-    }
-  };
-
   if (!result.mentors) {
     return <h1>loading</h1>;
   }
@@ -88,7 +80,6 @@ export const Layout = ({ children }) => {
   const handleLikedChange = (e) => {
     const checked = e.target.checked; // Use checked instead of value
     navigate("/");
-    console.log(checked);
     dispatch(setLiked(checked));
   };
 
@@ -108,15 +99,15 @@ export const Layout = ({ children }) => {
       <Header />
       <div className="main-cover">
         <div className="container-fluid">
-          <div class="fixed-menu">
-            <div class="title-text">
+          <div className="fixed-menu">
+            <div className="title-text">
               <h3>FILTER</h3>
               <p>{result.mentors.length} MENTORS</p>
             </div>
             <form>
-              <div class="fillter-cover">
-                <div class="filter-input">
-                  <label for="text">TECHNOLOGY</label>
+              <div className="fillter-cover">
+                <div className="filter-input">
+                  <label htmlFor="text">TECHNOLOGY</label>
                   <input
                     type="text"
                     list="skills"
@@ -124,14 +115,14 @@ export const Layout = ({ children }) => {
                     onChange={handleTechnologyChange}
                   />
                   <datalist id="skills">
-                    {skills.map((skill) => {
-                      return <option value={skill.name} />;
+                    {skills.map((skill, index) => {
+                      return <option key={index} value={skill.name} />;
                     })}
                   </datalist>
                 </div>
 
-                <div class="filter-input">
-                  <label for="text">COUNTRY</label>
+                <div className="filter-input">
+                  <label htmlFor="text">COUNTRY</label>
                   <input
                     type="text"
                     list="countries"
@@ -139,13 +130,13 @@ export const Layout = ({ children }) => {
                     onChange={handleCountryChange}
                   />
                   <datalist id="countries">
-                    {countries.map((country) => {
-                      return <option value={country.name} />;
+                    {countries.map((country, index) => {
+                      return <option key={index} value={country.name} />;
                     })}
                   </datalist>
                 </div>
-                <div class="filter-input">
-                  <label for="text">NAME</label>
+                <div className="filter-input">
+                  <label htmlFor="text">NAME</label>
                   <input
                     type="text"
                     value={filters.name}
@@ -153,13 +144,13 @@ export const Layout = ({ children }) => {
                     onChange={handleNameChange}
                   />
                   <datalist id="names">
-                    {result.mentors.map((mentor) => {
-                      return <option value={mentor.name} />;
+                    {result.mentors.map((mentor, index) => {
+                      return <option key={index} value={mentor.name} />;
                     })}
                   </datalist>
                 </div>
-                <div class="filter-input">
-                  <label for="text">LANGUAGE </label>
+                <div className="filter-input">
+                  <label htmlFor="text">LANGUAGE </label>
                   <input
                     type="text"
                     list="languages"
@@ -167,39 +158,39 @@ export const Layout = ({ children }) => {
                     onChange={handleSpokenLanguageChange}
                   />
                   <datalist id="languages">
-                    {languages.map((language) => {
-                      return <option value={language.name} />;
+                    {languages.map((language, index) => {
+                      return <option key={index} value={language.name} />;
                     })}
                   </datalist>
                 </div>
               </div>
             </form>
-            <div class="myfavourits">
+            <div className="myfavourits">
               <p>MY FAVORITES</p>
-              <label class="switch">
+              <label className="switch">
                 <input
                   checked={filters.isLiked}
                   onChange={handleLikedChange}
                   type="checkbox"
                 />
-                <span class="slider round"></span>
+                <span className="slider round"></span>
               </label>
             </div>
-            <div class="social-icon">
+            <div className="social-icon">
               <ul>
                 <li>
                   <a href="javascript:void(0)">
-                    <i class="fa-brands fa-github"></i>
+                    <i className="fa-brands fa-github"></i>
                   </a>
                 </li>
                 <li>
                   <a href="javascript:void(0)">
-                    <i class="fa-brands fa-square-facebook"></i>
+                    <i className="fa-brands fa-square-facebook"></i>
                   </a>
                 </li>
                 <li>
                   <a href="javascript:void(0)">
-                    <i class="fa-brands fa-twitter"></i>
+                    <i className="fa-brands fa-twitter"></i>
                   </a>
                 </li>
                 <li>
@@ -209,7 +200,7 @@ export const Layout = ({ children }) => {
                 </li>
               </ul>
             </div>
-            <div class="social-link">
+            <div className="social-link">
               <ul>
                 <li>
                   <a href="javascript:void(0)">Cookies policy</a>
@@ -230,16 +221,7 @@ export const Layout = ({ children }) => {
             <div className="row">
               <div className="col-lg-12">
                 <div className="mentor-card">
-                  <div>
-                    {children}
-                    <div>
-                      <CustomPagination
-                        totalPages={result.totalPages}
-                        currentPage={currentPage}
-                        handlePageChange={(page) => handlePageChange(page)}
-                      />
-                    </div>
-                  </div>
+                  <div>{children}</div>
                 </div>
               </div>
             </div>

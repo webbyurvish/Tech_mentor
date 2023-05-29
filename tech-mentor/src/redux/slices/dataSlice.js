@@ -10,6 +10,7 @@ const dataSlice = createSlice({
     languages: [],
     currentPage: 1,
     selectedStars: 0,
+    users: null,
   },
   reducers: {
     setCountries: (state, action) => {

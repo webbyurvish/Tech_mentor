@@ -13,6 +13,30 @@ const Requests = () => {
   const [loading, setLoading] = useState(false);
   const [mail, setMail] = useState("");
 
+  const changeRole = (uid) => {
+    const authKey = process.env.REACT_APP_COMETCHAT_AUTH_KEY;
+
+    const options = {
+      method: "PUT",
+      headers: {
+        accept: "application/json",
+        "content-type": "application/json",
+        apikey: authKey,
+      },
+      body: JSON.stringify({
+        role: "mentor",
+      }),
+    };
+
+    fetch(
+      `https://239573399dceb131.api-us.cometchat.io/v3/users/${uid}`,
+      options
+    )
+      .then((response) => response.json())
+      .then((response) => console.log(response))
+      .catch((err) => console.error(err));
+  };
+
   const handleApprove = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -28,6 +52,8 @@ const Requests = () => {
       );
 
       toast.success(response.data.message);
+
+      changeRole(e.target.value.split("@")[0]);
 
       setRequests(
         requests.filter((request) => request.email !== e.target.value)
@@ -214,7 +240,7 @@ const Requests = () => {
             </div>
             <div className="modal-body">
               <div className="reject-reason">
-                <label for="text">Reason to reject user's request</label>
+                <label htmlFor="text">Reason to reject user's request</label>
                 <textarea
                   type="text"
                   value={rejectmessage}

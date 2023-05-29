@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { logoutUser } from "../../redux/slices/authSlice";
+import { Link } from "react-router-dom";
 
 export const MentorWrapper = ({ children }) => {
   const navigate = useNavigate();
@@ -33,10 +34,10 @@ export const MentorWrapper = ({ children }) => {
               <div className="sc-bqiRlB bfSpmb">Mentorships</div>
             </a>
 
-            <a className="sc-crHmcD layWKW">
+            <Link className="sc-crHmcD layWKW" to={"/chat"}>
               <i className="fas fa-comments"></i>
               <div className="sc-bqiRlB bfSpmb">Conversations</div>
-            </a>
+            </Link>
             <a href="/" className="sc-crHmcD layWKW">
               <i className="fa-solid fa-people-arrows"></i>
               <div className="sc-bqiRlB bfSpmb">Mentors</div>

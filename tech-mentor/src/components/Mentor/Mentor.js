@@ -8,14 +8,13 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { fetchData } from "../../redux/slices/resultSlice";
 import { setCurrentPage } from "../../redux/slices/dataSlice";
+import { CometChatUI } from "../../cometchat-pro-react-ui-kit/CometChatWorkspace/src/components";
 
 export default function Mentor({ mentor }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const filters = useSelector((state) => state.filters);
   const currentPage = useSelector((state) => state.data.currentPage);
-
-  console.log(mentor.imageUrl.toString());
 
   const userId = user ? Number(user.id) : null;
 
@@ -38,7 +37,9 @@ export default function Mentor({ mentor }) {
           filters.country,
           filters.name,
           filters.spokenLanguage,
-          currentPage
+          currentPage,
+          filters.isLiked,
+          userId
         )
       );
 
@@ -57,7 +58,7 @@ export default function Mentor({ mentor }) {
             <div className="location-cover">
               <a href="javascript:void(0)">
                 <i
-                  class="fa-solid fa-location-dot"
+                  className="fa-solid fa-location-dot"
                   style={{ color: "#123268" }}
                 ></i>
                 <p>{mentor.country}</p>
@@ -102,7 +103,7 @@ export default function Mentor({ mentor }) {
         </div>
         <div className="go-to-profile">
           <Link to={`/mentor/${mentor.id}/profile`}>
-            <i class="fa-regular fa-hand-point-right"></i>
+            <i className="fa-regular fa-hand-point-right"></i>
             <p>Go To Profile</p>
           </Link>
         </div>

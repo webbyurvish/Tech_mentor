@@ -37,7 +37,7 @@ const AdminWrapper = ({ children }) => {
                 to={`/admin/${user.id}/requests`}
                 className="sc-crHmcD layWKW"
               >
-                <i class="fa-solid fa-user-plus"></i>
+                <i className="fa-solid fa-user-plus"></i>
                 <div className="sc-bqiRlB bfSpmb">Requests</div>
               </Link>
 

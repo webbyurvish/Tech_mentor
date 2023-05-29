@@ -12,6 +12,10 @@ const UserWrapper = ({ children }) => {
 
   const user = useSelector((state) => state.auth.user);
 
+  if (!user) {
+    navigate("/login  ");
+  }
+
   const handleLogout = () => {
     dispatch(logoutUser());
     navigate("/");
@@ -36,11 +40,11 @@ const UserWrapper = ({ children }) => {
                 <div className="sc-bqiRlB bfSpmb">Home</div>
               </Link>
               <Link to={`/me/${user.id}/become`} className="sc-crHmcD layWKW">
-                <i class="fa-solid fa-people-carry-box"></i>
+                <i className="fa-solid fa-people-carry-box"></i>
                 <div className="sc-bqiRlB bfSpmb">Become a mentor</div>
               </Link>
 
-              <Link to={"/userchat"} className="sc-crHmcD layWKW">
+              <Link to={"/chat"} className="sc-crHmcD layWKW">
                 <i className="fas fa-comments"></i>
                 <div className="sc-bqiRlB bfSpmb">Conversations</div>
               </Link>
