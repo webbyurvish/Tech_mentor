@@ -6,7 +6,6 @@ export const fetchRequests = async () => {
     const response = await axios.get(`${API_URL}/admin/requests`);
     console.log(response);
     return response.data;
-    // dispatch(setMentorDetails(response.data));
   } catch (error) {
     return error.response;
   }

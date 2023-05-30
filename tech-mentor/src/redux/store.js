@@ -4,10 +4,20 @@ import mentorReducer from "./slices/mentorSlice";
 import resultReducer from "./slices/resultSlice";
 import dataReducer from "./slices/dataSlice";
 import filterReducer from "./slices/filterSlice";
-import { persistStore, persistReducer } from "redux-persist";
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { combineReducers } from "@reduxjs/toolkit";
 import thunk from "redux-thunk";
+import { PersistGate } from "redux-persist/integration/react";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -25,11 +35,16 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const middleware = [...getDefaultMiddleware(), thunk]; // Include Redux Thunk middleware
+// const middleware = [...getDefaultMiddleware(), thunk]; // Include Redux Thunk middleware
 
 const store = configureStore({
   reducer: persistedReducer,
-  middleware,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
 
 const persistor = persistStore(store);

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { logoutUser } from "../../redux/slices/authSlice";
+import { CometChat } from "@cometchat-pro/chat";
 
 export const Header = () => {
   const dispatch = useDispatch();
@@ -17,6 +18,14 @@ export const Header = () => {
   const handleLogout = () => {
     dispatch(logoutUser());
     setmenu((prevstate) => !prevstate);
+    CometChat.logout().then(
+      () => {
+        console.log("Logout completed successfully");
+      },
+      (error) => {
+        console.log("Logout failed with exception:", { error });
+      }
+    );
   };
 
   return (
@@ -64,7 +73,7 @@ export const Header = () => {
                   <a>
                     <img
                       onClick={handleShowMenu}
-                      src={`https://localhost:7022${user.imageUrl}`}
+                      src={user.imageUrl}
                       width={50}
                       height={50}
                       alt=""

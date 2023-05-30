@@ -13,9 +13,16 @@ import { CometChat } from "@cometchat-pro/chat";
 import { UserDashboard } from "./user/UserDashboard";
 import MentorProfile from "./components/Mentor/MentorProfile";
 import { Chat } from "./components/chat/Chat";
+import { ChatWithMentor } from "./components/chat/ChatWithMentor";
+import { MainConversation } from "./components/chat/Conversation/MainConversation";
+import {
+  CometChatGroupListWithMessages,
+  CometChatUserListWithMessages,
+} from "./cometchat-pro-react-ui-kit/CometChatWorkspace/src/components";
+import { Groups } from "./components/chat/Conversation/Groups";
 
-const appId = "239582adc8bd705d";
-const region = "eu";
+const appId = process.env.REACT_APP_COMETCHAT_APP_ID;
+const region = process.env.REACT_APP_COMETCHAT_REGION;
 const appSetting = new CometChat.AppSettingsBuilder()
   .subscribePresenceForAllUsers()
   .setRegion(region)
@@ -45,6 +52,12 @@ function App() {
         <Route path="/admin/:id/requests" element={<Requests />} />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
         <Route path="/chat" element={<Chat />} />
+        <Route path="/chatwithmentor/:uid" element={<ChatWithMentor />} />
+        <Route path="/mentor/:id/groups" element={<Groups />} />
+        <Route
+          path="/mentor/:id/mainconversation"
+          element={<MainConversation />}
+        />
       </Routes>
     </div>
   );

@@ -21,26 +21,11 @@ const token =
 if (token) {
   const decodedToken = jwtDecode(token);
   initialState.user = decodedToken;
-
-  //   if (initialState.user.isMentor == "True") {
-  //     try {
-  //       initialState.mentor = getMentorDetails(initialState.user.email);
-  //     } catch (error) {
-  //       initialState.mentor = null;
-  //     }
-  //   }
 }
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  // user:
-  //   typeof localStorage !== "undefined"
-  //     ? jwtDecode(localStorage.getItem("token"))
-  //     : null,
-  // loading: false,
-  // error: null,
-  // message: "",
 
   reducers: {
     loginStart: (state) => {
@@ -71,11 +56,7 @@ const authSlice = createSlice({
       state.loading = false;
       state.user = jwtDecode(action.payload.token);
       state.message = "signup success";
-      //   localStorage.setItem("user", JSON.stringify(action.payload.user));
       localStorage.setItem("token", action.payload.token);
-
-      // state.user = action.payload.user;
-      // localStorage.setItem('token', action.payload.token);
     },
     signupFailure: (state, action) => {
       state.loading = false;
@@ -89,7 +70,6 @@ const authSlice = createSlice({
       state.error = null;
 
       localStorage.removeItem("token");
-      //   localStorage.removeItem("user");
     },
   },
 });
@@ -145,7 +125,14 @@ export const signupUser = (userData) => async (dispatch) => {
 
 export const logoutUser = () => (dispatch) => {
   dispatch(logout());
-  //   dispatch(logoutMentor());
+  CometChat.logout().then(
+    () => {
+      console.log("Logout completed successfully");
+    },
+    (error) => {
+      console.log("Logout failed with exception:", { error });
+    }
+  );
 };
 
 export default authSlice.reducer;

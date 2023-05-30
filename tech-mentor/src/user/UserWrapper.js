@@ -3,6 +3,7 @@ import "../components/MentorPanel/Account.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logoutUser } from "../redux/slices/authSlice";
+import { CometChat } from "@cometchat-pro/chat";
 
 const UserWrapper = ({ children }) => {
   const navigate = useNavigate();
@@ -18,6 +19,14 @@ const UserWrapper = ({ children }) => {
 
   const handleLogout = () => {
     dispatch(logoutUser());
+    CometChat.logout().then(
+      () => {
+        console.log("Logout completed successfully");
+      },
+      (error) => {
+        console.log("Logout failed with exception:", { error });
+      }
+    );
     navigate("/");
   };
   return (

@@ -5,9 +5,10 @@ import { API_URL } from "../../config";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
 import Multiselect from "multiselect-react-dropdown";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loading from "../Layout/Loading";
 
 export default function BecomeMentor() {
   const user = useSelector((state) => state.auth.user);
@@ -22,6 +23,7 @@ export default function BecomeMentor() {
   const [languages, setLanguages] = useState(null);
   const [selectedLanguages, setSelectedLanguages] = useState(null);
   const [selectedSkills, setSelectedSkills] = useState(null);
+  const [loading, setLoading] = useState(null);
 
   const handleCheckboxChange = (event) => {
     setIsChecked(event.target.checked);
@@ -74,10 +76,6 @@ export default function BecomeMentor() {
     fetchSkills();
   }, []);
 
-  if (!countries || !skills || !languages) {
-    return <h6>Loading...</h6>;
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const mentorData = {
@@ -90,160 +88,163 @@ export default function BecomeMentor() {
       skillIds: selectedSkills,
       available: isChecked,
     };
+    setLoading(true);
 
     try {
       const response = await axios.post(`${API_URL}/mentors/add`, mentorData, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-
-      toast.success("request sent successfully");
+      console.log(response.data.message);
+      toast.success(response.data.message);
     } catch (error) {
-      toast.error(error);
+      console.log(error.response.data.message);
+      toast.error(error.response.data.message);
     }
-
-    // dispatch(addMentorRequest(mentorData));
-
-    // navigate(`/me/${user.id}`);
+    setLoading(false);
   };
 
   return (
     <div className="mainwrapper">
       <ToastContainer />
-      <div className="editprofile">
-        <div>
-          <div className="edit-profile">
-            <h2>Become a Mentor</h2>
-            <form onSubmit={handleSubmit}>
-              <div className="row">
-                <div className="col-lg-6">
-                  <div className="profile-input">
-                    <label htmlFor="text">
-                      <p>Name </p>(Please use your real name)
-                    </label>
-                    <input
-                      disabled
-                      type="text"
-                      value={name}
-                      onChange={(event) => setName(event.target.value)}
-                    />
+      {(!countries || !skills || !languages || loading) && <Loading />}
+      {!loading && countries && skills && languages && (
+        <div className="editprofile">
+          <div>
+            <div className="edit-profile">
+              <h2>Become a Mentor</h2>
+              <form onSubmit={handleSubmit}>
+                <div className="row">
+                  <div className="col-lg-6">
+                    <div className="profile-input">
+                      <label htmlFor="text">
+                        <p>Name </p>(Please use your real name)
+                      </label>
+                      <input
+                        disabled
+                        type="text"
+                        value={name}
+                        onChange={(event) => setName(event.target.value)}
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="col-lg-6">
-                  <div className="profile-input">
-                    <label htmlFor="text">
-                      <p>Title </p>(e.g. Software Developer)
-                    </label>
-                    <input
-                      type="text"
-                      value={title}
-                      onChange={(event) => setTitle(event.target.value)}
-                    />
+                  <div className="col-lg-6">
+                    <div className="profile-input">
+                      <label htmlFor="text">
+                        <p>Title </p>(e.g. Software Developer)
+                      </label>
+                      <input
+                        type="text"
+                        value={title}
+                        onChange={(event) => setTitle(event.target.value)}
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="col-lg-6">
-                  <div className="profile-input">
-                    <label htmlFor="text">
-                      <p>About </p>
-                      (Up to 400 characters)
-                    </label>
-                    <textarea
-                      name="text"
-                      value={about}
-                      onChange={(event) => setAbout(event.target.value)}
-                      placeholder="brief about you..."
-                      id=""
-                      cols="30"
-                      rows="3"
-                    ></textarea>
+                  <div className="col-lg-6">
+                    <div className="profile-input">
+                      <label htmlFor="text">
+                        <p>About </p>
+                        (Up to 400 characters)
+                      </label>
+                      <textarea
+                        name="text"
+                        value={about}
+                        onChange={(event) => setAbout(event.target.value)}
+                        placeholder="brief about you..."
+                        id=""
+                        cols="30"
+                        rows="3"
+                      ></textarea>
+                    </div>
                   </div>
-                </div>
-                <div className="col-lg-6">
-                  <div className="profile-input">
-                    <label htmlFor="text">Country</label>
-                    <select
-                      className="form-select"
-                      aria-label="Default select example"
-                      value={country}
-                      onChange={handleCountryChange}
-                    >
-                      <option selected>Select your Country</option>
-                      {countries.map((country) => (
-                        <option key={country.id} value={country.name}>
-                          {country.name}
-                        </option>
-                      ))}
-                    </select>
+                  <div className="col-lg-6">
+                    <div className="profile-input">
+                      <label htmlFor="text">Country</label>
+                      <select
+                        className="form-select"
+                        aria-label="Default select example"
+                        value={country}
+                        onChange={handleCountryChange}
+                      >
+                        <option selected>Select your Country</option>
+                        {countries.map((country) => (
+                          <option key={country.id} value={country.name}>
+                            {country.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
-                </div>
-                <div className="col-lg-6">
-                  <div className="multiSelect">
-                    <label htmlFor="text">Spoken Languages</label>
-                    <Multiselect
-                      options={languages}
-                      selectionLimit="5"
-                      displayValue="name"
-                      onSelect={handleLanguagesSelection}
-                      onRemove={handleLanguagesSelection}
-                    />
+                  <div className="col-lg-6">
+                    <div className="multiSelect">
+                      <label htmlFor="text">Spoken Languages</label>
+                      <Multiselect
+                        options={languages}
+                        selectionLimit="5"
+                        displayValue="name"
+                        onSelect={handleLanguagesSelection}
+                        onRemove={handleLanguagesSelection}
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="col-lg-6">
-                  <div className="multiSelect">
-                    <label htmlFor="text">Skills (Up to 10)</label>
+                  <div className="col-lg-6">
+                    <div className="multiSelect">
+                      <label htmlFor="text">Skills (Up to 10)</label>
 
-                    <Multiselect
-                      options={skills}
-                      selectionLimit="10"
-                      displayValue="name"
-                      onSelect={handleSkillsSelection}
-                      onRemove={handleSkillsSelection}
-                      className="multiSelect_field"
-                    />
+                      <Multiselect
+                        options={skills}
+                        selectionLimit="10"
+                        displayValue="name"
+                        onSelect={handleSkillsSelection}
+                        onRemove={handleSkillsSelection}
+                        className="multiSelect_field"
+                      />
+                    </div>
+                  </div>
+                  <div className="col-lg-6">
+                    <div className="profile-input">
+                      <label htmlFor="text">
+                        <p>Email </p>
+                      </label>
+                      <input disabled type="email" value={user.email} />
+                    </div>
                   </div>
                 </div>
-                <div className="col-lg-6">
-                  <div className="profile-input">
-                    <label htmlFor="text">
-                      <p>Email </p>
+                <div className="form-text">
+                  <p>Available for new mentees</p>
+                  <span>
+                    Please define how would you like to drive the mentorship and
+                    how many mentees you can take.
+                  </span>
+                  <div className="formcheckinput">
+                    <label htmlFor="checkbox-text">
+                      <input
+                        type="checkbox"
+                        name=""
+                        id="checkbox-text"
+                        checked={isChecked}
+                        onChange={handleCheckboxChange}
+                      />
+                      Available for new mentees
                     </label>
-                    <input disabled type="email" value={user.email} />
+                  </div>
+                  <div className="saveorclose-btn">
+                    <button type="submit">send request</button>
+                    <Link
+                      to="javascriopt:void(0)"
+                      onClick={() => window.history.back()}
+                    >
+                      Close
+                    </Link>
                   </div>
                 </div>
-              </div>
-              <div className="form-text">
-                <p>Available for new mentees</p>
-                <span>
-                  Please define how would you like to drive the mentorship and
-                  how many mentees you can take.
-                </span>
-                <div className="formcheckinput">
-                  <label htmlFor="checkbox-text">
-                    <input
-                      type="checkbox"
-                      name=""
-                      id="checkbox-text"
-                      checked={isChecked}
-                      onChange={handleCheckboxChange}
-                    />
-                    Available for new mentees
-                  </label>
-                </div>
-                <div className="saveorclose-btn">
-                  <button type="submit">send request</button>
-                  <Link
-                    to="javascriopt:void(0)"
-                    onClick={() => window.history.back()}
-                  >
-                    Close
-                  </Link>
-                </div>
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

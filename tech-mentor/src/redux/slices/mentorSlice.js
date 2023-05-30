@@ -20,10 +20,10 @@ export const { setMentorDetails, updateMentorDetailsSuccess } =
 
 export const updateMentorDetails = (mentorData) => async (dispatch) => {
   try {
-    // Make API call to update mentor details in the database
     const response = await axios.put(`${API_URL}/mentors/update`, mentorData, {
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
 

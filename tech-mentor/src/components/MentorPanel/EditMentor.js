@@ -17,7 +17,6 @@ export default function EditMentor() {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.auth.user);
-  console.log(user);
   const mentor = useSelector((state) => state.mentor.details);
 
   const [name, setName] = useState(user.name);
@@ -54,7 +53,12 @@ export default function EditMentor() {
     const fetchMentorDetails = async () => {
       try {
         const response = await axios.get(
-          `${API_URL}/mentors/get/${user.email}`
+          `${API_URL}/mentors/get/${user.email}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
         );
         console.log(response);
         dispatch(setMentorDetails(response.data));
@@ -249,9 +253,11 @@ export default function EditMentor() {
                     Available for new mentees
                   </label>
                 </div>
-                <div className="deleted-btn">
-                  <a href="javascript:void(0)">Delete my account</a>
-                </div>
+                {/* <div className="deleted-btn">
+                  <a onClick={handleDelete} href="javascript:void(0)">
+                    Delete my account
+                  </a>
+                </div> */}
                 <div className="saveorclose-btn">
                   <button type="submit">Save</button>
                   <Link

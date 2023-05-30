@@ -3,6 +3,7 @@ import "../MentorPanel/Account.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logoutUser } from "../../redux/slices/authSlice";
+import { CometChat } from "@cometchat-pro/chat";
 
 const AdminWrapper = ({ children }) => {
   const navigate = useNavigate();
@@ -12,6 +13,14 @@ const AdminWrapper = ({ children }) => {
 
   const handleLogout = () => {
     dispatch(logoutUser());
+    CometChat.logout().then(
+      () => {
+        console.log("Logout completed successfully");
+      },
+      (error) => {
+        console.log("Logout failed with exception:", { error });
+      }
+    );
     navigate("/");
   };
 
@@ -41,10 +50,10 @@ const AdminWrapper = ({ children }) => {
                 <div className="sc-bqiRlB bfSpmb">Requests</div>
               </Link>
 
-              <a className="sc-crHmcD layWKW">
+              <Link className="sc-crHmcD layWKW" to={"/chat"}>
                 <i className="fas fa-comments"></i>
                 <div className="sc-bqiRlB bfSpmb">Conversations</div>
-              </a>
+              </Link>
               <Link to={`/`} className="sc-crHmcD layWKW">
                 <i className="fa-solid fa-people-arrows"></i>
                 <div className="sc-bqiRlB bfSpmb">Mentors</div>

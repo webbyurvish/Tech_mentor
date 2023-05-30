@@ -7,16 +7,20 @@ import { useParams } from "react-router";
 
 export default function MentorDetail() {
   const [mentor, setMentor] = useState(null);
-  const { mentorId } = useParams();
 
   const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    // Fetch mentor details from API
+    // Fetch mentor details fro m API
     const fetchMentorDetails = async () => {
       try {
         const response = await axios.get(
-          `${API_URL}/mentors/get/${user.email}`
+          `${API_URL}/mentors/get/${user.email}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
         );
         setMentor(response.data);
       } catch (error) {

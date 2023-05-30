@@ -6,18 +6,43 @@ import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { FeedBack } from "../Layout/FeedBack";
 import { useDispatch, useSelector } from "react-redux";
-import { setUsers } from "../../redux/slices/dataSlice";
+import { setCurrentPage, setUsers } from "../../redux/slices/dataSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { setTechnology } from "../../redux/slices/filterSlice";
+import { fetchData } from "../../redux/slices/resultSlice";
+import Loading from "../Layout/Loading";
 
 export default function MentorProfile() {
   const navigate = useNavigate();
-  const user = useSelector((state) => state.auth.user);
-  const selectedStars = useSelector((state) => state.data.selectedStars);
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
-  if (!user) {
-    navigate("/login");
-  }
+  const user = useSelector((state) => state.auth.user);
+  const filters = useSelector((state) => state.filters);
+  const selectedStars = useSelector((state) => state.data.selectedStars);
+  const currentPage = useSelector((state) => state.data.currentPage);
+
+  const userId = user ? Number(user.id) : null;
+
+  const handleskillchange = (skill) => {
+    setLoading(true);
+    navigate("/");
+    dispatch(setCurrentPage(1));
+    dispatch(setTechnology(skill)); // Dispatch the setTechnology action with the selected skill
+    dispatch(
+      fetchData(
+        filters.technology, // Use the selected skill instead of filters.technology
+        filters.country,
+        filters.name,
+        filters.spokenLanguage,
+        currentPage,
+        filters.isLiked,
+        userId
+      )
+    );
+    setLoading(false);
+  };
 
   const { id } = useParams();
   const [mentor, setMentor] = useState(null);
@@ -64,16 +89,27 @@ export default function MentorProfile() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const mentorResponse = await axios.get(`${API_URL}/mentors/${id}`);
+        setLoading(true);
+        const mentorResponse = await axios.get(`${API_URL}/mentors/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
         setMentor(mentorResponse.data);
+        setLoading(false);
       } catch (error) {
-        console.error("Error fetching mentor data:", error);
+        setLoading(false);
+        if (error.response && error.response.status === 401) {
+          navigate("/login"); // Redirect to the login page
+        } else {
+          console.error("Error fetching mentor data:", error);
+        }
       }
     }
     fetchData();
-  }, [mentor]);
+  }, []);
 
-  const handleSubmit = async (e) => {
+  const handleRatingSubmit = async (e) => {
     e.preventDefault();
 
     const data = {
@@ -87,26 +123,39 @@ export default function MentorProfile() {
       const response = await axios.post(`${API_URL}/rating`, data, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
       toast.success(response.data.message);
     } catch (error) {
-      toast.error(error.response.data.message);
+      if (error.response && error.response.status === 401) {
+        navigate("/login"); // Redirect to the login page
+      } else {
+        toast.error(error.response.data.message);
+      }
     }
 
     console.log(mentor.id, Number(user.id), feedbackMessage, selectedStars);
   };
-  if (!user || !mentor) {
-    return <p>loading</p>;
-  }
 
-  console.log(mentor);
+  if (!mentor || !user) {
+    return <Loading />;
+  }
 
   function formatDate(dateString) {
     const date = new Date(dateString);
     const options = { day: "numeric", month: "short" };
     return date.toLocaleDateString("en-US", options);
+  }
+
+  function extractUsername(email) {
+    const atIndex = email.indexOf("@");
+    if (atIndex !== -1) {
+      const username = email.substring(0, atIndex);
+      return username;
+    }
+    return null; // Return null if the email format is invalid
   }
 
   return (
@@ -148,10 +197,7 @@ export default function MentorProfile() {
                 </a> */}
               </div>
               <div className="card-img">
-                <img
-                  src="https://api.codingcoach.io/avatars/tns/abcb24517b43bf54000984ef4b2291fd"
-                  alt=""
-                />
+                <img src={mentor.imageUrl} alt="" />
               </div>
               <h2>{mentor && mentor.name}</h2>
               <span>{mentor && mentor.title}</span>
@@ -174,7 +220,12 @@ export default function MentorProfile() {
                   {mentor &&
                     mentor.skills.map((skill, index) => (
                       <li key={index}>
-                        <a href="javascript:void(0)">{skill}</a>
+                        <a
+                          onClick={() => handleskillchange(skill)}
+                          href="javascript:void(0)"
+                        >
+                          {skill}
+                        </a>
                       </li>
                     ))}
                 </ul>
@@ -194,6 +245,10 @@ export default function MentorProfile() {
                 <i className="fa-sharp fa-solid fa-face-smile"></i>
                 <p>Rate mentor</p>
               </a>
+              &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+              <Link to={`/chatwithmentor/${extractUsername(mentor.email)}`}>
+                <i className="fa-solid fa-comments"></i> <p>Communicate</p>
+              </Link>
             </div>
           </div>
         </div>
@@ -377,9 +432,6 @@ export default function MentorProfile() {
                   </div>
                 </div>
                 <div className="row text-left">
-                  {/* <h4 className="blue-text mt-3">
-                "An awesome activity to experience"
-              </h4> */}
                   <p className="content mt-3">{rating.comment}</p>
                 </div>
               </div>
@@ -391,7 +443,7 @@ export default function MentorProfile() {
       <div
         className="modal fade"
         id="exampleModal"
-        tabindex="-1"
+        tabIndex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
@@ -455,7 +507,7 @@ export default function MentorProfile() {
 
                     <button
                       type="submit"
-                      onClick={handleSubmit}
+                      onClick={handleRatingSubmit}
                       className="btn btn-primary"
                       data-bs-dismiss="modal"
                     >

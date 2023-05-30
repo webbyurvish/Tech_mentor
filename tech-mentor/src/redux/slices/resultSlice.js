@@ -55,7 +55,9 @@ export const fetchData =
         modifiedQueryString ? `?${modifiedQueryString}` : ""
       }`;
 
-      const response = await axios.get(url);
+      const response = await axios.get(url, {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      });
 
       dispatch(setMentors(response.data.items));
       dispatch(setTotalPages(response.data.totalPages));
@@ -67,7 +69,7 @@ export const fetchData =
 
       window.history.replaceState(null, null, newUrl);
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching mentors data:", error);
     }
   };
 

@@ -6,6 +6,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Login.css";
 import { CometChat } from "@cometchat-pro/chat";
+import { extractUsername } from "../../Functions/Index";
+import Loading from "../Layout/Loading";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -13,8 +15,8 @@ export default function Login() {
   const location = useLocation();
 
   const user = useSelector((state) => state.auth.user);
-  const error = useSelector((state) => state.auth.error);
 
+  const [loading, setLoading] = useState(false);
   const [username, setName] = useState("");
   const [image, setImage] = useState(null);
   const [email, setEmail] = useState("");
@@ -25,207 +27,10 @@ export default function Login() {
     setRightPanelActive((prevState) => !prevState);
   };
 
-  const handleLogin = (event) => {
-    event.preventDefault();
-    const credentials = {
-      email: email,
-      password: password,
-    };
-    dispatch(loginUser(credentials));
-
-    // let authKey = process.env.REACT_APP_COMETCHAT_AUTH_KEY;
-    // var uid = user && `user${user.name}`;
-    // console.log(uid);
-    // CometChat.login(uid, authKey).then(
-    //   (user) => {
-    //     console.log("Login Successful:", { user });
-    //   },
-    //   (error) => {
-    //     console.log("Login failed with exception:", { error });
-    //   }
-    // );
-  };
-
-  if (user) {
-    navigate("/");
-  }
-
-  const handleSignup = (event) => {
-    event.preventDefault();
-    const userData = {
-      name: username,
-      email: email,
-      password: password,
-      image: image,
-    };
-    console.log(userData);
-    dispatch(signupUser(userData));
-
-    // if (error == null) {
-    //   console.log("entered");
-    //   let authKey = process.env.REACT_APP_COMETCHAT_AUTH_KEY;
-    //   var uid = user && `user${userData.name}`;
-    //   var name = user && userData.name;
-
-    //   var user = new CometChat.User(uid);
-    //   user.setName(name);
-    //   console.log("fff");
-    //   CometChat.createUser(user, authKey).then(
-    //     (user) => {
-    //       console.log("user created", user);
-    //     },
-    //     (error) => {
-    //       console.log("error", error);
-    //     }
-    //   );
-    // }
-  };
-
-  // const apikey = "db073bd0b505b7c824b77f08e8646fbf5a83203c";
-
-  // useEffect(() => {
-  //   if (user) {
-  //     const authKey = process.env.REACT_APP_COMETCHAT_AUTH_KEY;
-  //     const uid = `user${user.name}`;
-  //     const name = user.name;
-  //     const role = "user";
-
-  //     CometChat.getUser(uid)
-  //       .then(
-  //         (existingUser) => {
-  //           console.log("User already exists:", existingUser);
-  //           // User already exists, proceed with login
-  //           loginCometChatUser(uid, authKey);
-  //         },
-  //         (error) => {
-  //           console.log("User does not exist:", error);
-  //           // User does not exist, create a new user
-  //           const requestBody = {
-  //             uid,
-  //             name,
-  //             role,
-  //             withAuthToken: false,
-  //           };
-
-  //           const requestOptions = {
-  //             method: "POST",
-  //             headers: {
-  //               accept: "application/json",
-  //               "content-type": "application/json",
-  //               apikey: authKey,
-  //             },
-  //             body: JSON.stringify(requestBody),
-  //           };
-
-  //           fetch(
-  //             "https://239573399dceb131.api-us.cometchat.io/v3/users",
-  //             requestOptions
-  //           )
-  //             .then((response) => response.json())
-  //             .then((data) => {
-  //               console.log("User created:", data);
-  //               // User created, now you can proceed with login
-  //               CometChat.login(uid, authKey);
-  //             })
-  //             .catch((error) => {
-  //               console.log("Error creating user:", error);
-  //               // Handle user creation error
-  //             });
-  //         }
-  //       )
-  //       .catch((error) => {
-  //         console.log("Error checking user:", error);
-  //         // Handle user checking error
-  //       });
-  //   }
-  // }, [user]);
-
-  // function loginCometChatUser(uid, authKey) {
-  //   // Perform login logic here
-  // }
-
-  // useEffect(() => {
-  //   if (user) {
-  //     const authKey = process.env.REACT_APP_COMETCHAT_AUTH_KEY;
-  //     const uid = `user${user.name}`;
-  //     const name = user.name;
-  //     const role = "user";
-  //     const apikey = process.env.REACT_APP_COMETCHAT_API_KEY;
-
-  //     CometChat.getUser(uid)
-  //       .then(
-  //         (existingUser) => {
-  //           console.log("User already exists:", existingUser);
-  //           // User already exists, no need to create a new user
-  //           return existingUser;
-  //         },
-  //         (error) => {
-  //           console.log("User does not exist:", error);
-
-  //           const requestBody = {
-  //             uid,
-  //             name,
-  //             role,
-  //             withAuthToken: false,
-  //           };
-
-  //           const requestOptions = {
-  //             method: "POST",
-  //             headers: {
-  //               accept: "application/json",
-  //               "content-type": "application/json",
-  //               apikey: authKey,
-  //             },
-  //             body: JSON.stringify(requestBody),
-  //           };
-
-  //           fetch(
-  //             "https://2400526630d3a3fa.api-us.cometchat.io/v3/users",
-  //             requestOptions
-  //           )
-  //             .then((response) => response.json())
-  //             .then((response) => console.log(response))
-  //             .catch((err) => console.error(err));
-
-  //           // User does not exist, create a new user
-  //           // var newUser = new CometChat.User(uid);
-  //           // newUser.setName(name);
-  //           // let roles = ["User"];
-  //           // let usersRequest = new CometChat.UsersRequestBuilder()
-  //           //   .setRoles(roles)
-  //           //   .build();
-  //           // return CometChat.createUser(newUser, authKey);
-  //         }
-  //       )
-  //       .then((user) => {
-  //         return CometChat.login(
-  //           uid,
-  //           "28a72244a6e90eae2ee58b5cb7238fa81546aad2"
-  //         );
-  //       })
-  //       .then(
-  //         (user) => {
-  //           console.log("Login Successful:", { user });
-  //           navigate("/"); // Redirect to the desired page after successful login
-  //         },
-  //         (error) => {
-  //           console.log("Login failed with exception:", { error });
-  //           // Handle login error
-  //         }
-  //       )
-  //       .catch((error) => {
-  //         console.log("User creation or login failed with exception:", {
-  //           error,
-  //         });
-  //         // Handle user creation or login error
-  //       });
-  //   }
-  // }, [user]);
-
   useEffect(() => {
     if (user) {
       const authKey = process.env.REACT_APP_COMETCHAT_AUTH_KEY;
-      const uid = `user${user.name}`;
+      const uid = extractUsername(user.email);
       const name = user.name;
       const role = "user";
 
@@ -239,30 +44,29 @@ export default function Login() {
           (error) => {
             console.log("User does not exist:", error);
             // User does not exist, create a new user
-            const requestBody = {
-              uid,
-              name,
-              role,
-            };
-
-            const requestOptions = {
+            const options = {
               method: "POST",
               headers: {
                 accept: "application/json",
                 "content-type": "application/json",
                 apikey: authKey,
               },
-              body: JSON.stringify(requestBody),
+              body: JSON.stringify({
+                uid,
+                name,
+                role,
+                withAuthToken: false,
+              }),
             };
 
             fetch(
               "https://2400526630d3a3fa.api-us.cometchat.io/v3/users",
-              requestOptions
+              options
             )
               .then((response) => response.json())
-              .then((data) => {
-                console.log("User created:", data);
-                // User created, now you can proceed with login
+              .then((response) => {
+                console.log("User created:", response);
+                // Proceed with login
                 loginCometChatUser(uid, authKey);
               })
               .catch((error) => {
@@ -279,15 +83,15 @@ export default function Login() {
   }, [user]);
 
   function loginCometChatUser(uid, authKey) {
-    // Perform login logic here
-    CometChat.login(uid, authKey).then(
-      (user) => {
+    CometChat.login(uid, authKey)
+      .then((user) => {
         console.log("Login Successful:", { user });
-      },
-      (error) => {
+        navigate("/"); // Redirect to the desired page after successful login
+      })
+      .catch((error) => {
         console.log("Login failed with exception:", { error });
-      }
-    );
+        // Handle login error
+      });
   }
 
   useEffect(() => {
@@ -295,6 +99,45 @@ export default function Login() {
       toast.success(location.state.successMessage);
     }
   }, [location.state]);
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (user) {
+    navigate("/");
+  }
+
+  const handleLogin = (event) => {
+    setLoading(true);
+    event.preventDefault();
+    const credentials = {
+      email: email,
+      password: password,
+    };
+    dispatch(loginUser(credentials));
+    setLoading(false);
+  };
+
+  const form = new FormData();
+  form.append("name", username);
+
+  console.log(form);
+  console.log(username);
+
+  const handleSignup = (event) => {
+    setLoading(true);
+
+    event.preventDefault();
+    const userData = {
+      name: username,
+      email: email,
+      password: password,
+      image: image,
+    };
+    dispatch(signupUser(userData));
+    setLoading(false);
+  };
 
   return (
     <div className="wrapper">

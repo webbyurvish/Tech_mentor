@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import "./Mentor.css";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { API_URL } from "../../config";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { fetchData } from "../../redux/slices/resultSlice";
-import { setCurrentPage } from "../../redux/slices/dataSlice";
-import { CometChatUI } from "../../cometchat-pro-react-ui-kit/CometChatWorkspace/src/components";
+import { setTechnology } from "../../redux/slices/filterSlice";
 
 export default function Mentor({ mentor }) {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const filters = useSelector((state) => state.filters);
@@ -18,8 +18,22 @@ export default function Mentor({ mentor }) {
 
   const userId = user ? Number(user.id) : null;
 
+  const handleskillchange = (skill) => {
+    dispatch(setTechnology(skill)); // Dispatch the setTechnology action with the selected skill
+    dispatch(
+      fetchData(
+        filters.technology, // Use the selected skill instead of filters.technology
+        filters.country,
+        filters.name,
+        filters.spokenLanguage,
+        currentPage,
+        filters.isLiked,
+        userId
+      )
+    );
+  };
+
   const handlelike = async (mentorId) => {
-    // dispatch(setCurrentPage(1));
     try {
       await axios.post(
         `${API_URL}/like`,
@@ -27,6 +41,7 @@ export default function Mentor({ mentor }) {
         {
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
@@ -42,10 +57,12 @@ export default function Mentor({ mentor }) {
           userId
         )
       );
-
-      // dispatch(setMentors(updatedMentors));
     } catch (error) {
-      toast.error(error);
+      if (error.response && error.response.status === 401) {
+        navigate("/login"); // Redirect to the login page
+      } else {
+        console.error("Error fetching mentor data:", error);
+      }
     }
   };
 
@@ -81,7 +98,7 @@ export default function Mentor({ mentor }) {
             </a>
           </div>
           <div className="card-img">
-            <img src={`https://localhost:7022${mentor.imageUrl}`} alt="" />
+            <img src={mentor.imageUrl} alt="" />
           </div>
           <h2>{mentor.name}</h2>
           <span>{mentor.title}</span>
@@ -90,7 +107,12 @@ export default function Mentor({ mentor }) {
             <ul>
               {mentor.skills.slice(0, 3).map((skill, index) => (
                 <li key={index}>
-                  <a href="javascript:void(0)">{skill}</a>
+                  <a
+                    onClick={() => handleskillchange(skill)}
+                    href="javascript:void(0)"
+                  >
+                    {skill}
+                  </a>
                 </li>
               ))}
               {mentor.skills.length > 3 && (

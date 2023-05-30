@@ -1,15 +1,56 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Account.css";
-
 import { MentorWrapper } from "./MentorWrapper";
+import axios from "axios";
+import { API_URL } from "../../config";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Account({ mentor }) {
   const user = useSelector((state) => state.auth.user);
+  const navigate = useNavigate();
+
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+
+  const handleresetpasswordsubmit = async (e) => {
+    e.preventDefault();
+
+    const data = {
+      email: user.email,
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+    };
+
+    try {
+      const response = await axios.post(
+        `${API_URL}/account/changepassword`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      toast.success(response.data.message);
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        navigate("/login"); // Redirect to the login page
+      } else {
+        console.log(error.response.data.message);
+        toast.error(error.response.data.message);
+      }
+    }
+    console.log(oldPassword, newPassword);
+  };
 
   return (
     <MentorWrapper>
+      <ToastContainer />
       <div className="account-right-side">
         <div className="accont-home">
           <h2>Home</h2>
@@ -21,11 +62,11 @@ export default function Account({ mentor }) {
             <div className="row justify-content-center">
               <div className="col-lg-4">
                 <div className="profile-details">
-                  <div className="share-details">
-                    <a href="javascript:void(0)">
-                      <i className="fa-solid fa-share-nodes"></i>
-                    </a>
-                  </div>
+                  {/* <div className="share-details">
+                      <a href="javascript:void(0)">
+                        <i className="fa-solid fa-share-nodes"></i>
+                      </a>
+                    </div> */}
                   <img src="img/navlogo.jpg" alt="" />
                   <h2>{mentor.name}</h2>
                   <p>{mentor.title}</p>
@@ -189,6 +230,15 @@ export default function Account({ mentor }) {
                         </svg>
                         <p>{mentor.about}</p>
                       </li>
+                      <li>
+                        <a
+                          href="javascript:vid(0)"
+                          data-bs-toggle="modal"
+                          data-bs-target="#exampleModal"
+                        >
+                          <p>change password</p>
+                        </a>
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -197,6 +247,71 @@ export default function Account({ mentor }) {
           </div>
         </div>
       )}
+      <div
+        className="modal fade"
+        id="exampleModal"
+        tabIndex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          <div className="modal-content">
+            {mentor && (
+              <>
+                <div className="modal-header">
+                  <h5 className="modal-title" id="exampleModalLabel">
+                    Reset Password
+                  </h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div className="modal-body">
+                  <div className="reject-reason">
+                    <label htmlFor="oldpassword">Old Password</label>
+                    <input
+                      name="oldpassword"
+                      id="oldpassword"
+                      type="text"
+                      value={oldPassword}
+                      onChange={(e) => setOldPassword(e.target.value)}
+                    ></input>
+                    <label htmlFor="newpassword">New Password</label>
+                    <input
+                      name="newpassword"
+                      id="newpassword"
+                      type="text"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                    ></input>
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Close
+                  </button>
+
+                  <button
+                    type="submit"
+                    onClick={handleresetpasswordsubmit}
+                    className="btn btn-primary"
+                    data-bs-dismiss="modal"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
     </MentorWrapper>
   );
 }

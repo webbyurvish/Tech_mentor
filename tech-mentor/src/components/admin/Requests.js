@@ -5,6 +5,7 @@ import { API_URL } from "../../config";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdminWrapper from "./AdminWrapper";
+import Loading from "../Layout/Loading";
 
 const Requests = () => {
   const [requests, setRequests] = useState([]);
@@ -14,7 +15,7 @@ const Requests = () => {
   const [mail, setMail] = useState("");
 
   const changeRole = (uid) => {
-    const authKey = process.env.REACT_APP_COMETCHAT_AUTH_KEY;
+    const authKey = process.env.REACT_APP_COMETCHAT_API_KEY;
 
     const options = {
       method: "PUT",
@@ -29,11 +30,11 @@ const Requests = () => {
     };
 
     fetch(
-      `https://239573399dceb131.api-us.cometchat.io/v3/users/${uid}`,
+      `https://2400526630d3a3fa.api-us.cometchat.io/v3/users/${uid}`,
       options
     )
       .then((response) => response.json())
-      .then((response) => console.log(response))
+      .then((response) => console.log("role updated", response))
       .catch((err) => console.error(err));
   };
 
@@ -47,6 +48,7 @@ const Requests = () => {
         {
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
@@ -59,14 +61,13 @@ const Requests = () => {
         requests.filter((request) => request.email !== e.target.value)
       );
     } catch (error) {
-      toast.error(error);
+      toast.error(error.response.data.message);
     }
     setLoading(false);
     setToggle(false);
   };
 
   const handlesubmit = async () => {
-    // e.preventDefault();
     const email = mail;
     console.log(email);
 
@@ -81,14 +82,16 @@ const Requests = () => {
         data: data,
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
       toast.success(response.data.message);
+      console.log(response.data.message);
 
       setRequests(requests.filter((request) => request.email !== mail));
     } catch (error) {
-      toast.error(error);
+      toast.error(error.response.data.message);
     }
     setLoading(false);
     setToggle(false);
@@ -97,8 +100,9 @@ const Requests = () => {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await axios.get(`${API_URL}/admin/requests`);
-        console.log(response);
+        const response = await axios.get(`${API_URL}/admin/requests`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
         setRequests(response.data);
       } catch (error) {
         return error.response;
@@ -112,101 +116,120 @@ const Requests = () => {
     <>
       <AdminWrapper>
         <ToastContainer />
-        <div className="managment-account">
-          <div className="container-fluid">
-            <div className="account-side-bar">
-              <div className="account-right-side">
-                <div className="accont-home">
-                  <h2>Requests to become a mentor</h2>
+        {(!requests || loading) && <Loading />}
+        {!loading && (
+          <div className="managment-account">
+            <div className="container-fluid">
+              <div className="account-side-bar">
+                <div className="account-right-side">
+                  <div className="accont-home">
+                    <h2>Requests to become a mentor</h2>
+                  </div>
                 </div>
-              </div>
-              <div className="account-profile">
-                <div className="accound-cover">
-                  <div className="row justify-content-center">
-                    <div className="col-lg-4">
-                      <div className="profile-details details-cover">
-                        <div className="share-details-2">
-                          <p>My Mentorship Requests</p>
-                          {requests.length < 1 && (
-                            <p>There is no request to become a mentor</p>
-                          )}
-                          {requests.map((request) => {
-                            const isToggled =
-                              toggle && request.email === toggle;
-                            return (
-                              <div
-                                key={request.email}
-                                onClick={() => {
-                                  setToggle(isToggled ? false : request.email);
-                                }}
-                                className={`mentorship-profile-detail ${
-                                  isToggled ? "toggled" : ""
-                                }`}
-                              >
-                                <a href="javascript:void(0)">
-                                  <div className="poifile-details">
-                                    <img src="/images/navlogo.jpg" alt="" />
-                                    <div className="poifile-details-cover">
-                                      <p>{request.name}</p>
-                                      <span>{request.title}</span>
+                <div className="account-profile">
+                  <div className="accound-cover">
+                    <div className="row justify-content-center">
+                      <div className="col-lg-4">
+                        <div className="profile-details details-cover">
+                          <div className="share-details-2">
+                            <p>My Mentorship Requests</p>
+                            {requests.length < 1 && (
+                              <p>There is no request to become a mentor</p>
+                            )}
+                            {requests.map((request) => {
+                              const isToggled =
+                                toggle && request.email === toggle;
+                              return (
+                                <div
+                                  key={request.email}
+                                  onClick={() => {
+                                    setToggle(
+                                      isToggled ? false : request.email
+                                    );
+                                  }}
+                                  className={`mentorship-profile-detail ${
+                                    isToggled ? "toggled" : ""
+                                  }`}
+                                >
+                                  <a href="javascript:void(0)">
+                                    <div className="poifile-details">
+                                      <img src={request.imageUrl} alt="" />
+                                      <div className="poifile-details-cover">
+                                        <p>{request.name}</p>
+                                        <span>{request.title}</span>
+                                      </div>
                                     </div>
-                                  </div>
-                                  <div className="mentorship-day"></div>
-                                </a>
-                                {isToggled && (
-                                  <div>
-                                    <div className="details-message-cover">
-                                      <p>Name</p>
-                                      <ul>
-                                        <li>{request.name}</li>
-                                      </ul>
-                                    </div>
-                                    <div className="details-message-cover">
-                                      <p>About</p>
-                                      <ul>
-                                        <li>{request.about}</li>
-                                      </ul>
-                                    </div>
-                                    <div className="details-message-cover">
-                                      <p>Languages known</p>
-                                      <ul>
-                                        {request.languages.map((language) => (
-                                          <li>{language}</li>
-                                        ))}
-                                      </ul>
-                                    </div>
-                                    <div className="details-link">
-                                      {!loading && (
-                                        <button
-                                          className="approve-button"
-                                          value={request.email}
-                                          onClick={handleApprove}
-                                        >
-                                          Approve
-                                        </button>
-                                      )}
-                                      {loading && (
-                                        <button className="approve-button">
-                                          Loading...
-                                        </button>
-                                      )}
+                                    <div className="mentorship-day"></div>
+                                  </a>
+                                  {isToggled && (
+                                    <div>
+                                      <div className="details-message-cover">
+                                        <p>Name</p>
+                                        <ul>
+                                          <li>{request.name}</li>
+                                        </ul>
+                                      </div>
+                                      <div className="details-message-cover">
+                                        <p>Title</p>
+                                        <ul>
+                                          <li>{request.title}</li>
+                                        </ul>
+                                      </div>
+                                      <div className="details-message-cover">
+                                        <p>About</p>
+                                        <ul>
+                                          <li>{request.about}</li>
+                                        </ul>
+                                      </div>
+                                      <div className="details-message-cover">
+                                        <p>Languages known</p>
+                                        <ul>
+                                          {request.languages.map((language) => (
+                                            <li>{language}</li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                      <div className="details-message-cover">
+                                        <p>Skills</p>
+                                        <ul>
+                                          {request.skills.map((skill) => (
+                                            <li>{skill}</li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                      <div className="details-link">
+                                        {!loading && (
+                                          <button
+                                            className="approve-button"
+                                            value={request.email}
+                                            onClick={handleApprove}
+                                          >
+                                            Approve
+                                          </button>
+                                        )}
+                                        {loading && (
+                                          <button className="approve-button">
+                                            Loading...
+                                          </button>
+                                        )}
 
-                                      <button
-                                        className="reject-button"
-                                        variant="primary"
-                                        value={request.email}
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal"
-                                        onClick={() => setMail(request.email)}
-                                      >
-                                        Reject
-                                      </button>
+                                        <button
+                                          className="reject-button"
+                                          variant="primary"
+                                          value={request.email}
+                                          data-bs-toggle="modal"
+                                          data-bs-target="#exampleModal"
+                                          onClick={() => setMail(request.email)}
+                                        >
+                                          Reject
+                                        </button>
+                                      </div>
                                     </div>
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })}
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -215,13 +238,13 @@ const Requests = () => {
               </div>
             </div>
           </div>
-        </div>
+        )}
       </AdminWrapper>
       {/* <!-- Modal --> */}
       <div
         className="modal fade"
         id="exampleModal"
-        tabindex="-1"
+        tabIndex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
@@ -258,20 +281,14 @@ const Requests = () => {
               >
                 Close
               </button>
-              {loading ? (
-                <button type="submit" className="btn btn-primary" disabled>
-                  Loading...
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  onClick={handlesubmit}
-                  className="btn btn-primary"
-                  data-bs-dismiss="modal"
-                >
-                  Submit
-                </button>
-              )}
+              <button
+                type="submit"
+                onClick={handlesubmit}
+                className="btn btn-primary"
+                data-bs-dismiss="modal"
+              >
+                Submit
+              </button>
             </div>
           </div>
         </div>
