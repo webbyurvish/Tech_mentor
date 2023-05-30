@@ -3,8 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { logoutUser } from "../../redux/slices/authSlice";
 import { CometChat } from "@cometchat-pro/chat";
+import { cometchatlogout } from "../chat/ChatServices";
 
 export const Header = () => {
+
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.auth.user);
@@ -18,14 +20,15 @@ export const Header = () => {
   const handleLogout = () => {
     dispatch(logoutUser());
     setmenu((prevstate) => !prevstate);
-    CometChat.logout().then(
-      () => {
-        console.log("Logout completed successfully");
-      },
-      (error) => {
-        console.log("Logout failed with exception:", { error });
-      }
-    );
+    cometchatlogout();
+    // CometChat.logout().then(
+    //   () => {
+    //     console.log("Logout completed successfully");
+    //   },
+    //   (error) => {
+    //     console.log("Logout failed with exception:", { error });
+    //   }
+    // );
   };
 
   return (

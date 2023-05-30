@@ -9,13 +9,15 @@ const Sidebar = () => {
 
   const mentors = useSelector((state) => state.mentors.mentors.items);
 
+  const [skills, setSkills] = useState([]);
   const [countries, setCountries] = useState([]);
   const [languages, setLanguages] = useState([]);
-  const [skills, setSkills] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [spokenLanguage, setSpokenLanguage] = useState("");
+
+  const [currentPage, setCurrentPage] = useState(1);
+
   const [country, setCountry] = useState("");
+  const [spokenLanguage, setSpokenLanguage] = useState("");
   const [technology, setTechnology] = useState("");
   const [name, setName] = useState("");
 

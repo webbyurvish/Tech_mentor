@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
-// import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser, signupUser } from "../../redux/slices/authSlice";
-import { useLocation } from "react-router-dom";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Login.css";
 import axios from "axios";
 import { API_URL } from "../../config";
+import { resetPassword } from "./AuthServices";
 
 export default function ForgotPassword() {
   const location = useLocation();
@@ -39,15 +38,17 @@ export default function ForgotPassword() {
       // Send a POST request to the backend API endpoint
       setLoading(true);
 
-      const response = await axios.post(
-        `${API_URL}/account/resetpassword`,
-        credentials,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = resetPassword(credentials)
+
+      // const response = await axios.post(
+      //   `${API_URL}/account/resetpassword`,
+      //   credentials,
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
+      // );
 
       //   setMessage("");
       setLoading(false);

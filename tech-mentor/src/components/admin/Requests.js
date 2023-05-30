@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import "./admin.css";
 import axios from "axios";
 import { API_URL } from "../../config";
@@ -6,61 +5,74 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdminWrapper from "./AdminWrapper";
 import Loading from "../Layout/Loading";
+import { useEffect, useState } from "react";
+import { changeRole } from "../chat/ChatServices";
+import { approveRequest, rejectRequest, fetchRequests } from "./AdminService";
 
 const Requests = () => {
+
   const [requests, setRequests] = useState([]);
   const [rejectmessage, setRejectMessage] = useState("");
   const [toggle, setToggle] = useState(false);
   const [loading, setLoading] = useState(false);
   const [mail, setMail] = useState("");
 
-  const changeRole = (uid) => {
-    const authKey = process.env.REACT_APP_COMETCHAT_API_KEY;
+  // const changeRole = (uid) => {
+  //   const authKey = process.env.REACT_APP_COMETCHAT_API_KEY;
 
-    const options = {
-      method: "PUT",
-      headers: {
-        accept: "application/json",
-        "content-type": "application/json",
-        apikey: authKey,
-      },
-      body: JSON.stringify({
-        role: "mentor",
-      }),
-    };
+  //   const options = {
+  //     method: "PUT",
+  //     headers: {
+  //       accept: "application/json",
+  //       "content-type": "application/json",
+  //       apikey: authKey,
+  //     },
+  //     body: JSON.stringify({
+  //       role: "mentor",
+  //     }),
+  //   };
 
-    fetch(
-      `https://2400526630d3a3fa.api-us.cometchat.io/v3/users/${uid}`,
-      options
-    )
-      .then((response) => response.json())
-      .then((response) => console.log("role updated", response))
-      .catch((err) => console.error(err));
-  };
+  //   fetch(
+  //     `https://2400526630d3a3fa.api-us.cometchat.io/v3/users/${uid}`,
+  //     options
+  //   )
+  //     .then((response) => response.json())
+  //     .then((response) => console.log("role updated", response))
+  //     .catch((err) => console.error(err));
+  // };
 
+
+  //approve request
   const handleApprove = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.put(
-        `${API_URL}/admin/approve`,
-        e.target.value,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = approveRequest(e.target.value)
+      // const response = await axios.put(
+      //   `${API_URL}/admin/approve`,
+      //   e.target.value,
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Authorization: `Bearer ${localStorage.getItem("token")}`,
+      //     },
+      //   }
+      // );
 
+      // toast success message
       toast.success(response.data.message);
 
+      // change user role in cometchat
       changeRole(e.target.value.split("@")[0]);
 
+      //filter remaining requests
       setRequests(
         requests.filter((request) => request.email !== e.target.value)
       );
+
     } catch (error) {
+
+      //toast error message
       toast.error(error.response.data.message);
     }
     setLoading(false);
@@ -76,21 +88,26 @@ const Requests = () => {
     setLoading(true);
 
     try {
-      const response = await axios({
-        method: "DELETE",
-        url: `${API_URL}/admin/reject`,
-        data: data,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = rejectRequest(data);
+      // const response = await axios({
+      //   method: "DELETE",
+      //   url: `${API_URL}/admin/reject`,
+      //   data: data,
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: `Bearer ${localStorage.getItem("token")}`,
+      //   },
+      // });
 
+      // toast success message
       toast.success(response.data.message);
       console.log(response.data.message);
 
+      // filter remaining requests
       setRequests(requests.filter((request) => request.email !== mail));
     } catch (error) {
+
+      // toast error message
       toast.error(error.response.data.message);
     }
     setLoading(false);
@@ -98,14 +115,16 @@ const Requests = () => {
   };
 
   useEffect(() => {
+    //fetch all mentor requests when component mounts
     const fetchRequests = async () => {
       try {
-        const response = await axios.get(`${API_URL}/admin/requests`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        });
+        const response = fetchRequests();
+        // const response = await axios.get(`${API_URL}/admin/requests`, {
+        //   headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        // });
         setRequests(response.data);
       } catch (error) {
-        return error.response;
+        console.log(error.response);
       }
     };
 
@@ -147,9 +166,8 @@ const Requests = () => {
                                       isToggled ? false : request.email
                                     );
                                   }}
-                                  className={`mentorship-profile-detail ${
-                                    isToggled ? "toggled" : ""
-                                  }`}
+                                  className={`mentorship-profile-detail ${isToggled ? "toggled" : ""
+                                    }`}
                                 >
                                   <a href="javascript:void(0)">
                                     <div className="poifile-details">
@@ -298,3 +316,9 @@ const Requests = () => {
 };
 
 export default Requests;
+
+
+{/* <div>
+  <div style={{ position: "fixed", left: 0 }}></div>
+  <div style={{ paddingLeft: "30px" }}></div>
+</div> */}

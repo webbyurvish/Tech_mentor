@@ -9,6 +9,7 @@ import "./Login.css";
 // import "./MailRequest.css";
 import { API_URL } from "../../config";
 import axios from "axios";
+import { sendMail } from "./AuthServices";
 
 export default function MailRequest() {
   const [email, setEmail] = useState("");
@@ -23,15 +24,17 @@ export default function MailRequest() {
       // Send a POST request to the backend API endpoint
       setLoading(true);
 
-      const response = await axios.post(
-        `${API_URL}/account/forgotpassword`,
-        email,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = sendMail(email)
+
+      // const response = await axios.post(
+      //   `${API_URL}/account/forgotpassword`,
+      //   email,
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
+      // );
 
       //   setMessage("");
       setLoading(false);

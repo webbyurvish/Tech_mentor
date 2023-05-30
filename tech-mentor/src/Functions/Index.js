@@ -8,3 +8,4 @@ export const extractUsername = (email) => {
   }
   return null; // Return null if the email format is invalid
 };
+
