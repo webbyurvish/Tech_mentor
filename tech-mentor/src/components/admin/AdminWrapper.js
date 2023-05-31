@@ -1,28 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import "../MentorPanel/Account.css";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { logoutUser } from "../../redux/slices/authSlice";
-import { CometChat } from "@cometchat-pro/chat";
 import { cometchatlogout } from "../chat/ChatServices";
 
 const AdminWrapper = ({ children }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const user = useSelector((state) => state.auth.user);
+  const [active, setActive] = useState("Home"); // Set default active state as "Home"
 
   const handleLogout = () => {
     dispatch(logoutUser());
-    cometchatlogout();
-    // CometChat.logout().then(
-    //   () => {
-    //     console.log("Logout completed successfully");
-    //   },
-    //   (error) => {
-    //     console.log("Logout failed with exception:", { error });
-    //   }
-    // );
     navigate("/");
   };
 
@@ -38,23 +30,36 @@ const AdminWrapper = ({ children }) => {
                 className="sc-egiyK dhAbpN"
               />
               <Link
+                className={`sc-crHmcD layWKW ${
+                  location.pathname === `/admin/${user.id}` ? "active" : ""
+                } `}
                 to={`/admin/${user.id}`}
-                className="sc-crHmcD layWKW active"
+                onClick={() => setActive("Home")}
               >
                 <i className="fa-solid fa-house-user"></i>
                 <div className="sc-bqiRlB bfSpmb">Home</div>
               </Link>
               <Link
                 to={`/admin/${user.id}/requests`}
-                className="sc-crHmcD layWKW"
+                className={`sc-crHmcD layWKW ${
+                  location.pathname.includes(`/admin/${user.id}/requests`)
+                    ? "active"
+                    : ""
+                } `}
+                onClick={() => setActive("Requests")}
               >
                 <i className="fa-solid fa-user-plus"></i>
-                <div className="sc-bqiRlB bfSpmb">Requests</div>
+                <div className="sc-bqiRlB bfSpmb ">Requests</div>
               </Link>
-
-              <Link className="sc-crHmcD layWKW" to={"/chat"}>
+              <Link
+                className={`sc-crHmcD layWKW ${
+                  location.pathname === "/admin/chat" ? "active" : ""
+                } `}
+                to={"/admin/chat"}
+                onClick={() => setActive("Connect")}
+              >
                 <i className="fas fa-comments"></i>
-                <div className="sc-bqiRlB bfSpmb">Conversations</div>
+                <div className="sc-bqiRlB bfSpmb">Connect</div>
               </Link>
               <Link to={`/`} className="sc-crHmcD layWKW">
                 <i className="fa-solid fa-people-arrows"></i>

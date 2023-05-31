@@ -355,6 +355,16 @@ a:hover {
   padding-bottom: 30px;
 }
 
+.mentorratingcard {
+  border-radius: 5px;
+  background-color: #30cea3;
+  padding-left: 30px;
+  padding-right: 30px;
+  margin-top: 15px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
 .rating-box {
   width: 130px;
   height: 130px;

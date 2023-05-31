@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { FeedBack } from "../Layout/FeedBack";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentPage, setUsers } from "../../redux/slices/dataSlice";
+import { setCurrentPage } from "../../redux/slices/dataSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { setTechnology } from "../../redux/slices/filterSlice";

@@ -1,11 +1,11 @@
 import React from "react";
 import UserWrapper from "./UserWrapper";
-import { UserHome } from "./UserHome";
+import UserHome from "./UserHome";
 
-export const UserDashboard = () => {
+export default function UserDashboard() {
   return (
     <UserWrapper>
       <UserHome />
     </UserWrapper>
   );
-};
+}

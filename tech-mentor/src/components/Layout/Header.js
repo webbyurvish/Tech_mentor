@@ -6,7 +6,6 @@ import { CometChat } from "@cometchat-pro/chat";
 import { cometchatlogout } from "../chat/ChatServices";
 
 export const Header = () => {
-
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.auth.user);
@@ -20,15 +19,6 @@ export const Header = () => {
   const handleLogout = () => {
     dispatch(logoutUser());
     setmenu((prevstate) => !prevstate);
-    cometchatlogout();
-    // CometChat.logout().then(
-    //   () => {
-    //     console.log("Logout completed successfully");
-    //   },
-    //   (error) => {
-    //     console.log("Logout failed with exception:", { error });
-    //   }
-    // );
   };
 
   return (

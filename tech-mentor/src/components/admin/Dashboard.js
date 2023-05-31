@@ -1,11 +1,16 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import "../MentorPanel/Account.css";
-
+import { useNavigate } from "react-router";
 import AdminWrapper from "./AdminWrapper";
 
 export default function Admin() {
+  const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
+
+  if (!user) {
+    navigate("/login");
+  }
 
   return (
     <AdminWrapper>
@@ -25,7 +30,7 @@ export default function Admin() {
                   </a>
                 </div>
                 <img src="img/navlogo.jpg" alt="" />
-                <h2>{user.name}</h2>
+                <h2> {user.name}</h2>
                 <p>Admin of Tech-mentor</p>
               </div>
             </div>

@@ -21,7 +21,6 @@ export default function Mentors() {
 
   return (
     <Layout>
-      {/* <CometChatUI /> */}
       {mentors && mentors.length === 0 && (
         <h3 className="nomentors">There are no mentors to show.</h3>
       )}

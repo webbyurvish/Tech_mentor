@@ -124,6 +124,10 @@
   margin-top: -60px;
 }
 
+.profiles-details-cover ul li p {
+  border: none;
+}
+
 /* flex */
 
 .flex-container {
@@ -137,4 +141,29 @@
 
 .flex-child:first-child {
   margin-right: 20px;
+}
+
+/* simple text - p */
+
+.simpletext {
+  border: none;
+}
+
+.likes-card {
+  background-color: #30cea3;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 25px;
+}
+
+.likes-card h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.likes-count {
+  font-size: 24px;
+  font-weight: bold;
 }

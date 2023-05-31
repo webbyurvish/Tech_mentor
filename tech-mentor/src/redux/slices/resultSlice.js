@@ -59,7 +59,12 @@ export const fetchData =
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       });
 
-      dispatch(setMentors(response.data.items));
+      const mentors = response.data.items.filter(
+        (item) => item.userId != userId
+      );
+      console.log(mentors);
+      console.log(userId);
+      dispatch(setMentors(mentors));
       dispatch(setTotalPages(response.data.totalPages));
 
       // Update URL with query parameters

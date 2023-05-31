@@ -2,18 +2,61 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import "./Account.css";
+import "./EditMentor.css";
 import { MentorWrapper } from "./MentorWrapper";
 import axios from "axios";
 import { API_URL } from "../../config";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./Ratings.css";
 
-export default function Account({ mentor }) {
+export default function Account() {
   const user = useSelector((state) => state.auth.user);
+  const mentor = useSelector((state) => state.data.mentor);
   const navigate = useNavigate();
 
+  console.log(mentor);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+
+  const countObjectsWithStars = (stars) => {
+    return (
+      mentor && mentor.ratings.filter((rating) => rating.stars === stars).length
+    );
+  };
+
+  const totalCount = mentor && mentor.ratings.length;
+  console.log(totalCount);
+
+  const calculatePercentage = (count) => {
+    if (totalCount === 0) return 0;
+    return (count / totalCount) * 100;
+  };
+
+  const ratingSum =
+    mentor && mentor.ratings.reduce((sum, rating) => sum + rating.stars, 0);
+
+  const averageRating = totalCount > 0 ? ratingSum / totalCount : 0;
+
+  const getActiveStars = () => {
+    const maxStars = 5;
+    const activeStars = Math.round(averageRating);
+    const stars = [];
+
+    for (let i = 0; i < maxStars; i++) {
+      if (i < activeStars) {
+        stars.push(
+          <span key={i} className="fa fa-star star-active mx-1"></span>
+        );
+      } else {
+        stars.push(
+          <span key={i} className="fa fa-star star-inactive mx-1"></span>
+        );
+      }
+    }
+
+    return stars;
+  };
 
   const handleresetpasswordsubmit = async (e) => {
     e.preventDefault();
@@ -62,14 +105,168 @@ export default function Account({ mentor }) {
             <div className="row justify-content-center">
               <div className="col-lg-4">
                 <div className="profile-details">
-                  {/* <div className="share-details">
-                      <a href="javascript:void(0)">
-                        <i className="fa-solid fa-share-nodes"></i>
-                      </a>
-                    </div> */}
                   <img src="img/navlogo.jpg" alt="" />
                   <h2>{mentor.name}</h2>
-                  <p>{mentor.title}</p>
+                  <p style={{ border: "none" }}>{mentor.title}</p>
+                  <div class="likes-card">
+                    <h3>Total Likes</h3>
+                    <p style={{ border: "none" }} class="likes-count">
+                      {mentor.likes.length}
+                    </p>
+                  </div>
+                  <div class="likes-card">
+                    <div className="mentorratingcard">
+                      <div className="row justify-content-left d-flex">
+                        <div
+                          style={{
+                            justifyContent: "center",
+                            marginLeft: "-16px",
+                            marginRight: "16px",
+                          }}
+                          className="col-md-4 d-flex flex-column"
+                        >
+                          <div className="mentor-rating-box">
+                            <h5
+                              className="pt-2"
+                              style={{ color: "black", marginLeft: "7%" }}
+                            >
+                              {averageRating.toFixed(1)}
+                            </h5>
+                            <p style={{ border: "none", font: "bold" }}>
+                              out of 5
+                            </p>
+                          </div>
+                          <div style={{ width: "168%", marginLeft: "-28px" }}>
+                            {getActiveStars()}
+                          </div>
+                        </div>
+                        <div className="col-md-8">
+                          <div className="rating-bar0 justify-content-center">
+                            <table
+                              className="text-left mx-auto"
+                              style={{ width: "221px" }}
+                            >
+                              <tr>
+                                <td className="rating-label td">Excellent</td>
+                                <td className="rating-bar td">
+                                  <div className="bar-container">
+                                    <div
+                                      style={{
+                                        width: `${calculatePercentage(
+                                          countObjectsWithStars(5)
+                                        )}%`,
+                                        height: "13px",
+                                        backgroundColor: "#fbc02d",
+                                        borderRadius: "20px",
+                                      }}
+                                    ></div>
+                                  </div>
+                                </td>
+                                <td className="text-right td">
+                                  {calculatePercentage(
+                                    countObjectsWithStars(5)
+                                  ).toFixed(1)}
+                                  %
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="rating-label td">Good</td>
+                                <td className="rating-bar td">
+                                  <div className="bar-container">
+                                    <div
+                                      style={{
+                                        width: `${calculatePercentage(
+                                          countObjectsWithStars(4)
+                                        )}%`,
+                                        height: "13px",
+                                        backgroundColor: "#fbc02d",
+                                        borderRadius: "20px",
+                                      }}
+                                    ></div>
+                                  </div>
+                                </td>
+                                <td className="text-right td">
+                                  {calculatePercentage(
+                                    countObjectsWithStars(4)
+                                  ).toFixed(1)}
+                                  %
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="rating-label td">Average</td>
+                                <td className="rating-bar td">
+                                  <div className="bar-container">
+                                    <div
+                                      style={{
+                                        width: `${calculatePercentage(
+                                          countObjectsWithStars(3)
+                                        )}%`,
+                                        height: "13px",
+                                        backgroundColor: "#fbc02d",
+                                        borderRadius: "20px",
+                                      }}
+                                    ></div>
+                                  </div>
+                                </td>
+                                <td className="text-right td">
+                                  {calculatePercentage(
+                                    countObjectsWithStars(3)
+                                  ).toFixed(1)}
+                                  %
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="rating-label td">Poor</td>
+                                <td className="rating-bar td">
+                                  <div className="bar-container">
+                                    <div
+                                      style={{
+                                        width: `${calculatePercentage(
+                                          countObjectsWithStars(2)
+                                        )}%`,
+                                        height: "13px",
+                                        backgroundColor: "#fbc02d",
+                                        borderRadius: "20px",
+                                      }}
+                                    ></div>
+                                  </div>
+                                </td>
+                                <td className="text-right td">
+                                  {calculatePercentage(
+                                    countObjectsWithStars(2)
+                                  ).toFixed(1)}
+                                  %
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="rating-label td">Terrible</td>
+                                <td className="rating-bar td">
+                                  <div className="bar-container">
+                                    <div
+                                      style={{
+                                        width: `${calculatePercentage(
+                                          countObjectsWithStars(1)
+                                        )}%`,
+                                        height: "13px",
+                                        backgroundColor: "#fbc02d",
+                                        borderRadius: "20px",
+                                      }}
+                                    ></div>
+                                  </div>
+                                </td>
+                                <td className="text-right td">
+                                  {calculatePercentage(
+                                    countObjectsWithStars(1)
+                                  ).toFixed(1)}
+                                  %
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="col-lg-4">
@@ -236,7 +433,9 @@ export default function Account({ mentor }) {
                           data-bs-toggle="modal"
                           data-bs-target="#exampleModal"
                         >
-                          <p>change password</p>
+                          <div className="saveorclose-btn">
+                            <button>change password</button>
+                          </div>
                         </a>
                       </li>
                     </ul>
@@ -270,23 +469,23 @@ export default function Account({ mentor }) {
                   ></button>
                 </div>
                 <div className="modal-body">
-                  <div className="reject-reason">
+                  <div>
                     <label htmlFor="oldpassword">Old Password</label>
                     <input
                       name="oldpassword"
                       id="oldpassword"
-                      type="text"
+                      type="password"
                       value={oldPassword}
                       onChange={(e) => setOldPassword(e.target.value)}
-                    ></input>
+                    />
                     <label htmlFor="newpassword">New Password</label>
                     <input
                       name="newpassword"
                       id="newpassword"
-                      type="text"
+                      type="password"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                    ></input>
+                    />
                   </div>
                 </div>
                 <div className="modal-footer">

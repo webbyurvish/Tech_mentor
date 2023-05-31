@@ -1,17 +1,20 @@
 import React, { useState } from "react";
-import "../components/MentorPanel/Account.css";
+import "../MentorPanel/Account.css";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { logoutUser } from "../redux/slices/authSlice";
-import { CometChat } from "@cometchat-pro/chat";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { logoutUser } from "../../redux/slices/authSlice";
+import { cometchatlogout } from "../chat/ChatServices";
+import { extractUsername } from "../../Functions/Index";
 
-const UserWrapper = ({ children }) => {
+export default function UserWrapper({ children }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
 
-  const [activeLink, setActiveLink] = useState(""); // Add state variable
+  const [active, setActive] = useState("Home"); // Set default active state as "Home"
 
   const user = useSelector((state) => state.auth.user);
+  const uid = extractUsername(user.email);
 
   if (!user) {
     navigate("/login  ");
@@ -19,16 +22,9 @@ const UserWrapper = ({ children }) => {
 
   const handleLogout = () => {
     dispatch(logoutUser());
-    CometChat.logout().then(
-      () => {
-        console.log("Logout completed successfully");
-      },
-      (error) => {
-        console.log("Logout failed with exception:", { error });
-      }
-    );
     navigate("/");
   };
+
   return (
     <div>
       <div className="managment-account">
@@ -41,21 +37,35 @@ const UserWrapper = ({ children }) => {
                 className="sc-egiyK dhAbpN"
               />
               <Link
+                className={`sc-crHmcD layWKW ${
+                  location.pathname === `/me/${user.id}` ? "active" : ""
+                } `}
+                onClick={() => setActive("Home")}
                 to={`/me/${user.id}`}
-                className={`sc-crHmcD layWKW active`}
-                isActive={() => setActiveLink("home")}
               >
                 <i className="fa-solid fa-house-user"></i>
                 <div className="sc-bqiRlB bfSpmb">Home</div>
               </Link>
-              <Link to={`/me/${user.id}/become`} className="sc-crHmcD layWKW">
+              <Link
+                className={`sc-crHmcD layWKW ${
+                  location.pathname === `/me/${user.id}/become` ? "active" : ""
+                } `}
+                to={`/me/${user.id}/become`}
+              >
                 <i className="fa-solid fa-people-carry-box"></i>
-                <div className="sc-bqiRlB bfSpmb">Become a mentor</div>
+                <div className="sc-bqiRlB bfSpmb">
+                  Become <br /> a mentor
+                </div>
               </Link>
 
-              <Link to={"/chat"} className="sc-crHmcD layWKW">
+              <Link
+                to={`/user/${user.id}/chat`}
+                className={`sc-crHmcD layWKW ${
+                  location.pathname === `/user/${user.id}/chat` ? "active" : ""
+                } `}
+              >
                 <i className="fas fa-comments"></i>
-                <div className="sc-bqiRlB bfSpmb">Conversations</div>
+                <div className="sc-bqiRlB bfSpmb">Connect</div>
               </Link>
               <Link to={`/`} className="sc-crHmcD layWKW">
                 <i className="fa-solid fa-people-arrows"></i>
@@ -75,6 +85,4 @@ const UserWrapper = ({ children }) => {
       </div>
     </div>
   );
-};
-
-export default UserWrapper;
+}

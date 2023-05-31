@@ -119,12 +119,6 @@ export default function Login() {
     setLoading(false);
   };
 
-  const form = new FormData();
-  form.append("name", username);
-
-  console.log(form);
-  console.log(username);
-
   const handleSignup = (event) => {
     setLoading(true);
 

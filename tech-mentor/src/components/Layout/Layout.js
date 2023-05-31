@@ -23,7 +23,6 @@ import { useNavigate } from "react-router";
 import Loading from "./Loading";
 
 export const Layout = ({ children }) => {
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -99,140 +98,144 @@ export const Layout = ({ children }) => {
   return (
     <div>
       <ToastContainer />
-      {!result.mentors ? <Loading /> : <>
-        <Header />
-        <div className="main-cover">
-          <div className="container-fluid">
-            <div className="fixed-menu">
-              <div className="title-text">
-                <h3>FILTER</h3>
-                <p>{result.mentors.length} MENTORS</p>
-              </div>
-              <form>
-                <div className="fillter-cover">
-                  <div className="filter-input">
-                    <label htmlFor="text">TECHNOLOGY</label>
-                    <input
-                      type="text"
-                      list="skills"
-                      value={filters.technology}
-                      onChange={handleTechnologyChange}
-                    />
-                    <datalist id="skills">
-                      {skills.map((skill, index) => {
-                        return <option key={index} value={skill.name} />;
-                      })}
-                    </datalist>
-                  </div>
-
-                  <div className="filter-input">
-                    <label htmlFor="text">COUNTRY</label>
-                    <input
-                      type="text"
-                      list="countries"
-                      value={filters.country}
-                      onChange={handleCountryChange}
-                    />
-                    <datalist id="countries">
-                      {countries.map((country, index) => {
-                        return <option key={index} value={country.name} />;
-                      })}
-                    </datalist>
-                  </div>
-                  <div className="filter-input">
-                    <label htmlFor="text">NAME</label>
-                    <input
-                      type="text"
-                      value={filters.name}
-                      list="names"
-                      onChange={handleNameChange}
-                    />
-                    <datalist id="names">
-                      {result.mentors.map((mentor, index) => {
-                        return <option key={index} value={mentor.name} />;
-                      })}
-                    </datalist>
-                  </div>
-                  <div className="filter-input">
-                    <label htmlFor="text">LANGUAGE </label>
-                    <input
-                      type="text"
-                      list="languages"
-                      value={filters.spokenLanguage}
-                      onChange={handleSpokenLanguageChange}
-                    />
-                    <datalist id="languages">
-                      {languages.map((language, index) => {
-                        return <option key={index} value={language.name} />;
-                      })}
-                    </datalist>
-                  </div>
+      {!result.mentors ? (
+        <Loading />
+      ) : (
+        <>
+          <Header />
+          <div className="main-cover">
+            <div className="container-fluid">
+              <div className="fixed-menu">
+                <div className="title-text">
+                  <h3>FILTER</h3>
+                  <p>{result.mentors.length} MENTORS</p>
                 </div>
-              </form>
-              <div className="myfavourits">
-                <p>MY FAVORITES</p>
-                <label className="switch">
-                  <input
-                    checked={filters.isLiked}
-                    onChange={handleLikedChange}
-                    type="checkbox"
-                  />
-                  <span className="slider round"></span>
-                </label>
-              </div>
-              <div className="social-icon">
-                <ul>
-                  <li>
-                    <a href="javascript:void(0)">
-                      <i className="fa-brands fa-github"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="javascript:void(0)">
-                      <i className="fa-brands fa-square-facebook"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="javascript:void(0)">
-                      <i className="fa-brands fa-twitter"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="javascript:void(0)">
-                      <i className="fa-brands fa-instagram"></i>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <div className="social-link">
-                <ul>
-                  <li>
-                    <a href="javascript:void(0)">Cookies policy</a>
-                  </li>
-                  <li>
-                    <a href="javascript:void(0)">Code of Conduct</a>
-                  </li>
-                  <li>
-                    <a href="javascript:void(0)">Terms & Conditions</a>
-                  </li>
-                  <li>
-                    <a href="javascript:void(0)">Privacy Statement</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div className="right-side-section">
-              <div className="row">
-                <div className="col-lg-12">
-                  <div className="mentor-card">
-                    <div>{children}</div>
+                <form>
+                  <div className="fillter-cover">
+                    <div className="filter-input">
+                      <label htmlFor="text">TECHNOLOGY</label>
+                      <input
+                        type="text"
+                        list="skills"
+                        value={filters.technology}
+                        onChange={handleTechnologyChange}
+                      />
+                      <datalist id="skills">
+                        {skills.map((skill, index) => {
+                          return <option key={index} value={skill.name} />;
+                        })}
+                      </datalist>
+                    </div>
+
+                    <div className="filter-input">
+                      <label htmlFor="text">COUNTRY</label>
+                      <input
+                        type="text"
+                        list="countries"
+                        value={filters.country}
+                        onChange={handleCountryChange}
+                      />
+                      <datalist id="countries">
+                        {countries.map((country, index) => {
+                          return <option key={index} value={country.name} />;
+                        })}
+                      </datalist>
+                    </div>
+                    <div className="filter-input">
+                      <label htmlFor="text">NAME</label>
+                      <input
+                        type="text"
+                        value={filters.name}
+                        list="names"
+                        onChange={handleNameChange}
+                      />
+                      <datalist id="names">
+                        {result.mentors.map((mentor, index) => {
+                          return <option key={index} value={mentor.name} />;
+                        })}
+                      </datalist>
+                    </div>
+                    <div className="filter-input">
+                      <label htmlFor="text">LANGUAGE </label>
+                      <input
+                        type="text"
+                        list="languages"
+                        value={filters.spokenLanguage}
+                        onChange={handleSpokenLanguageChange}
+                      />
+                      <datalist id="languages">
+                        {languages.map((language, index) => {
+                          return <option key={index} value={language.name} />;
+                        })}
+                      </datalist>
+                    </div>
                   </div>
+                </form>
+                <div className="myfavourits">
+                  <p>MY FAVORITES</p>
+                  <label className="switch">
+                    <input
+                      checked={filters.isLiked}
+                      onChange={handleLikedChange}
+                      type="checkbox"
+                    />
+                    <span className="slider round"></span>
+                  </label>
+                </div>
+                <div className="social-icon">
+                  <ul>
+                    <li>
+                      <a href="javascript:void(0)">
+                        <i className="fa-brands fa-github"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0)">
+                        <i className="fa-brands fa-square-facebook"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0)">
+                        <i className="fa-brands fa-twitter"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0)">
+                        <i className="fa-brands fa-instagram"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div className="social-link">
+                  <ul>
+                    <li>
+                      <a href="javascript:void(0)">Cookies policy</a>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0)">Code of Conduct</a>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0)">Terms & Conditions</a>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0)">Privacy Statement</a>
+                    </li>
+                  </ul>
                 </div>
               </div>
+              <div className="right-side-section">
+                <div className="row">
+                  <div className="col-lg-12">
+                    <div className="mentor-card">
+                      <div>{children}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div> </>}
-
+          </div>{" "}
+        </>
+      )}
     </div>
   );
 };

@@ -4,24 +4,21 @@ import Login from "./components/Login/Login";
 import "@fortawesome/fontawesome-free/css/all.css";
 import MentorDetail from "./components/MentorPanel/MentorDetail";
 import EditMentor from "./components/MentorPanel/EditMentor";
-import BecomeMentor from "./components/User/BecomeMentor";
 import ForgotPassword from "./components/Login/ForgotPassword";
 import MailRequest from "./components/Login/MailRequest";
 import Admin from "./components/admin/Dashboard";
 import Requests from "./components/admin/Requests";
 import { CometChat } from "@cometchat-pro/chat";
-import { UserDashboard } from "./user/UserDashboard";
+import UserDashboard from "./components/user/UserDashboard";
 import MentorProfile from "./components/Mentor/MentorProfile";
-import { Chat } from "./components/chat/Chat";
-import { ChatWithMentor } from "./components/chat/ChatWithMentor";
-import { MainConversation } from "./components/chat/Conversation/MainConversation";
-import {
-  CometChatGroupListWithMessages,
-  CometChatUserListWithMessages,
-} from "./cometchat-pro-react-ui-kit/CometChatWorkspace/src/components";
-import { Groups } from "./components/chat/Conversation/Groups";
-
+import ChatWithMentor from "./components/chat/ChatWithMentor";
+import ChatWithAdmin from "./components/chat/ChatWithAdmin";
+import AdminChat from "./components/admin/AdminChat";
+import UserChat from "./components/user/UserChat";
+import BecomeMentor from "./components/user/BecomeMentor";
+import MentorChat from "./components/Mentor/MentorChat";
 const appId = process.env.REACT_APP_COMETCHAT_APP_ID;
+
 const region = process.env.REACT_APP_COMETCHAT_REGION;
 const appSetting = new CometChat.AppSettingsBuilder()
   .subscribePresenceForAllUsers()
@@ -51,13 +48,11 @@ function App() {
         <Route path="/me/:id/become" element={<BecomeMentor />} />
         <Route path="/admin/:id/requests" element={<Requests />} />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
-        <Route path="/chat" element={<Chat />} />
+        <Route path="/user/:id/chat" element={<UserChat />} />
+        <Route path="/mentor/:id/chat" element={<MentorChat />} />
         <Route path="/chatwithmentor/:uid" element={<ChatWithMentor />} />
-        <Route path="/mentor/:id/groups" element={<Groups />} />
-        <Route
-          path="/mentor/:id/mainconversation"
-          element={<MainConversation />}
-        />
+        <Route path="/chatwithadmin/:uid" element={<ChatWithAdmin />} />
+        <Route path="/admin/chat" element={<AdminChat />} />
       </Routes>
     </div>
   );

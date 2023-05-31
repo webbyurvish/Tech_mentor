@@ -2,44 +2,19 @@ import React, { useEffect, useState } from "react";
 import Account from "./Account";
 import axios from "axios";
 import { API_URL } from "../../config";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
+import { fetchMentorDetails } from "../../redux/slices/dataSlice";
+import Loading from "../Layout/Loading";
 
 export default function MentorDetail() {
-  const [mentor, setMentor] = useState(null);
-
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const mentor = useSelector((state) => state.data.mentor);
 
   useEffect(() => {
-    // Fetch mentor details fro m API
-    const fetchMentorDetails = async () => {
-      try {
-        const response = await axios.get(
-          `${API_URL}/mentors/get/${user.email}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-        setMentor(response.data);
-      } catch (error) {
-        // Handle error
-      }
-    };
-
-    fetchMentorDetails();
+    dispatch(fetchMentorDetails(user.email));
   }, [user.email]);
 
-  if (!mentor) {
-    return <div>Loading...</div>;
-  }
-
-  console.log(mentor);
-
-  return (
-    <div>
-      <Account mentor={mentor} />
-    </div>
-  );
+  return <div>{!mentor ? <Loading /> : <Account />}</div>;
 }
