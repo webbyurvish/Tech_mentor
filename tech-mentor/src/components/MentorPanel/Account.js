@@ -9,6 +9,7 @@ import { API_URL } from "../../config";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Ratings.css";
+import { DashboardRating } from "../Layout/Rating/DashboardRating";
 
 export default function Account() {
   const user = useSelector((state) => state.auth.user);
@@ -18,6 +19,7 @@ export default function Account() {
   console.log(mentor);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const classes = ["Excellent", "Good", "Average", "Poor", "Terrible"];
 
   const countObjectsWithStars = (stars) => {
     return (
@@ -146,121 +148,7 @@ export default function Account() {
                               className="text-left mx-auto"
                               style={{ width: "221px" }}
                             >
-                              <tr>
-                                <td className="rating-label td">Excellent</td>
-                                <td className="rating-bar td">
-                                  <div className="bar-container">
-                                    <div
-                                      style={{
-                                        width: `${calculatePercentage(
-                                          countObjectsWithStars(5)
-                                        )}%`,
-                                        height: "13px",
-                                        backgroundColor: "#fbc02d",
-                                        borderRadius: "20px",
-                                      }}
-                                    ></div>
-                                  </div>
-                                </td>
-                                <td className="text-right td">
-                                  {calculatePercentage(
-                                    countObjectsWithStars(5)
-                                  ).toFixed(1)}
-                                  %
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="rating-label td">Good</td>
-                                <td className="rating-bar td">
-                                  <div className="bar-container">
-                                    <div
-                                      style={{
-                                        width: `${calculatePercentage(
-                                          countObjectsWithStars(4)
-                                        )}%`,
-                                        height: "13px",
-                                        backgroundColor: "#fbc02d",
-                                        borderRadius: "20px",
-                                      }}
-                                    ></div>
-                                  </div>
-                                </td>
-                                <td className="text-right td">
-                                  {calculatePercentage(
-                                    countObjectsWithStars(4)
-                                  ).toFixed(1)}
-                                  %
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="rating-label td">Average</td>
-                                <td className="rating-bar td">
-                                  <div className="bar-container">
-                                    <div
-                                      style={{
-                                        width: `${calculatePercentage(
-                                          countObjectsWithStars(3)
-                                        )}%`,
-                                        height: "13px",
-                                        backgroundColor: "#fbc02d",
-                                        borderRadius: "20px",
-                                      }}
-                                    ></div>
-                                  </div>
-                                </td>
-                                <td className="text-right td">
-                                  {calculatePercentage(
-                                    countObjectsWithStars(3)
-                                  ).toFixed(1)}
-                                  %
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="rating-label td">Poor</td>
-                                <td className="rating-bar td">
-                                  <div className="bar-container">
-                                    <div
-                                      style={{
-                                        width: `${calculatePercentage(
-                                          countObjectsWithStars(2)
-                                        )}%`,
-                                        height: "13px",
-                                        backgroundColor: "#fbc02d",
-                                        borderRadius: "20px",
-                                      }}
-                                    ></div>
-                                  </div>
-                                </td>
-                                <td className="text-right td">
-                                  {calculatePercentage(
-                                    countObjectsWithStars(2)
-                                  ).toFixed(1)}
-                                  %
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="rating-label td">Terrible</td>
-                                <td className="rating-bar td">
-                                  <div className="bar-container">
-                                    <div
-                                      style={{
-                                        width: `${calculatePercentage(
-                                          countObjectsWithStars(1)
-                                        )}%`,
-                                        height: "13px",
-                                        backgroundColor: "#fbc02d",
-                                        borderRadius: "20px",
-                                      }}
-                                    ></div>
-                                  </div>
-                                </td>
-                                <td className="text-right td">
-                                  {calculatePercentage(
-                                    countObjectsWithStars(1)
-                                  ).toFixed(1)}
-                                  %
-                                </td>
-                              </tr>
+                              <DashboardRating mentor={mentor} />
                             </table>
                           </div>
                         </div>
@@ -275,7 +163,7 @@ export default function Account() {
                     <a href="javascript:void(0)">My Profile</a>
                     <Link
                       to={{
-                        pathname: `/me/${user.id}/edit`,
+                        pathname: `/mentor/${user.id}/edit`,
                         state: { mentor },
                       }}
                     >

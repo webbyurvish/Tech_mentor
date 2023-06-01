@@ -2,6 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import { API_URL } from "../../config";
 import axios from "axios";
 import { getMentorDetails } from "../APIs/mentorApi";
+import createAxiosInstance from "../../Axios/axiosInstance";
+
+const axiosInstance = createAxiosInstance();
 
 const mentorSlice = createSlice({
   name: "mentor",
@@ -20,7 +23,7 @@ export const { setMentorDetails, updateMentorDetailsSuccess } =
 
 export const updateMentorDetails = (mentorData) => async (dispatch) => {
   try {
-    const response = await axios.put(`${API_URL}/mentors/update`, mentorData, {
+    await axiosInstance.put("/mentors/update", JSON.stringify(mentorData), {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,

@@ -4,6 +4,7 @@ import { Layout } from "../Layout/Layout";
 import { useSelector, useDispatch } from "react-redux";
 import CustomPagination from "../Layout/Pagination";
 import { setCurrentPage } from "../../redux/slices/dataSlice";
+import Loading from "../Layout/Loading";
 
 export default function Mentors() {
   const dispatch = useDispatch();
@@ -11,6 +12,7 @@ export default function Mentors() {
   const currentPage = useSelector((state) => state.data.currentPage);
   const result = useSelector((state) => state.result);
 
+  // triggered when user change page
   const handlePageChange = (pageNumber) => {
     if (pageNumber === currentPage) {
       dispatch(setCurrentPage(1)); // Set the current page to null or a default value
@@ -21,10 +23,15 @@ export default function Mentors() {
 
   return (
     <Layout>
-      {mentors && mentors.length === 0 && (
+      {!mentors && <Loading />}
+
+      {/* If result have no mentors */}
+      {mentors.length === 0 && (
         <h3 className="nomentors">There are no mentors to show.</h3>
       )}
-      {mentors && mentors.length > 0 && (
+
+      {/* display mentors */}
+      {mentors.length > 0 && (
         <div>
           <div className="row justify-content-center">
             {mentors.map((mentor, index) => (
@@ -33,6 +40,8 @@ export default function Mentors() {
           </div>
         </div>
       )}
+
+      {/* Pagination */}
       <div>
         <CustomPagination
           totalPages={result.totalPages}

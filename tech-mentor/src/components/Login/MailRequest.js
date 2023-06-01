@@ -24,19 +24,9 @@ export default function MailRequest() {
       // Send a POST request to the backend API endpoint
       setLoading(true);
 
-      const response = sendMail(email)
+      // const response = sendMail(email)
+      const response = await sendMail(email);
 
-      // const response = await axios.post(
-      //   `${API_URL}/account/forgotpassword`,
-      //   email,
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //   }
-      // );
-
-      //   setMessage("");
       setLoading(false);
       setSuccessMessage(response.data.message);
       setEmailSent(true);

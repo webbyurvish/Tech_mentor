@@ -8,6 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { fetchData } from "../../redux/slices/resultSlice";
 import { setTechnology } from "../../redux/slices/filterSlice";
+import { handleLikeFunction } from "./MentorServices";
 
 export default function Mentor({ mentor }) {
   const navigate = useNavigate();
@@ -33,37 +34,16 @@ export default function Mentor({ mentor }) {
     );
   };
 
+  // When user like or remove like of a mentor
   const handlelike = async (mentorId) => {
-    try {
-      await axios.post(
-        `${API_URL}/like`,
-        { userId, mentorId: mentorId },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      dispatch(
-        fetchData(
-          filters.technology,
-          filters.country,
-          filters.name,
-          filters.spokenLanguage,
-          currentPage,
-          filters.isLiked,
-          userId
-        )
-      );
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        navigate("/login"); // Redirect to the login page
-      } else {
-        console.error("Error fetching mentor data:", error);
-      }
-    }
+    await handleLikeFunction(
+      userId,
+      mentorId,
+      filters,
+      currentPage,
+      navigate,
+      dispatch
+    );
   };
 
   return (
@@ -97,13 +77,21 @@ export default function Mentor({ mentor }) {
               ></i>
             </a>
           </div>
+          {/* Mentor Profile Image */}
           <div className="card-img">
             <img src={mentor.imageUrl} alt="" />
           </div>
+          {/* Mentor's Name */}
           <h2>{mentor.name}</h2>
+
+          {/* Mentor's Title */}
           <span>{mentor.title}</span>
+
+          {/* About Mentor */}
           <p>{mentor.about}</p>
+
           <div className="technology">
+            {/* List of skills that mentor knows */}
             <ul>
               {mentor.skills.slice(0, 3).map((skill, index) => (
                 <li key={index}>
@@ -123,6 +111,8 @@ export default function Mentor({ mentor }) {
             </ul>
           </div>
         </div>
+
+        {/* Link to see profile of a mentor */}
         <div className="go-to-profile">
           <Link to={`/mentor/${mentor.id}/profile`}>
             <i className="fa-regular fa-hand-point-right"></i>

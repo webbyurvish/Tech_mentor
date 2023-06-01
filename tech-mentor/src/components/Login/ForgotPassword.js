@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "./Login.css";
 import axios from "axios";
 import { API_URL } from "../../config";
-import { resetPassword } from "./AuthServices";
+import { handleResetPasswordrequest } from "./AuthServices";
 
 export default function ForgotPassword() {
   const location = useLocation();
@@ -38,29 +38,18 @@ export default function ForgotPassword() {
       // Send a POST request to the backend API endpoint
       setLoading(true);
 
-      const response = resetPassword(credentials)
+      const response = await handleResetPasswordrequest(credentials);
 
-      // const response = await axios.post(
-      //   `${API_URL}/account/resetpassword`,
-      //   credentials,
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //   }
-      // );
-
-      //   setMessage("");
       setLoading(false);
       setSuccessMessage(response.data.message);
-      //   setEmailSent(true);
 
-      //   toast.success(response.data.message);
+      console.log("Before navigate");
       navigate("/login", {
         state: { successMessage: "Password reset successful!" },
       });
+      console.log("After navigate");
     } catch (error) {
-      toast.error(error);
+      toast.error(error.response.data.message);
       setSuccessMessage("");
     }
   };

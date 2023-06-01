@@ -3,21 +3,13 @@ import "../MentorPanel/Account.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { logoutUser } from "../../redux/slices/authSlice";
-import { cometchatlogout } from "../chat/ChatServices";
+import ConnectLink from "../Layout/Dashboardlinks/ConnectLink";
+import MentorspageLink from "../Layout/Dashboardlinks/MentorspageLink";
+import LogoutLink from "../Layout/Dashboardlinks/LogoutLink";
+import RequestsLink from "../Layout/Dashboardlinks/RequestsLink";
+import HomeLink from "../Layout/Dashboardlinks/HomeLink";
 
 const AdminWrapper = ({ children }) => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const location = useLocation();
-
-  const user = useSelector((state) => state.auth.user);
-  const [active, setActive] = useState("Home"); // Set default active state as "Home"
-
-  const handleLogout = () => {
-    dispatch(logoutUser());
-    navigate("/");
-  };
-
   return (
     <div>
       <div className="managment-account">
@@ -29,49 +21,20 @@ const AdminWrapper = ({ children }) => {
                 alt="Logo"
                 className="sc-egiyK dhAbpN"
               />
-              <Link
-                className={`sc-crHmcD layWKW ${
-                  location.pathname === `/admin/${user.id}` ? "active" : ""
-                } `}
-                to={`/admin/${user.id}`}
-                onClick={() => setActive("Home")}
-              >
-                <i className="fa-solid fa-house-user"></i>
-                <div className="sc-bqiRlB bfSpmb">Home</div>
-              </Link>
-              <Link
-                to={`/admin/${user.id}/requests`}
-                className={`sc-crHmcD layWKW ${
-                  location.pathname.includes(`/admin/${user.id}/requests`)
-                    ? "active"
-                    : ""
-                } `}
-                onClick={() => setActive("Requests")}
-              >
-                <i className="fa-solid fa-user-plus"></i>
-                <div className="sc-bqiRlB bfSpmb ">Requests</div>
-              </Link>
-              <Link
-                className={`sc-crHmcD layWKW ${
-                  location.pathname === "/admin/chat" ? "active" : ""
-                } `}
-                to={"/admin/chat"}
-                onClick={() => setActive("Connect")}
-              >
-                <i className="fas fa-comments"></i>
-                <div className="sc-bqiRlB bfSpmb">Connect</div>
-              </Link>
-              <Link to={`/`} className="sc-crHmcD layWKW">
-                <i className="fa-solid fa-people-arrows"></i>
-                <div className="sc-bqiRlB bfSpmb">Mentors</div>
-              </Link>
-              <a
-                onClick={handleLogout}
-                className="sc-crHmcD sc-ksdxgE layWKW feLfRC krxgFs"
-              >
-                <i className="fa-solid fa-right-from-bracket"></i>
-                <div className="sc-bqiRlB bfSpmb">Logout</div>
-              </a>
+              {/* Admin Dashboard home */}
+              <HomeLink />
+
+              {/* Dashboard Users Requests to become a mentor */}
+              <RequestsLink />
+
+              {/* Dashboard Chat and video call to mentors and users */}
+              <ConnectLink />
+
+              {/* Main mentors list page */}
+              <MentorspageLink />
+
+              {/* Logout */}
+              <LogoutLink />
             </nav>
             <div>{children}</div>
           </div>

@@ -5,6 +5,11 @@ import { logoutUser } from "../../redux/slices/authSlice";
 import { Link } from "react-router-dom";
 import { CometChat } from "@cometchat-pro/chat";
 import { cometchatlogout } from "../chat/ChatServices";
+import HomeLink from "../Layout/Dashboardlinks/HomeLink";
+import ConnectLink from "../Layout/Dashboardlinks/ConnectLink";
+import MentorspageLink from "../Layout/Dashboardlinks/MentorspageLink";
+import LogoutLink from "../Layout/Dashboardlinks/LogoutLink";
+import ConnectWithAdminLink from "../Layout/Dashboardlinks/ConnectWithAdminLink";
 
 export const MentorWrapper = ({ children }) => {
   const navigate = useNavigate();
@@ -12,8 +17,6 @@ export const MentorWrapper = ({ children }) => {
   const location = useLocation();
 
   const user = useSelector((state) => state.auth.user);
-
-  const [active, setActive] = useState("Home"); // Set default active state as "Home"
 
   const handleLogout = () => {
     dispatch(logoutUser());
@@ -32,58 +35,21 @@ export const MentorWrapper = ({ children }) => {
               alt="Logo"
               className="sc-egiyK dhAbpN"
             />
-            <Link
-              to={`/mentor/${user.id}`}
-              className={`sc-crHmcD layWKW ${
-                location.pathname === `/mentor/${user.id}` ? "active" : ""
-              } `}
-              onClick={() => setActive("Home")}
-            >
-              <i className="fa-solid fa-house-user"></i>
-              <div className="sc-bqiRlB bfSpmb">Home</div>
-            </Link>
-            <Link
-              to={`/chatwithadmin/${mentor}`}
-              className={`sc-crHmcD layWKW ${
-                location.pathname === `/chatwithadmin/${mentor}` ? "active" : ""
-              } `}
-            >
-              <i className="fa-solid fa-house-signal"></i>
-              <div className="sc-bqiRlB bfSpmb">
-                Connect with <br />
-                Admin
-              </div>
-            </Link>
 
-            <Link
-              className={`sc-crHmcD layWKW ${
-                location.pathname === `/mentor/${user.id}/chat` ? "active" : ""
-              } `}
-              to={`/mentor/${user.id}/chat`}
-            >
-              <i className="fas fa-comments"></i>
-              <div className="sc-bqiRlB bfSpmb">Connect</div>
-            </Link>
-            <Link to={"/"} className="sc-crHmcD layWKW">
-              <i className="fa-solid fa-people-arrows"></i>
-              <div className="sc-bqiRlB bfSpmb">Mentors</div>
-            </Link>
-            <Link
-              to={`/mentor/${user.id}/reach`}
-              className={`sc-crHmcD layWKW ${
-                location.pathname === `/mentor/${user.id}/reach` ? "active" : ""
-              } `}
-            >
-              <i className="fa-solid fa-house-signal"></i>
-              <div className="sc-bqiRlB bfSpmb">Reach</div>
-            </Link>
-            <a
-              onClick={handleLogout}
-              className="sc-crHmcD sc-ksdxgE layWKW feLfRC krxgFs"
-            >
-              <i className="fa-solid fa-right-from-bracket"></i>
-              <div className="sc-bqiRlB bfSpmb">Logout</div>
-            </a>
+            {/* Mentor Dashboard home */}
+            <HomeLink />
+
+            {/* Dashboard Chat and video call with Admin ==> directly Allowed only for mentors*/}
+            <ConnectWithAdminLink />
+
+            {/* Dashboard Chat and video call with mentors and users */}
+            <ConnectLink />
+
+            {/* Main mentors list page */}
+            <MentorspageLink />
+
+            {/* logout */}
+            <LogoutLink />
           </nav>
           <div>{children}</div>
         </div>

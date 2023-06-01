@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import UserWrapper from "./UserWrapper";
 import { useSelector } from "react-redux";
 import "../MentorPanel/Account.css";
-import axios from "axios";
-import { API_URL } from "../../config";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router";
+import {
+  handleResetPasswordSubmitFunction,
+  handleResetPasswordSubmitfunction,
+} from "./UserServices";
 
 export default function UserHome() {
   const navigate = useNavigate();
@@ -15,38 +17,28 @@ export default function UserHome() {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
+  // on submit password change model
   const handleresetpasswordsubmit = async (e) => {
     e.preventDefault();
 
-    const data = {
-      email: user.email,
-      oldPassword: oldPassword,
-      newPassword: newPassword,
+    const successCallback = (message) => {
+      toast.success(message);
     };
 
-    try {
-      const response = await axios.post(
-        `${API_URL}/account/changepassword`,
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+    const errorCallback = (errorMessage) => {
+      toast.error(errorMessage);
+    };
 
-      toast.success(response.data.message);
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        navigate("/login"); // Redirect to the login page
-      } else {
-        console.log(error.response.data.message);
-        toast.error(error.response.data.message);
-      }
-    }
-    console.log(oldPassword, newPassword);
+    await handleResetPasswordSubmitFunction(
+      user,
+      oldPassword,
+      newPassword,
+      successCallback,
+      errorCallback,
+      navigate
+    );
   };
+
   return (
     <UserWrapper>
       <ToastContainer />
@@ -66,9 +58,11 @@ export default function UserHome() {
                   </a>
                 </div>
                 <img src="img/navlogo.jpg" alt="" />
+                {/* User Name */}
                 <h2>{user.name}</h2>
-                {/* <p>Admin of Tech-mentor</p> */}
-                <img src={`https://localhost:7022${user.imageUrl}`} alt="" />
+                {/* user's profile image */}
+                <img src={user.imageUrl} alt="" />
+                {/* change password button ( on click its open a modal ) */}
                 <div>
                   <a
                     href="javascript:vid(0)"
@@ -85,6 +79,8 @@ export default function UserHome() {
           </div>
         </div>
       </div>
+
+      {/* Change password Modal */}
       <div
         className="modal fade"
         id="exampleModal"
@@ -109,6 +105,7 @@ export default function UserHome() {
                 </div>
                 <div className="modal-body">
                   <div>
+                    {/* old password input */}
                     <label htmlFor="oldpassword">Old Password</label>
                     <input
                       name="oldpassword"
@@ -117,6 +114,7 @@ export default function UserHome() {
                       value={oldPassword}
                       onChange={(e) => setOldPassword(e.target.value)}
                     />
+                    {/* new Password input */}
                     <label htmlFor="newpassword">New Password</label>
                     <input
                       name="newpassword"

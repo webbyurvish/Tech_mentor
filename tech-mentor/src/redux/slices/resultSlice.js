@@ -2,6 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import qs from "qs";
 import { API_URL } from "../../config";
+import createAxiosInstance from "../../Axios/axiosInstance";
+
+const axiosInstance = createAxiosInstance();
 
 const resultSlice = createSlice({
   name: "results",
@@ -55,15 +58,11 @@ export const fetchData =
         modifiedQueryString ? `?${modifiedQueryString}` : ""
       }`;
 
-      const response = await axios.get(url, {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      });
+      const response = await axiosInstance.get(url);
 
       const mentors = response.data.items.filter(
-        (item) => item.userId != userId
+        (item) => item.userId !== userId
       );
-      console.log(mentors);
-      console.log(userId);
       dispatch(setMentors(mentors));
       dispatch(setTotalPages(response.data.totalPages));
 

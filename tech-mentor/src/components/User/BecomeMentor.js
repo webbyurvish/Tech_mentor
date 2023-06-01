@@ -5,23 +5,32 @@ import { API_URL } from "../../config";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
 import Multiselect from "multiselect-react-dropdown";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loading from "../Layout/Loading";
 import UserWrapper from "./UserWrapper";
+import {
+  fetchCountries,
+  fetchLanguages,
+  fetchSkills,
+} from "../../redux/slices/dataSlice";
 
 export default function BecomeMentor() {
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const skills = useSelector((state) => state.data.skills);
+  const countries = useSelector((state) => state.data.countries);
+  const languages = useSelector((state) => state.data.languages);
 
   const [name, setName] = useState(user.name);
   const [title, setTitle] = useState("");
   const [country, setCountry] = useState("");
   const [about, setAbout] = useState("");
   const [isChecked, setIsChecked] = useState(true);
-  const [countries, setCountries] = useState(null);
-  const [skills, setSkills] = useState(null);
-  const [languages, setLanguages] = useState(null);
+  //   const [countries, setCountries] = useState(null);
+  //   const [skills, setSkills] = useState(null);
+  //   const [languages, setLanguages] = useState(null);
   const [selectedLanguages, setSelectedLanguages] = useState([]);
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [loading, setLoading] = useState(null);
@@ -53,36 +62,10 @@ export default function BecomeMentor() {
   };
 
   useEffect(() => {
-    const fetchCountries = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/data/countries`);
-        setCountries(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    const fetchLanguages = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/data/languages`);
-        setLanguages(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    const fetchSkills = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/data/skills`);
-        setSkills(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchCountries();
-    fetchLanguages();
-    fetchSkills();
+    // fetch all data for form ( countries , languages and skills )
+    dispatch(fetchCountries);
+    dispatch(fetchLanguages);
+    dispatch(fetchSkills);
   }, []);
 
   const handleSubmit = async (e) => {
@@ -177,10 +160,11 @@ export default function BecomeMentor() {
                 <h2>Become a Mentor</h2>
                 <form onSubmit={handleSubmit}>
                   <div className="row">
+                    {/* Name input ( disabled ) */}
                     <div className="col-lg-6">
                       <div className="profile-input">
                         <label htmlFor="text">
-                          <p>Name </p>(Please use your real name)
+                          <p>Name </p>
                         </label>
                         <input
                           disabled
@@ -190,6 +174,7 @@ export default function BecomeMentor() {
                         />
                       </div>
                     </div>
+                    {/* mentor Title input */}
                     <div className="col-lg-6">
                       <div className="profile-input">
                         <label htmlFor="text">
@@ -205,6 +190,7 @@ export default function BecomeMentor() {
                         )}
                       </div>
                     </div>
+                    {/* About textarea input */}
                     <div className="col-lg-6">
                       <div className="profile-input">
                         <label htmlFor="text">
@@ -227,6 +213,7 @@ export default function BecomeMentor() {
                     </div>
                     <div className="col-lg-6">
                       <div className="profile-input">
+                        {/* country input dropdown */}
                         <label htmlFor="text">Country</label>
                         <select
                           className="form-select"
@@ -246,6 +233,8 @@ export default function BecomeMentor() {
                         )}
                       </div>
                     </div>
+
+                    {/* multiselect for languages */}
                     <div className="col-lg-6">
                       <div className="multiSelect">
                         <label htmlFor="text">Spoken Languages</label>
@@ -263,6 +252,8 @@ export default function BecomeMentor() {
                         )}
                       </div>
                     </div>
+
+                    {/* multi select for skills */}
                     <div className="col-lg-6">
                       <div className="multiSelect">
                         <label htmlFor="text">Skills (Up to 10)</label>
@@ -280,6 +271,7 @@ export default function BecomeMentor() {
                         )}
                       </div>
                     </div>
+                    {/* Email input (disabled) */}
                     <div className="col-lg-6">
                       <div className="profile-input">
                         <label htmlFor="text">
@@ -295,6 +287,8 @@ export default function BecomeMentor() {
                       Please define how would you like to drive the mentorship
                       and how many mentees you can take.
                     </span>
+
+                    {/* Checkbox for user is available for mentorship or not */}
                     <div className="formcheckinput">
                       <label htmlFor="checkbox-text">
                         <input

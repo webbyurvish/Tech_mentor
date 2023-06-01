@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setTechnology,
@@ -10,7 +10,6 @@ import {
 import "./Layout.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import CustomPagination from "./Pagination";
 import { Header } from "./Header";
 import {
   fetchCountries,
@@ -55,10 +54,6 @@ export const Layout = ({ children }) => {
     dispatch(fetchSkills);
   }, [filters, currentPage, dispatch]);
 
-  // if (!result.mentors) {
-  //   return <h1>loading</h1>;
-  // }
-
   const handleTechnologyChange = (e) => {
     const selectedTechnology = e.target.value;
     navigate("/");
@@ -82,12 +77,13 @@ export const Layout = ({ children }) => {
   const handleLikedChange = (e) => {
     const checked = e.target.checked; // Use checked instead of value
     navigate("/");
+    dispatch(setCurrentPage(1));
     dispatch(setLiked(checked));
   };
 
   const handleSpokenLanguageChange = (e) => {
     const selectedSpokenLanguage = e.target.value;
-    // navigate("/");
+    navigate("/");
     dispatch(
       setSpokenLanguage(
         selectedSpokenLanguage !== "" ? selectedSpokenLanguage : null

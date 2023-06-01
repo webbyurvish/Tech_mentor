@@ -12,21 +12,26 @@ import {
   setMentorDetails,
   updateMentorDetails,
 } from "../../redux/slices/mentorSlice";
+import {
+  fetchCountries,
+  fetchLanguages,
+  fetchSkills,
+} from "../../redux/slices/dataSlice";
 
 export default function EditMentor() {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.auth.user);
   const mentor = useSelector((state) => state.mentor.details);
+  const skills = useSelector((state) => state.data.skills);
+  const countries = useSelector((state) => state.data.countries);
+  const languages = useSelector((state) => state.data.languages);
 
   const [name, setName] = useState(user.name);
   const [title, setTitle] = useState(mentor.title);
   const [country, setCountry] = useState(mentor.country);
   const [about, setAbout] = useState(mentor.about);
   const [isChecked, setIsChecked] = useState(true);
-  const [countries, setCountries] = useState(null);
-  const [skills, setSkills] = useState(null);
-  const [languages, setLanguages] = useState(null);
   const [selectedLanguages, setSelectedLanguages] = useState([]);
   const [selectedSkills, setSelectedSkills] = useState([]);
 
@@ -66,38 +71,10 @@ export default function EditMentor() {
         console.log(error);
       }
     };
-
-    const fetchCountries = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/data/countries`);
-        setCountries(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    const fetchLanguages = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/data/languages`);
-        setLanguages(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    const fetchSkills = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/data/skills`);
-        setSkills(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
     fetchMentorDetails();
-    fetchCountries();
-    fetchLanguages();
-    fetchSkills();
+    dispatch(fetchCountries);
+    dispatch(fetchLanguages);
+    dispatch(fetchSkills);
   }, [user.email]);
 
   if (!countries || !skills || !languages) {

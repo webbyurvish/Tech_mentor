@@ -51,7 +51,7 @@ export const Header = () => {
                     </li>
                     {user && user.role == "user" && (
                       <li>
-                        <Link to={`/me/${user.id}/become`}>
+                        <Link to={`/user/${user.id}/become`}>
                           Become a mentor
                         </Link>
                       </li>
@@ -84,7 +84,7 @@ export const Header = () => {
                     )}
 
                     {user && user.role == "user" && (
-                      <Link to={`/me/${Number(user.id)}`}>Dashboard</Link>
+                      <Link to={`/user/${Number(user.id)}`}>Dashboard</Link>
                     )}
 
                     <a onClick={handleLogout} href="javascript:void(0)">

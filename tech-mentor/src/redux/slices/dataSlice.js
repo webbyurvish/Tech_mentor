@@ -1,7 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { API_URL } from "../../config";
 import axios from "axios";
-import { toast } from "react-toastify";
+import createAxiosInstance from "../../Axios/axiosInstance";
+
+// Create an instance of axios with interceptor
+const axiosInstance = createAxiosInstance();
 
 const dataSlice = createSlice({
   name: "data",
@@ -47,44 +50,50 @@ export const {
   setNewPassword,
 } = dataSlice.actions;
 
-export const fetchCountries = async (dispatch) => {
+export const fetchCountries = () => async (dispatch) => {
   try {
-    const response = await axios.get(`${API_URL}/data/countries`);
+    const response = await axiosInstance.get("/data/countries");
     dispatch(setCountries(response.data));
   } catch (error) {
     console.log(error);
   }
 };
 
-export const fetchLanguages = async (dispatch) => {
+export const fetchLanguages = () => async (dispatch) => {
   try {
-    const response = await axios.get(`${API_URL}/data/languages`);
+    const response = await axiosInstance.get("/data/languages");
     dispatch(setLanguages(response.data));
   } catch (error) {
     console.log(error);
   }
 };
 
-export const fetchSkills = async (dispatch) => {
+export const fetchSkills = () => async (dispatch) => {
   try {
-    const response = await axios.get(`${API_URL}/data/skills`);
+    const response = await axiosInstance.get("/data/skills");
     dispatch(setSkills(response.data));
   } catch (error) {
     console.log(error);
   }
 };
 
-export const fetchMentorDetails = (email) => async (dispatch) => {
-  try {
-    const response = await axios.get(`${API_URL}/mentors/get/${email}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-    dispatch(setMentor(response.data));
-  } catch (error) {
-    console.log(error);
-  }
-};
+export const fetchMentorDetails =
+  (email, includeAuthorization = true) =>
+  async (dispatch) => {
+    try {
+      const config = includeAuthorization
+        ? {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        : {};
+
+      const response = await axiosInstance.get(`/mentors/get/${email}`, config);
+      dispatch(setMentor(response.data));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 export default dataSlice.reducer;

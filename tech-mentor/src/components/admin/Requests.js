@@ -1,13 +1,11 @@
 import "./admin.css";
-import axios from "axios";
-import { API_URL } from "../../config";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdminWrapper from "./AdminWrapper";
 import Loading from "../Layout/Loading";
 import { useEffect, useState } from "react";
 import { changeRole } from "../chat/ChatServices";
-import { approveRequest, rejectRequest } from "./AdminService";
+import { approveRequest, fetchRequests, rejectRequest } from "./AdminService";
 
 export default function Requests() {
   const [requests, setRequests] = useState([]);
@@ -21,30 +19,20 @@ export default function Requests() {
     e.preventDefault();
     setLoading(true);
     try {
-      // const response = approveRequest(e.target.value);
-      const response = await axios.put(
-        `${API_URL}/admin/approve`,
-        e.target.value,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await approveRequest(e.target.value);
 
       // toast success message
-      toast.success(response.data.message);
+      toast.success(response.message);
 
       // change user role in cometchat
       changeRole(e.target.value.split("@")[0]);
 
-      //filter remaining requests
+      // filter remaining requests
       setRequests(
         requests.filter((request) => request.email !== e.target.value)
       );
     } catch (error) {
-      //toast error message
+      // toast error message
       toast.error(error.response.data.message);
     }
     setLoading(false);
@@ -53,27 +41,14 @@ export default function Requests() {
 
   const handlesubmit = async () => {
     const email = mail;
-    console.log(email);
-
-    const data = { email: email, rejectmessage: rejectmessage };
-
     setLoading(true);
 
     try {
-      // const response = rejectRequest(data);
-      const response = await axios({
-        method: "DELETE",
-        url: `${API_URL}/admin/reject`,
-        data: data,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await rejectRequest(email, rejectmessage);
 
       // toast success message
-      toast.success(response.data.message);
-      console.log(response.data.message);
+      toast.success(response.message);
+      console.log(response.message);
 
       // filter remaining requests
       setRequests(requests.filter((request) => request.email !== mail));
@@ -86,28 +61,27 @@ export default function Requests() {
   };
 
   useEffect(() => {
-    //fetch all mentor requests when component mounts
-    const fetchRequests = async () => {
+    // Fetch all mentor requests when component mounts
+    const fetchData = async () => {
       try {
-        // const response = fetchRequests();
-        const response = await axios.get(`${API_URL}/admin/requests`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        });
-        setRequests(response.data);
+        const token = localStorage.getItem("token");
+        const requests = await fetchRequests(token);
+        setRequests(requests);
       } catch (error) {
         console.log(error.response);
       }
     };
 
-    fetchRequests();
+    fetchData();
   }, []);
 
   return (
     <>
       <AdminWrapper>
         <ToastContainer />
-        {(!requests || loading) && <Loading />}
-        {!loading && (
+        {!requests || loading ? (
+          <Loading />
+        ) : (
           <div className="managment-account">
             <div className="container-fluid">
               <div className="account-side-bar">
@@ -126,6 +100,7 @@ export default function Requests() {
                             {requests.length < 1 && (
                               <p>There is no request to become a mentor</p>
                             )}
+                            {/* List of requests to become a mentor */}
                             {requests.map((request) => {
                               const isToggled =
                                 toggle && request.email === toggle;
@@ -165,12 +140,14 @@ export default function Requests() {
                                           <li>{request.title}</li>
                                         </ul>
                                       </div>
+                                      {/* About User */}
                                       <div className="details-message-cover">
                                         <p>About</p>
                                         <ul>
                                           <li>{request.about}</li>
                                         </ul>
                                       </div>
+                                      {/* Languages that user knows */}
                                       <div className="details-message-cover">
                                         <p>Languages known</p>
                                         <ul>
@@ -179,6 +156,7 @@ export default function Requests() {
                                           ))}
                                         </ul>
                                       </div>
+                                      {/* Skills of user */}
                                       <div className="details-message-cover">
                                         <p>Skills</p>
                                         <ul>
@@ -188,6 +166,7 @@ export default function Requests() {
                                         </ul>
                                       </div>
                                       <div className="details-link">
+                                        {/* Reject button */}
                                         {!loading && (
                                           <button
                                             className="approve-button"
@@ -202,7 +181,7 @@ export default function Requests() {
                                             Loading...
                                           </button>
                                         )}
-
+                                        {/* Reject Button */}
                                         <button
                                           className="reject-button"
                                           variant="primary"
@@ -230,6 +209,7 @@ export default function Requests() {
           </div>
         )}
       </AdminWrapper>
+
       {/* <!-- Modal --> */}
       <div
         className="modal fade"

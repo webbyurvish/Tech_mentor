@@ -2,32 +2,44 @@
 
 import axios from "axios";
 import { API_URL } from "../../config";
+import createAxiosInstance from "../../Axios/axiosInstance";
+const axiosInstance = createAxiosInstance();
 
-export async function resetPassword(credentials) {
-    const response = await axios.post(
-        `${API_URL}/account/resetpassword`,
-        credentials,
-        {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        }
+export const handleResetPasswordrequest = async (credentials) => {
+  try {
+    // Send a POST request to the backend API endpoint
+    const response = await axiosInstance.post(
+      "/account/resetpassword",
+      credentials,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
+
     return response;
-}
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 
 //  send mail for forgot password
 
-export async function sendMail(email) {
-    const response = await axios.post(
-        `${API_URL}/account/forgotpassword`,
-        email,
-        {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        }
+export const sendMail = async (email) => {
+  try {
+    const response = await axiosInstance.post(
+      "/account/forgotpassword",
+      email,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
 
     return response;
-}
+  } catch (error) {
+    throw new Error(error);
+  }
+};

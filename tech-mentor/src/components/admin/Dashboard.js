@@ -30,6 +30,7 @@ export default function Admin() {
                   </a>
                 </div>
                 <img src="img/navlogo.jpg" alt="" />
+                {/* Name of admin */}
                 <h2> {user.name}</h2>
                 <p>Admin of Tech-mentor</p>
               </div>
