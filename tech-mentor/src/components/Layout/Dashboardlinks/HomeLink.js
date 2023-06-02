@@ -7,7 +7,6 @@ export default function HomeLink() {
   const location = useLocation();
 
   const user = useSelector((state) => state.auth.user);
-  console.log(user.role);
 
   return (
     <Link

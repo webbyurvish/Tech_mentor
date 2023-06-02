@@ -8,9 +8,8 @@ import Loading from "../Layout/Loading";
 
 export default function Mentors() {
   const dispatch = useDispatch();
-  const mentors = useSelector((state) => state.result.mentors);
   const currentPage = useSelector((state) => state.data.currentPage);
-  const result = useSelector((state) => state.result);
+  const { totalPages, mentors } = useSelector((state) => state.result);
 
   // triggered when user change page
   const handlePageChange = (pageNumber) => {
@@ -23,32 +22,36 @@ export default function Mentors() {
 
   return (
     <Layout>
-      {!mentors && <Loading />}
+      {!mentors ? (
+        <Loading />
+      ) : (
+        <>
+          {/* If result have no mentors */}
+          {mentors.length === 0 && (
+            <h3 className="nomentors">There are no mentors to show.</h3>
+          )}
 
-      {/* If result have no mentors */}
-      {mentors.length === 0 && (
-        <h3 className="nomentors">There are no mentors to show.</h3>
-      )}
+          {/* display mentors */}
+          {mentors.length > 0 && (
+            <div>
+              <div className="row justify-content-center">
+                {mentors.map((mentor, index) => (
+                  <Mentor mentor={mentor} key={index} />
+                ))}
+              </div>
+            </div>
+          )}
 
-      {/* display mentors */}
-      {mentors.length > 0 && (
-        <div>
-          <div className="row justify-content-center">
-            {mentors.map((mentor, index) => (
-              <Mentor mentor={mentor} key={index} />
-            ))}
+          {/* Pagination */}
+          <div>
+            <CustomPagination
+              totalPages={totalPages}
+              currentPage={currentPage}
+              handlePageChange={(page) => handlePageChange(page)}
+            />
           </div>
-        </div>
+        </>
       )}
-
-      {/* Pagination */}
-      <div>
-        <CustomPagination
-          totalPages={result.totalPages}
-          currentPage={currentPage}
-          handlePageChange={(page) => handlePageChange(page)}
-        />
-      </div>
     </Layout>
   );
 }

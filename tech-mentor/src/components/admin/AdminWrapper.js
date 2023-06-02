@@ -1,8 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import "../MentorPanel/Account.css";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { logoutUser } from "../../redux/slices/authSlice";
 import ConnectLink from "../Layout/Dashboardlinks/ConnectLink";
 import MentorspageLink from "../Layout/Dashboardlinks/MentorspageLink";
 import LogoutLink from "../Layout/Dashboardlinks/LogoutLink";

@@ -5,71 +5,44 @@ import AdminWrapper from "./AdminWrapper";
 import Loading from "../Layout/Loading";
 import { useEffect, useState } from "react";
 import { changeRole } from "../chat/ChatServices";
-import { approveRequest, fetchRequests, rejectRequest } from "./AdminService";
+import {
+  approveRequest,
+  fetchRequests,
+  rejectRequest,
+} from "../../redux/slices/mentorsSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Requests() {
-  const [requests, setRequests] = useState([]);
+  const dispatch = useDispatch();
+  const { loading, requests } = useSelector((state) => state.mentors);
+
   const [rejectmessage, setRejectMessage] = useState("");
   const [toggle, setToggle] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [mail, setMail] = useState("");
+
+  console.log(loading);
 
   //approve request
   const handleApprove = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      const response = await approveRequest(e.target.value);
 
-      // toast success message
-      toast.success(response.message);
-
-      // change user role in cometchat
-      changeRole(e.target.value.split("@")[0]);
-
-      // filter remaining requests
-      setRequests(
-        requests.filter((request) => request.email !== e.target.value)
-      );
-    } catch (error) {
-      // toast error message
-      toast.error(error.response.data.message);
-    }
-    setLoading(false);
+    dispatch(approveRequest(e.target.value));
+    changeRole(e.target.value.split("@")[0]);
     setToggle(false);
   };
 
-  const handlesubmit = async () => {
+  // reject request
+  const handlesubmit = async (e) => {
+    e.preventDefault();
+
     const email = mail;
-    setLoading(true);
-
-    try {
-      const response = await rejectRequest(email, rejectmessage);
-
-      // toast success message
-      toast.success(response.message);
-      console.log(response.message);
-
-      // filter remaining requests
-      setRequests(requests.filter((request) => request.email !== mail));
-    } catch (error) {
-      // toast error message
-      toast.error(error.response.data.message);
-    }
-    setLoading(false);
+    dispatch(rejectRequest({ email, rejectmessage }));
     setToggle(false);
   };
 
   useEffect(() => {
-    // Fetch all mentor requests when component mounts
     const fetchData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const requests = await fetchRequests(token);
-        setRequests(requests);
-      } catch (error) {
-        console.log(error.response);
-      }
+      dispatch(fetchRequests());
     };
 
     fetchData();
@@ -79,7 +52,7 @@ export default function Requests() {
     <>
       <AdminWrapper>
         <ToastContainer />
-        {!requests || loading ? (
+        {loading ? (
           <Loading />
         ) : (
           <div className="managment-account">

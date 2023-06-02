@@ -4,7 +4,6 @@ import { formatDate } from "../../Mentor/MentorServices";
 export default function Ratings({ mentor }) {
   return (
     <div>
-      {" "}
       {mentor.ratings.map((rating) => (
         <>
           <div className="row d-flex">

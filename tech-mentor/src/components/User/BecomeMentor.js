@@ -3,7 +3,6 @@ import "../../components/MentorPanel/EditMentor.css";
 import axios from "axios";
 import { API_URL } from "../../config";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router";
 import Multiselect from "multiselect-react-dropdown";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
@@ -15,6 +14,7 @@ import {
   fetchLanguages,
   fetchSkills,
 } from "../../redux/slices/dataSlice";
+import { addMentor } from "../../redux/slices/mentorsSlice";
 
 export default function BecomeMentor() {
   const dispatch = useDispatch();
@@ -22,18 +22,15 @@ export default function BecomeMentor() {
   const skills = useSelector((state) => state.data.skills);
   const countries = useSelector((state) => state.data.countries);
   const languages = useSelector((state) => state.data.languages);
+  const loading = useSelector((state) => state.mentors.loading);
 
   const [name, setName] = useState(user.name);
   const [title, setTitle] = useState("");
   const [country, setCountry] = useState("");
   const [about, setAbout] = useState("");
   const [isChecked, setIsChecked] = useState(true);
-  //   const [countries, setCountries] = useState(null);
-  //   const [skills, setSkills] = useState(null);
-  //   const [languages, setLanguages] = useState(null);
   const [selectedLanguages, setSelectedLanguages] = useState([]);
   const [selectedSkills, setSelectedSkills] = useState([]);
-  const [loading, setLoading] = useState(null);
 
   const [errors, setErrors] = useState({
     titleError: "",
@@ -63,9 +60,9 @@ export default function BecomeMentor() {
 
   useEffect(() => {
     // fetch all data for form ( countries , languages and skills )
-    dispatch(fetchCountries);
-    dispatch(fetchLanguages);
-    dispatch(fetchSkills);
+    dispatch(fetchCountries());
+    dispatch(fetchLanguages());
+    dispatch(fetchSkills());
   }, []);
 
   const handleSubmit = async (e) => {
@@ -115,30 +112,18 @@ export default function BecomeMentor() {
     }
 
     const mentorData = {
-      name: name,
-      title: title,
-      about: about,
+      name,
+      title,
+      about,
       email: user.email,
-      country: country,
+      country,
       languageIds: selectedLanguages,
       skillIds: selectedSkills,
       available: isChecked,
     };
-    setLoading(true);
 
-    try {
-      const response = await axios.post(`${API_URL}/mentors/add`, mentorData, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      console.log(response.data.message);
-      toast.success(response.data.message);
-    } catch (error) {
-      toast.error(error.response.data.message);
-    }
-    setLoading(false);
+    dispatch(addMentor(mentorData));
+
     setErrors({
       titleError: "",
       countryError: "",

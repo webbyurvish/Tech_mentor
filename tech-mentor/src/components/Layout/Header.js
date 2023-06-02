@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { logoutUser } from "../../redux/slices/authSlice";
-import { CometChat } from "@cometchat-pro/chat";
-import { cometchatlogout } from "../chat/ChatServices";
 
 export const Header = () => {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
 
   const [menu, setmenu] = useState(false);
@@ -18,6 +16,7 @@ export const Header = () => {
 
   const handleLogout = () => {
     dispatch(logoutUser());
+    navigate("/");
     setmenu((prevstate) => !prevstate);
   };
 

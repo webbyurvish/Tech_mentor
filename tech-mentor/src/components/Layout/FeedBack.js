@@ -1,6 +1,6 @@
 import React from "react";
 import "../Mentor/Mentor.css";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setSelectedStars } from "../../redux/slices/dataSlice";
 
 export const FeedBack = () => {

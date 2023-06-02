@@ -34,7 +34,7 @@ CometChat.init(appId, appSetting).then(
   }
 );
 
-function App() {
+export default function App() {
   return (
     <div>
       <Routes>
@@ -58,5 +58,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

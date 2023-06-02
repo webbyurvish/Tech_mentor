@@ -1,33 +1,46 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import qs from "qs";
 import { API_URL } from "../../config";
-import createAxiosInstance from "../../Axios/axiosInstance";
 
-const axiosInstance = createAxiosInstance();
-
-const resultSlice = createSlice({
-  name: "results",
-  initialState: {
-    mentors: [],
-    totalPages: 0,
-  },
-  reducers: {
-    setMentors: (state, action) => {
-      state.mentors = action.payload;
-    },
-    setTotalPages: (state, action) => {
-      state.totalPages = action.payload;
-    },
-  },
+const axiosInstance = axios.create({
+  baseURL: API_URL,
 });
 
-export const { setMentors, setTotalPages, updateMentor } = resultSlice.actions;
+axiosInstance.interceptors.request.use(
+  (config) => {
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
-export const fetchData =
-  (technology, country, name, spokenLanguage, currentPage, isLiked, userId) =>
-  async (dispatch) => {
+axiosInstance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+export const fetchData = createAsyncThunk(
+  "results/fetchData",
+  async (
+    { technology, country, name, spokenLanguage, currentPage, isLiked, userId },
+    { rejectWithValue }
+  ) => {
     try {
+      console.log({
+        technology,
+        country,
+        name,
+        spokenLanguage,
+        currentPage,
+        isLiked,
+        userId,
+      });
       const params = {
         technology,
         country,
@@ -54,7 +67,7 @@ export const fetchData =
         "$1"
       );
 
-      const url = `${API_URL}/mentors${
+      const url = `/mentors${
         modifiedQueryString ? `?${modifiedQueryString}` : ""
       }`;
 
@@ -63,8 +76,8 @@ export const fetchData =
       const mentors = response.data.items.filter(
         (item) => item.userId !== userId
       );
-      dispatch(setMentors(mentors));
-      dispatch(setTotalPages(response.data.totalPages));
+
+      const totalPageCount = response.data.totalPages;
 
       // Update URL with query parameters
       const newUrl = `${window.location.origin}${window.location.pathname}${
@@ -72,9 +85,40 @@ export const fetchData =
       }`;
 
       window.history.replaceState(null, null, newUrl);
+
+      return { mentors, totalPageCount };
     } catch (error) {
-      console.error("Error fetching mentors data:", error);
+      return rejectWithValue(error.response.data);
     }
-  };
+  }
+);
+
+const resultSlice = createSlice({
+  name: "results",
+  initialState: {
+    mentors: [],
+    totalPages: 0,
+    loading: false,
+    error: null,
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchData.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.mentors = action.payload.mentors;
+        state.totalPages = action.payload.totalPageCount;
+      })
+      .addCase(fetchData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      });
+  },
+});
 
 export default resultSlice.reducer;

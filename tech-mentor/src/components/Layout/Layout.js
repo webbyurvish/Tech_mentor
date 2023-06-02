@@ -11,15 +11,15 @@ import "./Layout.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Header } from "./Header";
-import {
-  fetchCountries,
-  fetchLanguages,
-  fetchSkills,
-  setCurrentPage,
-} from "../../redux/slices/dataSlice";
+import { setCurrentPage } from "../../redux/slices/dataSlice";
 import { fetchData } from "../../redux/slices/resultSlice";
 import { useNavigate } from "react-router";
 import Loading from "./Loading";
+import {
+  fetchCountries,
+  fetchSkills,
+  fetchLanguages,
+} from "../../redux/slices/dataSlice";
 
 export const Layout = ({ children }) => {
   const dispatch = useDispatch();
@@ -28,34 +28,38 @@ export const Layout = ({ children }) => {
   //redux store data
   const result = useSelector((state) => state.result);
   const user = useSelector((state) => state.auth.user);
+  const { technology, country, name, spokenLanguage, isLiked } = useSelector(
+    (state) => state.filters
+  );
   const filters = useSelector((state) => state.filters);
-  const skills = useSelector((state) => state.data.skills);
-  const countries = useSelector((state) => state.data.countries);
-  const languages = useSelector((state) => state.data.languages);
-  const currentPage = useSelector((state) => state.data.currentPage);
+
+  const { skills, countries, languages, currentPage } = useSelector(
+    (state) => state.data
+  );
 
   const userId = user !== null ? Number(user.id) : null;
 
   useEffect(() => {
     dispatch(
-      fetchData(
-        filters.technology,
-        filters.country,
-        filters.name,
-        filters.spokenLanguage,
+      fetchData({
+        technology,
+        country,
+        name,
+        spokenLanguage,
         currentPage,
-        filters.isLiked,
-        userId
-      )
+        isLiked,
+        userId,
+      })
     );
 
-    dispatch(fetchCountries);
-    dispatch(fetchLanguages);
-    dispatch(fetchSkills);
+    dispatch(fetchCountries());
+    dispatch(fetchLanguages());
+    dispatch(fetchSkills());
   }, [filters, currentPage, dispatch]);
 
   const handleTechnologyChange = (e) => {
     const selectedTechnology = e.target.value;
+    dispatch(setCurrentPage(1));
     navigate("/");
     dispatch(
       setTechnology(selectedTechnology !== "" ? selectedTechnology : null)
@@ -64,12 +68,14 @@ export const Layout = ({ children }) => {
 
   const handleCountryChange = (e) => {
     const selectedCountry = e.target.value;
+    dispatch(setCurrentPage(1));
     navigate("/");
     dispatch(setCountry(selectedCountry !== "" ? selectedCountry : null));
   };
 
   const handleNameChange = (e) => {
     const selectedName = e.target.value;
+    dispatch(setCurrentPage(1));
     navigate("/");
     dispatch(setName(selectedName !== "" ? selectedName : null));
   };
@@ -83,6 +89,7 @@ export const Layout = ({ children }) => {
 
   const handleSpokenLanguageChange = (e) => {
     const selectedSpokenLanguage = e.target.value;
+    dispatch(setCurrentPage(1));
     navigate("/");
     dispatch(
       setSpokenLanguage(

@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import Account from "./Account";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchMentorDetails } from "../../redux/slices/dataSlice";
+import { fetchMentor } from "../../redux/slices/dataSlice";
 import Loading from "../Layout/Loading";
 
 export default function MentorDetail() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const mentor = useSelector((state) => state.data.mentor);
+  const { loading } = useSelector((state) => state.data);
 
   useEffect(() => {
-    dispatch(fetchMentorDetails(user.email));
+    dispatch(fetchMentor(user.email));
   }, [user.email]);
 
-  return <div>{!mentor ? <Loading /> : <Account />}</div>;
+  return <div>{loading ? <Loading /> : <Account />}</div>;
 }

@@ -11,13 +11,9 @@ import { setTechnology } from "../../redux/slices/filterSlice";
 import { fetchData } from "../../redux/slices/resultSlice";
 import Loading from "../Layout/Loading";
 import Overview from "../Layout/Rating/Overview";
-import {
-  RatingSubmit,
-  extractUsername,
-  fetchMentorData,
-} from "./MentorServices";
+import { extractUsername, fetchMentorData } from "./MentorServices";
 import Ratings from "../Layout/Rating/Ratings";
-import RatingModal from "../Layout/Rating/RatingModal";
+import { submitRating } from "../../redux/slices/likeratingSlice";
 
 export default function MentorProfile() {
   const navigate = useNavigate();
@@ -36,16 +32,17 @@ export default function MentorProfile() {
     navigate("/");
     dispatch(setCurrentPage(1));
     dispatch(setTechnology(skill)); // Dispatch the setTechnology action with the selected skill
+
     dispatch(
-      fetchData(
-        filters.technology, // Use the selected skill instead of filters.technology
-        filters.country,
-        filters.name,
-        filters.spokenLanguage,
+      fetchData({
+        technology: skill, // Use the selected skill directly instead of filters.technology
+        country: filters.country,
+        name: filters.name,
+        spokenLanguage: filters.spokenLanguage,
         currentPage,
-        filters.isLiked,
-        userId
-      )
+        isLiked: filters.isLiked,
+        userId,
+      })
     );
     setLoading(false);
   };
@@ -84,18 +81,15 @@ export default function MentorProfile() {
   // submit ratings to mentor
   const handleRatingSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const message = await RatingSubmit(
-        user,
-        mentor,
-        feedbackMessage,
-        selectedStars,
-        navigate
-      );
-      toast.success(message);
-    } catch (error) {
-      toast.error(error.message);
-    }
+
+    const data = {
+      userId: Number(user.id),
+      mentorId: mentor.id,
+      comment: feedbackMessage,
+      stars: selectedStars,
+    };
+
+    dispatch(submitRating(data));
   };
 
   return (

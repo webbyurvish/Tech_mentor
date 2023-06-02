@@ -10,55 +10,23 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Ratings.css";
 import { DashboardRating } from "../Layout/Rating/DashboardRating";
+import { getActiveStars } from "../Mentor/MentorServices";
 
 export default function Account() {
   const user = useSelector((state) => state.auth.user);
   const mentor = useSelector((state) => state.data.mentor);
+
   const navigate = useNavigate();
 
-  console.log(mentor);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const classes = ["Excellent", "Good", "Average", "Poor", "Terrible"];
-
-  const countObjectsWithStars = (stars) => {
-    return (
-      mentor && mentor.ratings.filter((rating) => rating.stars === stars).length
-    );
-  };
 
   const totalCount = mentor && mentor.ratings.length;
-  console.log(totalCount);
-
-  const calculatePercentage = (count) => {
-    if (totalCount === 0) return 0;
-    return (count / totalCount) * 100;
-  };
 
   const ratingSum =
     mentor && mentor.ratings.reduce((sum, rating) => sum + rating.stars, 0);
 
   const averageRating = totalCount > 0 ? ratingSum / totalCount : 0;
-
-  const getActiveStars = () => {
-    const maxStars = 5;
-    const activeStars = Math.round(averageRating);
-    const stars = [];
-
-    for (let i = 0; i < maxStars; i++) {
-      if (i < activeStars) {
-        stars.push(
-          <span key={i} className="fa fa-star star-active mx-1"></span>
-        );
-      } else {
-        stars.push(
-          <span key={i} className="fa fa-star star-inactive mx-1"></span>
-        );
-      }
-    }
-
-    return stars;
-  };
 
   const handleresetpasswordsubmit = async (e) => {
     e.preventDefault();
@@ -139,7 +107,7 @@ export default function Account() {
                             </p>
                           </div>
                           <div style={{ width: "168%", marginLeft: "-28px" }}>
-                            {getActiveStars()}
+                            {getActiveStars(averageRating)}
                           </div>
                         </div>
                         <div className="col-md-8">

@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import UserWrapper from "./UserWrapper";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "../MentorPanel/Account.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router";
-import {
-  handleResetPasswordSubmitFunction,
-  handleResetPasswordSubmitfunction,
-} from "./UserServices";
+import { handleResetPasswordSubmit } from "../../redux/slices/accountSlice";
+import Loading from "../Layout/Loading";
 
 export default function UserHome() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const { loading } = useSelector((state) => state.account);
 
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -21,64 +21,61 @@ export default function UserHome() {
   const handleresetpasswordsubmit = async (e) => {
     e.preventDefault();
 
-    const successCallback = (message) => {
-      toast.success(message);
-    };
-
-    const errorCallback = (errorMessage) => {
-      toast.error(errorMessage);
-    };
-
-    await handleResetPasswordSubmitFunction(
-      user,
+    const data = {
+      email: user.email,
       oldPassword,
       newPassword,
-      successCallback,
-      errorCallback,
-      navigate
-    );
+    };
+
+    dispatch(handleResetPasswordSubmit(data));
   };
 
   return (
     <UserWrapper>
-      <ToastContainer />
-      <div className="account-right-side">
-        <div className="accont-home">
-          <h2>Home</h2>
-        </div>
-      </div>
-      <div className="account-profile">
-        <div className="accound-cover">
-          <div className="row justify-content-center">
-            <div className="col-lg-4">
-              <div className="profile-details">
-                <div className="share-details">
-                  <a href="javascript:void(0)">
-                    <i className="fa-solid fa-share-nodes"></i>
-                  </a>
-                </div>
-                <img src="img/navlogo.jpg" alt="" />
-                {/* User Name */}
-                <h2>{user.name}</h2>
-                {/* user's profile image */}
-                <img src={user.imageUrl} alt="" />
-                {/* change password button ( on click its open a modal ) */}
-                <div>
-                  <a
-                    href="javascript:vid(0)"
-                    data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"
-                  >
-                    <div className="saveorclose-btn">
-                      <button>change password</button>
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <div className="account-right-side">
+            <div className="accont-home">
+              <h2>Home</h2>
+            </div>
+          </div>
+          <div className="account-profile">
+            <div className="accound-cover">
+              <div className="row justify-content-center">
+                <div className="col-lg-4">
+                  <div className="profile-details">
+                    <div className="share-details">
+                      <a href="javascript:void(0)">
+                        <i className="fa-solid fa-share-nodes"></i>
+                      </a>
                     </div>
-                  </a>
+                    <img src="img/navlogo.jpg" alt="" />
+                    {/* User Name */}
+                    <h2>{user.name}</h2>
+                    {/* user's profile image */}
+                    <img src={user.imageUrl} alt="" />
+                    {/* change password button ( on click its open a modal ) */}
+                    <div>
+                      <a
+                        href="javascript:vid(0)"
+                        data-bs-toggle="modal"
+                        data-bs-target="#exampleModal"
+                      >
+                        <div className="saveorclose-btn">
+                          <button>change password</button>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
+      <ToastContainer />
 
       {/* Change password Modal */}
       <div

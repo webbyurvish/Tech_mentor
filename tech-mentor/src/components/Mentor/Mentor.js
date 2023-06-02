@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import "./Mentor.css";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { API_URL } from "../../config";
-import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { fetchData } from "../../redux/slices/resultSlice";
 import { setTechnology } from "../../redux/slices/filterSlice";
-import { handleLikeFunction } from "./MentorServices";
+import { addLike } from "../../redux/slices/likeratingSlice";
+import { setCurrentPage } from "../../redux/slices/dataSlice";
 
 export default function Mentor({ mentor }) {
   const navigate = useNavigate();
@@ -20,35 +19,42 @@ export default function Mentor({ mentor }) {
   const userId = user ? Number(user.id) : null;
 
   const handleskillchange = (skill) => {
+    dispatch(setCurrentPage(1));
     dispatch(setTechnology(skill)); // Dispatch the setTechnology action with the selected skill
     dispatch(
-      fetchData(
-        filters.technology, // Use the selected skill instead of filters.technology
-        filters.country,
-        filters.name,
-        filters.spokenLanguage,
+      fetchData({
+        technology: skill, // Use the selected skill directly instead of filters.technology
+        country: filters.country,
+        name: filters.name,
+        spokenLanguage: filters.spokenLanguage,
         currentPage,
-        filters.isLiked,
-        userId
-      )
+        isLiked: filters.isLiked,
+        userId,
+      })
     );
   };
 
   // When user like or remove like of a mentor
   const handlelike = async (mentorId) => {
-    await handleLikeFunction(
+    if (!user) {
+      navigate("/login");
+    }
+    const data = {
       userId,
       mentorId,
       filters,
       currentPage,
       navigate,
-      dispatch
-    );
+      dispatch,
+    };
+
+    dispatch(addLike(data));
   };
 
   return (
     <div className="col-lg-4">
       <ToastContainer />
+
       <div className="mentor-card-cover">
         <div className="card-inner">
           <div className="row align-items-center justify-content-between mentor-location">
