@@ -7,6 +7,7 @@ import filterReducer from "./slices/filterSlice";
 import mentorsReducer from "./slices/mentorsSlice";
 import accountReducer from "./slices/accountSlice";
 import likeRatingReducer from "./slices/likeratingSlice";
+import videoReducer from "./slices/videoSlice";
 
 import {
   persistStore,
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
   filters: filterReducer,
   account: accountReducer,
   likeRating: likeRatingReducer,
+  video: videoReducer,
 });
 
 const persistConfig = {
@@ -43,6 +45,7 @@ const persistConfig = {
     "filters",
     "mentors",
     "likeRating",
+    "video",
   ], // Specify the reducers to persist
 };
 

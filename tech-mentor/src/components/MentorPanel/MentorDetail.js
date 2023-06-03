@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Account from "./Account";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchMentor } from "../../redux/slices/dataSlice";
 import Loading from "../Layout/Loading";
+import { getMentorDetails } from "../../redux/slices/mentorSlice";
 
 export default function MentorDetail() {
   const dispatch = useDispatch();
@@ -10,7 +10,7 @@ export default function MentorDetail() {
   const { loading } = useSelector((state) => state.data);
 
   useEffect(() => {
-    dispatch(fetchMentor(user.email));
+    dispatch(getMentorDetails(user.email));
   }, [user.email]);
 
   return <div>{loading ? <Loading /> : <Account />}</div>;

@@ -28,26 +28,27 @@ export const Header = () => {
             <div className="col-lg-8">
               <div className="logo-and-navbar">
                 <div className="logo">
-                  <a href="javascript:void(0)">
+                  <Link to={"/"}>
                     <img
                       src="/images/Tech-mentor.png"
                       width={120}
                       height={40}
                       alt=""
                     />
-                  </a>
+                  </Link>
                 </div>
                 <div className="nav-bar">
                   <ul>
                     <li>
-                      <a href="/about">About</a>
+                      <Link to={"/about"}>About</Link>
                     </li>
-                    <li>
+                    {/* <li>
                       <a href="javascript:void(0)">Mentorship Guidelines</a>
                     </li>
                     <li>
                       <a href="javascript:void(0)">Sessions Calendar</a>
-                    </li>
+                    </li> */}
+
                     {user && user.role == "user" && (
                       <li>
                         <Link to={`/user/${user.id}/become`}>
@@ -55,6 +56,9 @@ export const Header = () => {
                         </Link>
                       </li>
                     )}
+                    <li>
+                      <Link to={"/videos"}>Find Videos</Link>
+                    </li>
                   </ul>
                 </div>
               </div>

@@ -11,30 +11,30 @@ const AdminWrapper = ({ children }) => {
     <div>
       <div className="managment-account">
         <div className="container-fluid">
-          <div className="account-side-bar">
-            <nav className="sc-iqseJM eWrBEk">
-              <img
-                src="/images/coding.png"
-                alt="Logo"
-                className="sc-egiyK dhAbpN"
-              />
-              {/* Admin Dashboard home */}
-              <HomeLink />
+          {/* <div className="account-side-bar"> */}
+          <nav style={{ width: "77px" }} className="sc-iqseJM eWrBEk">
+            <img
+              src="/images/coding.png"
+              alt="Logo"
+              className="sc-egiyK dhAbpN"
+            />
+            {/* Admin Dashboard home */}
+            <HomeLink />
 
-              {/* Dashboard Users Requests to become a mentor */}
-              <RequestsLink />
+            {/* Dashboard Users Requests to become a mentor */}
+            <RequestsLink />
 
-              {/* Dashboard Chat and video call to mentors and users */}
-              <ConnectLink />
+            {/* Dashboard Chat and video call to mentors and users */}
+            <ConnectLink />
 
-              {/* Main mentors list page */}
-              <MentorspageLink />
+            {/* Main mentors list page */}
+            <MentorspageLink />
 
-              {/* Logout */}
-              <LogoutLink />
-            </nav>
-            <div>{children}</div>
-          </div>
+            {/* Logout */}
+            <LogoutLink />
+          </nav>
+          <div>{children}</div>
+          {/* </div> */}
         </div>
       </div>
     </div>

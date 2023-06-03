@@ -7,9 +7,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router";
 import { handleResetPasswordSubmit } from "../../redux/slices/accountSlice";
 import Loading from "../Layout/Loading";
+import { changePassword } from "../../redux/slices/authSlice";
 
 export default function UserHome() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const { loading } = useSelector((state) => state.account);
@@ -27,7 +27,7 @@ export default function UserHome() {
       newPassword,
     };
 
-    dispatch(handleResetPasswordSubmit(data));
+    dispatch(changePassword(data));
   };
 
   return (

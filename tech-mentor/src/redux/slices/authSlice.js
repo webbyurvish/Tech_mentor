@@ -72,6 +72,26 @@ export const signupUser = createAsyncThunk(
   }
 );
 
+export const changePassword = createAsyncThunk(
+  "changePassword",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/account/changepassword`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const initialState = {
   error: null,
   loading: false,
@@ -95,7 +115,6 @@ const dataSlice = createSlice({
       state.user = null;
       state.loading = false;
       state.error = null;
-
       localStorage.removeItem("token");
     },
   },
@@ -129,6 +148,20 @@ const dataSlice = createSlice({
         toast.success("signup successful");
       })
       .addCase(signupUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(action.payload.message);
+      })
+      .addCase(changePassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(changePassword.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        toast.success("password changed successfully");
+      })
+      .addCase(changePassword.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         toast.error(action.payload.message);

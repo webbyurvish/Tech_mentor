@@ -29,7 +29,7 @@ export const MentorWrapper = ({ children }) => {
     <div className="managment-account">
       <div className="container-fluid">
         <div className="account-side-bar">
-          <nav className="sc-iqseJM eWrBEk">
+          <nav style={{ width: "77px" }} className="sc-iqseJM eWrBEk">
             <img
               src="/images/coding.png"
               alt="Logo"

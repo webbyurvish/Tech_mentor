@@ -17,6 +17,9 @@ import BecomeMentor from "./components/user/BecomeMentor";
 import MentorChat from "./components/Mentor/MentorChat";
 import AdminChat from "./components/admin/AdminChat";
 import UserHome from "./components/user/UserHome";
+import Yt from "./Youtube/components/Yt";
+import PlayVideo from "./Youtube/components/PlayVideo";
+import About from "./components/Layout/About/About";
 
 const appId = process.env.REACT_APP_COMETCHAT_APP_ID;
 
@@ -39,6 +42,7 @@ export default function App() {
     <div>
       <Routes>
         <Route path="/" element={<Mentors />} />
+        <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin/:id" element={<Admin />} />
         <Route path="/user/:id" element={<UserHome />} />
@@ -54,6 +58,8 @@ export default function App() {
         <Route path="/admin/:id/chat" element={<AdminChat />} />
         <Route path="/chatwithmentor/:uid" element={<ChatWithMentor />} />
         <Route path="/chatwithadmin/:uid" element={<ChatWithAdmin />} />
+        <Route path="/videos" element={<Yt />} />
+        <Route path="/videos/play/:id" element={<PlayVideo />} />
       </Routes>
     </div>
   );

@@ -15,7 +15,7 @@ export default function HomeLink() {
         location.pathname === `/${user.role}/${user.id}` ? "active" : ""
       } `}
     >
-      <i className="fa-solid fa-house-user"></i>
+      <i className="fa-solid fa-house-user fa-2xs"></i>
       <div className="sc-bqiRlB bfSpmb">Home</div>
     </Link>
   );
