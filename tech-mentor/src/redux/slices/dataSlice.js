@@ -1,40 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import createAxiosInstance from "../../Axios/axiosInstance";
-import axios from "axios";
-import { API_URL } from "../../config";
 
 // // Create an instance of axios with interceptor
-// const axiosInstance = createAxiosInstance();
 
-const axiosInstance = axios.create({
-  baseURL: API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-axiosInstance.interceptors.response.use(
-  (response) => {
-    // Handle the response if needed
-    return response;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+const axiosInstance = createAxiosInstance();
 
 // Thunk action to fetch countries
 export const fetchCountries = createAsyncThunk(
@@ -94,9 +63,13 @@ export const fetchMentor = createAsyncThunk(
   "mentor/fetch",
   async (email, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/mentors/get/${email}`);
+      const response = await axiosInstance.get(`/mentors/get/${email}`, {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      });
+      console.log(response.data);
       return response.data;
     } catch (error) {
+      console.log(error);
       return rejectWithValue(error.response.data);
     }
   }
@@ -115,6 +88,7 @@ const dataSlice = createSlice({
     error: null,
     loading: false,
     mentor: null,
+    feedbackMessage: "",
   },
   reducers: {
     setCurrentPage: (state, action) => {
@@ -122,6 +96,9 @@ const dataSlice = createSlice({
     },
     setSelectedStars: (state, action) => {
       state.selectedStars = action.payload;
+    },
+    setFeedbackMessage: (state, action) => {
+      state.feedbackMessage = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -199,6 +176,7 @@ export const {
   setSelectedStars,
   setOldPassword,
   setNewPassword,
+  setFeedbackMessage,
 } = dataSlice.actions;
 
 export default dataSlice.reducer;

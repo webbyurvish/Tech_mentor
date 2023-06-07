@@ -1,39 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { API_URL } from "../../config";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import { batch } from "react-redux";
+import createAxiosInstance from "../../Axios/axiosInstance";
 
-const axiosInstance = axios.create({
-  baseURL: API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-axiosInstance.interceptors.response.use(
-  (response) => {
-    // Handle the response if needed
-    return response;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+const axiosInstance = createAxiosInstance();
 
 export const addMentor = createAsyncThunk(
   "mentors/add",
@@ -67,7 +38,21 @@ export const approveRequest = createAsyncThunk(
 export const rejectRequest = createAsyncThunk(
   "requests/reject",
   async ({ email, rejectmessage }) => {
-    console.log(email, rejectmessage);
+    try {
+      const response = await axiosInstance.delete("/admin/reject", {
+        data: { email, rejectmessage },
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response.data);
+    }
+  }
+);
+
+// Thunk action to reject a request
+export const DeleteMentor = createAsyncThunk(
+  "requests/reject",
+  async ({ email, rejectmessage }) => {
     try {
       const response = await axiosInstance.delete("/admin/reject", {
         data: { email, rejectmessage },
@@ -115,7 +100,7 @@ const mentorsSlice = createSlice({
       .addCase(addMentor.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.message;
-        toast.error(action.payload);
+        toast.error(action.payload.message);
       })
       .addCase(fetchRequests.pending, (state) => {
         state.loading = true;

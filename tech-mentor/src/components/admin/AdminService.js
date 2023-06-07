@@ -1,18 +1,5 @@
 import createAxiosInstance from "../../Axios/axiosInstance";
 
-// // Fetch all mentor requests
-// export const fetchRequests = async () => {
-//   try {
-//     const response = await axios.get(`${API_URL}/admin/requests`, {
-//       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-//     });
-//     return response.data;
-//   } catch (error) {
-//     console.log(error.response);
-//     throw error;
-//   }
-// };
-
 // Create an instance of axios with interceptor
 const axiosInstance = createAxiosInstance();
 

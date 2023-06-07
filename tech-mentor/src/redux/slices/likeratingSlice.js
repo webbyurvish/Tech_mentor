@@ -1,37 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import { API_URL } from "../../config";
 import { toast } from "react-toastify";
 import { fetchData } from "./resultSlice";
+import createAxiosInstance from "../../Axios/axiosInstance";
 
-const axiosInstance = axios.create({
-  baseURL: API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-axiosInstance.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+const axiosInstance = createAxiosInstance();
 
 // thunk for submit rating
 export const submitRating = createAsyncThunk(
@@ -45,7 +17,11 @@ export const submitRating = createAsyncThunk(
     };
 
     try {
-      const response = await axiosInstance.post("/rating", data);
+      const response = await axiosInstance.post("/rating", data, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -63,7 +39,12 @@ export const addLike = createAsyncThunk(
     const data = { userId, mentorId, filters, currentPage, navigate, dispatch };
 
     try {
-      const response = await axiosInstance.post("/like", data);
+      const response = await axiosInstance.post("/like", data, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
       dispatch(
         fetchData({
           technology: filters.technology,

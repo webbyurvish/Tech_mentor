@@ -1,4 +1,5 @@
 import createAxiosInstance from "../../Axios/axiosInstance";
+
 const axiosInstance = createAxiosInstance();
 
 export const handleResetPasswordrequest = async (credentials) => {
@@ -21,7 +22,6 @@ export const handleResetPasswordrequest = async (credentials) => {
 };
 
 //  send mail for forgot password
-
 export const sendMail = async (email) => {
   try {
     const response = await axiosInstance.post(

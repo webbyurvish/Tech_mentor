@@ -67,7 +67,7 @@
 .content {
   background: #f9f9f9;
   padding-left: 2%;
-  padding-right: 2%;
+  /* padding-right: 2%; */
   padding-top: 20px;
   padding-bottom: 20px;
   transition: all 0.3s ease;

@@ -264,3 +264,17 @@ button.btn.btn-primary {
   background: #36d1a6;
   border: none;
 }
+
+.doughnut-chart-container {
+  position: relative;
+}
+
+.chart-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}

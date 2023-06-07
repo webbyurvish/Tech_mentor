@@ -58,3 +58,38 @@ export const fetchMentorData = async (id, navigate) => {
     throw error; // Re-throw the error to handle it in the component
   }
 };
+
+// Function to calculate the average rating
+export function calculateAverageRating(ratings) {
+  const sum = ratings?.reduce((total, rating) => total + rating.stars, 0);
+  const average = sum / ratings?.length;
+  return average;
+}
+
+// sort mentors by likes and ratings
+export function getSortedMentors(mentors) {
+  const sortedMentors = [...mentors].sort((a, b) => {
+    const likesA = a.likes.length;
+    const likesB = b.likes.length;
+
+    const averageRatingA = calculateAverageRating(a.ratings);
+    const averageRatingB = calculateAverageRating(b.ratings);
+
+    // Sort by number of likes (descending order)
+    if (likesA > likesB) {
+      return -1;
+    } else if (likesA < likesB) {
+      return 1;
+    }
+
+    // If number of likes is the same, sort by average rating (descending order)
+    if (averageRatingA > averageRatingB) {
+      return -1;
+    } else if (averageRatingA < averageRatingB) {
+      return 1;
+    }
+    // If both criteria are equal, maintain the original order
+    return 0;
+  });
+  return sortedMentors;
+}

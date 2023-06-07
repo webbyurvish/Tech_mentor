@@ -8,6 +8,8 @@ const initialState = {
   name: "",
   spokenLanguage: "",
   isLiked: false,
+  isMostLiked: false,
+  isTopRated: false,
 };
 
 const filtersSlice = createSlice({
@@ -29,6 +31,19 @@ const filtersSlice = createSlice({
     setLiked: (state, action) => {
       state.isLiked = action.payload;
     },
+    setTopRated: (state, action) => {
+      state.isTopRated = action.payload;
+    },
+    setMostLiked: (state, action) => {
+      state.isMostLiked = action.payload;
+    },
+    resetallfilters: (state, action) => {
+      state.technology = "";
+      state.country = "";
+      state.name = "";
+      state.spokenLanguage = "";
+      state.isLiked = false;
+    },
   },
 });
 
@@ -38,6 +53,8 @@ export const {
   setName,
   setSpokenLanguage,
   setLiked,
+  setMostLiked,
+  setTopRated,
 } = filtersSlice.actions;
 
 export default filtersSlice.reducer;

@@ -1,39 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import { API_URL } from "../../config";
 import { toast } from "react-toastify";
 import jwtDecode from "jwt-decode";
 import "react-toastify/dist/ReactToastify.css";
 import { CometChat } from "@cometchat-pro/chat";
+import createAxiosInstance from "../../Axios/axiosInstance";
 
 // // Create an instance of axios with interceptor
-// const axiosInstance = createAxiosInstance();
 
-const axiosInstance = axios.create({
-  baseURL: API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-axiosInstance.interceptors.request.use(
-  (config) => {
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-axiosInstance.interceptors.response.use(
-  (response) => {
-    // Handle the response if needed
-    return response;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+const axiosInstance = createAxiosInstance();
 
 // async thunk for login
 export const loginUser = createAsyncThunk(
@@ -62,6 +36,7 @@ export const signupUser = createAsyncThunk(
       const response = await axiosInstance.post("account/register", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       navigate("/");
@@ -76,8 +51,8 @@ export const changePassword = createAsyncThunk(
   "changePassword",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        `${API_URL}/account/changepassword`,
+      const response = await axiosInstance.post(
+        "/account/changepassword",
         data,
         {
           headers: {
@@ -92,10 +67,26 @@ export const changePassword = createAsyncThunk(
   }
 );
 
+// export const sendMail = createAsyncThunk(
+//   "sendMail",
+//   async (email, { rejectWithValue }) => {
+//     try {
+//       const response = await axiosInstance.post(
+//         "/account/forgotpassword",
+//         email
+//       );
+//       return response.data;
+//     } catch (error) {
+//       return rejectWithValue(error.response.data);
+//     }
+//   }
+// );
+
 const initialState = {
   error: null,
   loading: false,
   user: null,
+  isAuthenticated: false,
 };
 
 const token =
@@ -105,6 +96,7 @@ const token =
 if (token) {
   const decodedToken = jwtDecode(token);
   initialState.user = decodedToken;
+  initialState.isAuthenticated = true;
 }
 
 const dataSlice = createSlice({
@@ -115,6 +107,7 @@ const dataSlice = createSlice({
       state.user = null;
       state.loading = false;
       state.error = null;
+      state.isAuthenticated = false;
       localStorage.removeItem("token");
     },
   },
@@ -127,6 +120,7 @@ const dataSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
+        state.isAuthenticated = true;
         state.user = jwtDecode(action.payload.token);
         localStorage.setItem("token", action.payload.token);
         toast.success("login successful");
@@ -134,6 +128,7 @@ const dataSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.isAuthenticated = false;
         toast.error(action.payload.message);
       })
       .addCase(signupUser.pending, (state) => {
@@ -143,6 +138,7 @@ const dataSlice = createSlice({
       .addCase(signupUser.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
+        state.isAuthenticated = true;
         state.user = jwtDecode(action.payload.token);
         localStorage.setItem("token", action.payload.token);
         toast.success("signup successful");
@@ -150,6 +146,7 @@ const dataSlice = createSlice({
       .addCase(signupUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.isAuthenticated = false;
         toast.error(action.payload.message);
       })
       .addCase(changePassword.pending, (state) => {
@@ -166,6 +163,20 @@ const dataSlice = createSlice({
         state.error = action.payload;
         toast.error(action.payload.message);
       });
+    // .addCase(sendMail.pending, (state) => {
+    //   state.loading = true;
+    //   state.error = null;
+    // })
+    // .addCase(sendMail.fulfilled, (state, action) => {
+    //   state.loading = false;
+    //   state.error = null;
+    //   toast.success("Mail sent successfully");
+    // })
+    // .addCase(sendMail.rejected, (state, action) => {
+    //   state.loading = false;
+    //   state.error = action.payload;
+    //   toast.error(action.payload.message);
+    // });
   },
 });
 

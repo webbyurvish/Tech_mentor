@@ -4,6 +4,7 @@ import VideoList from "./VideoList";
 import { Header } from "../../components/Layout/Header";
 import "../style/youtube.css";
 import { useSelector } from "react-redux";
+import { Skills } from "./Skills";
 
 function Yt() {
   const videos = useSelector((state) => state.video.videos);
@@ -26,7 +27,8 @@ function Yt() {
 
         <div className="content">
           <div className="banner">
-            <img src="images/banner2.jpg" alt="" />
+            <Skills />
+            {/* <img src="images/banner2.jpg" alt="" /> */}
           </div>
           <div id="result"></div>
 

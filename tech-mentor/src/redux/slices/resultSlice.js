@@ -1,46 +1,27 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 import qs from "qs";
-import { API_URL } from "../../config";
+import createAxiosInstance from "../../Axios/axiosInstance";
+import { calculateAverageRating } from "../../components/Mentor/MentorServices";
 
-const axiosInstance = axios.create({
-  baseURL: API_URL,
-});
-
-axiosInstance.interceptors.request.use(
-  (config) => {
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-axiosInstance.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+const axiosInstance = createAxiosInstance();
 
 export const fetchData = createAsyncThunk(
   "results/fetchData",
   async (
-    { technology, country, name, spokenLanguage, currentPage, isLiked, userId },
+    {
+      technology,
+      country,
+      name,
+      spokenLanguage,
+      currentPage,
+      isLiked,
+      userId,
+      isMostLiked,
+      isTopRated,
+    },
     { rejectWithValue }
   ) => {
     try {
-      console.log({
-        technology,
-        country,
-        name,
-        spokenLanguage,
-        currentPage,
-        isLiked,
-        userId,
-      });
       const params = {
         technology,
         country,
@@ -72,10 +53,34 @@ export const fetchData = createAsyncThunk(
       }`;
 
       const response = await axiosInstance.get(url);
+      let mentors = null;
 
-      const mentors = response.data.items.filter(
-        (item) => item.userId !== userId
-      );
+      if (isMostLiked) {
+        mentors = response.data.items
+          .filter((item) => item.userId !== userId)
+          .sort((a, b) => b.likes.length - a.likes.length);
+      } else {
+        mentors = response.data.items.filter((item) => item.userId !== userId);
+      }
+
+      if (isTopRated) {
+        mentors.sort((a, b) => {
+          // Calculate the average rating for mentor 'a'
+          const averageRatingA = calculateAverageRating(a.ratings);
+
+          // Calculate the average rating for mentor 'b'
+          const averageRatingB = calculateAverageRating(b.ratings);
+
+          // Compare the average ratings
+          if (averageRatingA > averageRatingB) {
+            return -1; // 'a' comes before 'b'
+          } else if (averageRatingA < averageRatingB) {
+            return 1; // 'b' comes before 'a'
+          } else {
+            return 0; // No change in order
+          }
+        });
+      }
 
       const totalPageCount = response.data.totalPages;
 
@@ -101,7 +106,11 @@ const resultSlice = createSlice({
     loading: false,
     error: null,
   },
-  reducers: {},
+  reducers: {
+    setMentors: (state, action) => {
+      state.mentors = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchData.pending, (state) => {
