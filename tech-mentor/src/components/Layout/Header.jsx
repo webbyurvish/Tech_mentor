@@ -88,9 +88,7 @@ export const Header = () => {
                       <Link to={`/user/${Number(user.id)}`}>Dashboard</Link>
                     )}
 
-                    <a onClick={handleLogout} href="javascript:void(0)">
-                      Logout
-                    </a>
+                    <a onClick={handleLogout}>Logout</a>
                   </div>
                 )}
 

@@ -47,30 +47,15 @@ export default function Admin() {
                     {/* Name of admin */}
                     <h2> {user.name}</h2>
                     <p>Admin of Tech-mentor</p>
+                    <img
+                      style={{ marginTop: "20px" }}
+                      alt="admin profile"
+                      src={user.imageUrl}
+                    />
                     <div className="likes-card">
                       <h3>Total Mentors</h3>
                       <p style={{ border: "none" }} className="likes-count">
                         {mentors?.length}
-                      </p>
-                    </div>
-
-                    <div className="likes-card">
-                      <h3>Total Ratings</h3>
-                      <p style={{ border: "none" }} className="likes-count">
-                        {mentors?.reduce(
-                          (count, mentor) => count + mentor.ratings.length,
-                          0
-                        )}
-                      </p>
-                    </div>
-
-                    <div className="likes-card">
-                      <h3>Total Likes</h3>
-                      <p style={{ border: "none" }} className="likes-count">
-                        {mentors?.reduce(
-                          (count, mentor) => count + mentor.likes.length,
-                          0
-                        )}
                       </p>
                     </div>
 

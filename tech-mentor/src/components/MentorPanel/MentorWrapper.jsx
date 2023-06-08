@@ -34,7 +34,7 @@ export const MentorWrapper = ({ children }) => {
             <LogoutLink />
 
             {/* Reviews */}
-            {/* <ReviewsLink /> */}
+            <ReviewsLink />
           </nav>
           <div>{children}</div>
         </div>

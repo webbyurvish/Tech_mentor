@@ -35,15 +35,26 @@ export default function Account() {
                   <p style={{ border: "none" }}>{mentor.title}</p>
 
                   {/* likes card */}
-                  <div className="likes-card">
-                    <h3>Total Likes</h3>
-                    <p style={{ border: "none" }} className="likes-count">
-                      {mentor.likes.length}
-                    </p>
+                  <div
+                    style={{ display: "flex", justifyContent: "space-around" }}
+                    className="likes-card"
+                  >
+                    <div>
+                      <h3>Total Likes</h3>
+                      <p style={{ border: "none" }} className="likes-count">
+                        {mentor.likes.length}
+                      </p>
+                    </div>
+                    <div>
+                      <h3>Total Ratings</h3>
+                      <p style={{ border: "none" }} className="likes-count">
+                        {mentor.ratings.length}
+                      </p>
+                    </div>
                   </div>
 
-                  {/* ratings card */}
-                  <RatingCard />
+                  {/* ratings overview card */}
+                  {mentor.ratings.length > 0 && <RatingCard />}
                 </div>
               </div>
 

@@ -67,21 +67,6 @@ export const changePassword = createAsyncThunk(
   }
 );
 
-// export const sendMail = createAsyncThunk(
-//   "sendMail",
-//   async (email, { rejectWithValue }) => {
-//     try {
-//       const response = await axiosInstance.post(
-//         "/account/forgotpassword",
-//         email
-//       );
-//       return response.data;
-//     } catch (error) {
-//       return rejectWithValue(error.response.data);
-//     }
-//   }
-// );
-
 const initialState = {
   error: null,
   loading: false,
@@ -163,20 +148,6 @@ const dataSlice = createSlice({
         state.error = action.payload;
         toast.error(action.payload.message);
       });
-    // .addCase(sendMail.pending, (state) => {
-    //   state.loading = true;
-    //   state.error = null;
-    // })
-    // .addCase(sendMail.fulfilled, (state, action) => {
-    //   state.loading = false;
-    //   state.error = null;
-    //   toast.success("Mail sent successfully");
-    // })
-    // .addCase(sendMail.rejected, (state, action) => {
-    //   state.loading = false;
-    //   state.error = action.payload;
-    //   toast.error(action.payload.message);
-    // });
   },
 });
 

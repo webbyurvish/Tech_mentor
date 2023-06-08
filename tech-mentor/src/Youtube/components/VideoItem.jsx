@@ -9,7 +9,7 @@ const VideoItem = ({ video }) => {
     <>
       <div className="vid_list">
         <Link className="yta" to={`/videos/play/${videoId}`}>
-          <a className="yta" href="play-video.html">
+          <a className="yta">
             <img
               className="ytimg thumbnail"
               src={video.snippet.thumbnails.medium.url}

@@ -127,9 +127,9 @@ export default function LeaderBoard() {
 
                   {/* other top mentors */}
                   <tbody>
-                    {sortedMentors?.slice(3, 10).map((mentor) => {
+                    {sortedMentors?.slice(3, 10).map((mentor, index) => {
                       return (
-                        <tr>
+                        <tr key={index}>
                           <td>
                             <div className="d-flex align-items-center">
                               <img

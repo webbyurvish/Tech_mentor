@@ -82,7 +82,6 @@ export default function Mentor({ mentor }) {
                 onClick={(e) => {
                   handleCountryChange(dispatch, mentor.country, navigate);
                 }}
-                href="javascript:void(0)"
               >
                 <i
                   className="fa-solid fa-location-dot"
@@ -93,7 +92,7 @@ export default function Mentor({ mentor }) {
             </div>
 
             {/* Like */}
-            <a onClick={() => handlelike(mentor.id)} href="javascript:void(0)">
+            <a onClick={() => handlelike(mentor.id)}>
               <i
                 className={
                   user !== null && mentor.likes.includes(Number(userId))
@@ -128,17 +127,14 @@ export default function Mentor({ mentor }) {
             <ul>
               {mentor.skills.slice(0, 3).map((skill, index) => (
                 <li key={index}>
-                  <a
-                    onClick={() => handleskillchange(skill)}
-                    href="javascript:void(0)"
-                  >
+                  <a onClick={() => handleskillchange(skill)} href="#">
                     {skill}
                   </a>
                 </li>
               ))}
               {mentor.skills.length > 3 && (
                 <li>
-                  <p href="javascript:void(0)">+{mentor.skills.length - 3}</p>
+                  <p>+{mentor.skills.length - 3}</p>
                 </li>
               )}
             </ul>

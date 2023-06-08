@@ -11,11 +11,13 @@ import {
   Legend,
 } from "chart.js";
 import { Doughnut, Pie, PolarArea } from "react-chartjs-2";
+import Sentiment from "sentiment";
 
 ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend);
 
 export default function States() {
   const { mentors } = useSelector((state) => state.data);
+  console.log(mentors);
 
   // count mentors by average count of stars given in rating
   const starCounts = Array(5).fill(0);
@@ -55,6 +57,39 @@ export default function States() {
     return count;
   }
 
+  // Sentiment analysis for rating comments
+  const countSentiments = (mentors) => {
+    let positiveCount = 0;
+    let negativeCount = 0;
+    let neutralCount = 0;
+
+    const sentiment = new Sentiment();
+
+    mentors.forEach((mentor) => {
+      mentor.ratings.forEach((rating) => {
+        const analysis = sentiment.analyze(rating.comment);
+
+        if (analysis.score > 0) {
+          positiveCount++;
+          console.log(positiveCount);
+        } else if (analysis.score < 0) {
+          negativeCount++;
+          console.log(negativeCount);
+        } else {
+          neutralCount++;
+          console.log(neutralCount);
+        }
+      });
+    });
+
+    return { positiveCount, negativeCount, neutralCount }; // Add this line
+  };
+
+  const { positiveCount, negativeCount, neutralCount } =
+    countSentiments(mentors);
+
+  const ratingCategories = [positiveCount, neutralCount, negativeCount];
+
   // Count the mentors by likes
   const likesMentorCount = countMentorsByLikes(mentors);
 
@@ -83,6 +118,28 @@ export default function States() {
           "rgba(255, 206, 86, 1)",
           "rgba(75, 192, 192, 1)",
           "rgba(153, 102, 255, 1)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  // positive , negative or neutral feedback
+  const ratingData = {
+    labels: ["Positive Feedback", "Neutral Feedback", "Negative Feedback"],
+    datasets: [
+      {
+        label: "Count",
+        data: ratingCategories,
+        backgroundColor: [
+          "rgba(0, 10, 160, 0.8)",
+          "rgba(255, 178, 0, 0.8)",
+          "rgba(255, 9, 81, 0.8)",
+        ],
+        borderColor: [
+          "rgba(255, 99, 132, 1)",
+          "rgba(54, 162, 235, 1)",
+          "rgba(255, 206, 86, 1)",
         ],
         borderWidth: 1,
       },
@@ -227,9 +284,7 @@ export default function States() {
 
                 <div style={{ marginBottom: "50px" }} className="col-lg-4">
                   <div className="profile-details">
-                    {/* likes card */}
-
-                    <Pie data={data} />
+                    <Pie data={ratingData} />
                   </div>
                 </div>
               </div>

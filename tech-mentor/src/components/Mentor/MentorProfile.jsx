@@ -19,6 +19,7 @@ import {
 import Ratings from "../Layout/Rating/Ratings";
 import { submitRating } from "../../redux/slices/likeratingSlice";
 import { handleCountryChange } from "../Filters/OnChangeHandlers";
+import { DeleteMentorPermanent } from "../../redux/slices/mentorsSlice";
 
 export default function MentorProfile() {
   const navigate = useNavigate();
@@ -97,6 +98,14 @@ export default function MentorProfile() {
     dispatch(submitRating(data));
   };
 
+  const handleDelete = async () => {
+    dispatch(
+      DeleteMentorPermanent({ email: mentor.email, navigate, dispatch })
+    );
+    toast.success("mentor deleted successfully");
+    navigate("/");
+  };
+
   return (
     <Layout>
       <ToastContainer />
@@ -105,7 +114,7 @@ export default function MentorProfile() {
       ) : (
         <>
           <div className="row justify-content-center">
-            <Link style={{ "margin-top": "40px" }} to="/">
+            <Link style={{ marginTop: "40px" }} to="/">
               Back to mentors list
             </Link>
           </div>
@@ -119,7 +128,10 @@ export default function MentorProfile() {
                     {/* Mentor's country */}
                     <div className="location-cover">
                       <a href="javascript:void(0)">
-                        <i className="fa-solid fa-location-dot"></i>
+                        <i
+                          className="fa-solid fa-location-dot"
+                          style={{ color: "#123268" }}
+                        ></i>
                         <p
                           onClick={(e) => {
                             handleCountryChange(
@@ -184,6 +196,15 @@ export default function MentorProfile() {
                 </div>
 
                 <div className="go-to-profile">
+                  {user.role === "admin" ? (
+                    <>
+                      <a onClick={handleDelete}>
+                        <i class="fa-solid fa-trash"></i>
+                        <p>Delete mentor</p>
+                      </a>
+                      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                    </>
+                  ) : null}
                   {/* Link for rating mentor ( on click its open a modal ) */}
                   <a
                     href="javascript:vid(0)"
@@ -194,7 +215,7 @@ export default function MentorProfile() {
                     <i className="fa-sharp fa-solid fa-face-smile"></i>
                     <p>Rate mentor</p>
                   </a>
-                  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                   {/* Link to direct chat with mentor */}
                   <Link to={`/chatwithmentor/${extractUsername(mentor.email)}`}>
                     <i className="fa-solid fa-comments"></i> <p>Communicate</p>
@@ -203,20 +224,22 @@ export default function MentorProfile() {
               </div>
             </div>
 
-            <div className="ratingbody">
-              {/* Rating overview of mentor */}
-              <div className="card">
-                <div className="row justify-content-left d-flex">
-                  <Overview averageRating={averageRating} mentor={mentor} />
+            {mentor.ratings.length > 0 && (
+              <div className="ratingbody">
+                {/* Rating overview of mentor */}
+                <div className="card">
+                  <div className="row justify-content-left d-flex">
+                    <Overview averageRating={averageRating} mentor={mentor} />
+                  </div>
+                </div>
+                <hr />
+
+                {/* List of ratings */}
+                <div className="card">
+                  <Ratings mentor={mentor} />
                 </div>
               </div>
-              <hr />
-
-              {/* List of ratings */}
-              <div className="card">
-                <Ratings mentor={mentor} />
-              </div>
-            </div>
+            )}
           </div>
 
           {/* Rating modal */}

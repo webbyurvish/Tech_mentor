@@ -22,7 +22,7 @@ a.header-cover {
   align-items: center;
   justify-content: space-between;
 }
-header.header .container-fluid {
+header.header {
   padding: 80px 20px;
 }
 .bg-diagonal-primary-light:after {

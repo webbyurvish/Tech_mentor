@@ -64,7 +64,10 @@ export default function Requests() {
                 <div className="account-profile">
                   <div className="accound-cover">
                     <div className="row justify-content-center">
-                      <div className="col-lg-4">
+                      <div
+                        style={{ marginBottom: "40px" }}
+                        className="col-lg-4"
+                      >
                         <div className="profile-details details-cover">
                           <div className="share-details-2">
                             <p>My Mentorship Requests</p>

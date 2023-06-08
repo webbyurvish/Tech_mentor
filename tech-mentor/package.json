@@ -26,6 +26,7 @@
     "jsonwebtoken": "^9.0.0",
     "jwt-decode": "^3.1.2",
     "multiselect-react-dropdown": "^2.0.25",
+    "natural": "^6.5.0",
     "qs": "^6.11.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.4",
@@ -44,6 +45,8 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.2",
     "semantic-ui-react": "^2.1.4",
+    "sentiment": "^5.0.2",
+    "util": "^0.12.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

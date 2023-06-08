@@ -206,6 +206,11 @@ input:checked + .slider:before {
   align-items: center;
   justify-content: space-between;
 }
+
+.myfavourits input {
+  color: #015d3e;
+}
+
 .social-icon ul li a i {
   font-size: 25px;
   padding: 0 10px;
