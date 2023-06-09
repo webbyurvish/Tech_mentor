@@ -2,7 +2,7 @@ import React from "react";
 import {
   calculateAverageRating,
   getActiveStars,
-} from "../Mentor/MentorServices";
+} from "../../services/MentorServices";
 import { DashboardRating } from "../Layout/Rating/DashboardRating";
 import { useSelector } from "react-redux";
 
