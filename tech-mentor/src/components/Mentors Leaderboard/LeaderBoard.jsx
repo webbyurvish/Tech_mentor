@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { Header } from "../Layout/Header";
-import "./Leaderboard.css";
+import Header from "../Layout/Header";
+import "./styles/Leaderboard.css";
 import Loading from "../Layout/Loading/Loading";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllMentors } from "../../redux/slices/dataSlice";
@@ -9,7 +9,7 @@ import {
   calculateAverageRating,
   extractUsername,
   getSortedMentors,
-} from "../Mentor/MentorServices";
+} from "../../services/MentorServices";
 
 export default function LeaderBoard() {
   const dispatch = useDispatch();
@@ -27,7 +27,7 @@ export default function LeaderBoard() {
   }, [dispatch]);
 
   return (
-    <>
+    <React.Fragment>
       {loading ? (
         <Loading />
       ) : (
@@ -182,6 +182,6 @@ export default function LeaderBoard() {
           </div>
         </div>
       )}
-    </>
+    </React.Fragment>
   );
 }

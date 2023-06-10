@@ -1,7 +1,8 @@
 import React from "react";
 import "./Loading.css";
 
-//  loading component
+//////////////////// ----  Loading component ---- ////////////////////
+
 export default function Loading() {
   return (
     <div>

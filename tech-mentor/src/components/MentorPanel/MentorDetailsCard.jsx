@@ -8,9 +8,9 @@ import {
   Skillsvg,
   Titlesvg,
 } from "../Layout/Icons/Languagesvg";
-import "./Styles/Ratings.css";
-import "./Styles/Account.css";
-import "./Styles/EditMentor.css";
+import "./styles/Ratings.css";
+import "./styles/Account.css";
+import "./styles/EditMentor.css";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -19,7 +19,7 @@ export const MentorDetailsCard = () => {
   const mentor = useSelector((state) => state.mentor.details);
 
   return (
-    <div className="col-lg-4">
+    <div className="col-lg-4" style={{ marginBottom: "30px" }}>
       <div className="profile-details details-cover">
         <div className="row align-items-center justify-content-between detail-name">
           <a href="javascript:void(0)">My Profile</a>

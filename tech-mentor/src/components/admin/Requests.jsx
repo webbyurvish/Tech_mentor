@@ -1,16 +1,21 @@
-import "./admin.css";
-import { ToastContainer, toast } from "react-toastify";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import "./styles/admin.css";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 import AdminWrapper from "./AdminWrapper";
 import Loading from "../Layout/Loading/Loading";
-import { useEffect, useState } from "react";
-import { changeRole } from "../chat/ChatServices";
+
+import { changeRole } from "../../services/ChatServices";
 import {
   approveRequest,
   fetchRequests,
   rejectRequest,
 } from "../../redux/slices/mentorsSlice";
-import { useDispatch, useSelector } from "react-redux";
+
+//////////////////// ---- Requests component for admin Dashboard ---- ////////////////////
 
 export default function Requests() {
   const dispatch = useDispatch();
@@ -20,7 +25,8 @@ export default function Requests() {
   const [toggle, setToggle] = useState(false);
   const [mail, setMail] = useState("");
 
-  //approve request
+  //////////////////// ---- approve request handler ---- ////////////////////
+
   const handleApprove = async (e) => {
     e.preventDefault();
 
@@ -29,8 +35,9 @@ export default function Requests() {
     setToggle(false);
   };
 
-  // reject request
-  const handlesubmit = async (e) => {
+  //////////////////// ---- reject request handler ---- ////////////////////
+
+  const handleReject = async (e) => {
     e.preventDefault();
 
     const email = mail;
@@ -47,7 +54,7 @@ export default function Requests() {
   }, []);
 
   return (
-    <>
+    <React.Fragment>
       <AdminWrapper>
         <ToastContainer />
         {loading ? (
@@ -74,7 +81,9 @@ export default function Requests() {
                             {requests.length < 1 && (
                               <p>There is no request to become a mentor</p>
                             )}
-                            {/* List of requests to become a mentor */}
+
+                            {/* ---------- List of requests to become a mentor ---------- */}
+
                             {requests.map((request) => {
                               const isToggled =
                                 toggle && request.email === toggle;
@@ -100,6 +109,9 @@ export default function Requests() {
                                     </div>
                                     <div className="mentorship-day"></div>
                                   </a>
+
+                                  {/* ----------- User Details ---------- */}
+
                                   {isToggled && (
                                     <div>
                                       <div className="details-message-cover">
@@ -114,14 +126,16 @@ export default function Requests() {
                                           <li>{request.title}</li>
                                         </ul>
                                       </div>
-                                      {/* About User */}
+
+                                      {/* ---- About User ---- */}
                                       <div className="details-message-cover">
                                         <p>About</p>
                                         <ul>
                                           <li>{request.about}</li>
                                         </ul>
                                       </div>
-                                      {/* Languages that user knows */}
+
+                                      {/* ---- Languages that user knows ---- */}
                                       <div className="details-message-cover">
                                         <p>Languages known</p>
                                         <ul>
@@ -130,7 +144,8 @@ export default function Requests() {
                                           ))}
                                         </ul>
                                       </div>
-                                      {/* Skills of user */}
+
+                                      {/* ---- skills of user ---- */}
                                       <div className="details-message-cover">
                                         <p>Skills</p>
                                         <ul>
@@ -140,7 +155,7 @@ export default function Requests() {
                                         </ul>
                                       </div>
                                       <div className="details-link">
-                                        {/* Reject button */}
+                                        {/* ---- Approve button ---- */}
                                         {!loading && (
                                           <button
                                             className="approve-button"
@@ -155,7 +170,8 @@ export default function Requests() {
                                             Loading...
                                           </button>
                                         )}
-                                        {/* Reject Button */}
+
+                                        {/* ---- Reject Button ---- */}
                                         <button
                                           className="reject-button"
                                           variant="primary"
@@ -184,7 +200,8 @@ export default function Requests() {
         )}
       </AdminWrapper>
 
-      {/* <!-- Modal --> */}
+      {/* <!--------------- Modal to give reason of reject user's request ---------------> */}
+
       <div
         className="modal fade"
         id="exampleModal"
@@ -227,7 +244,7 @@ export default function Requests() {
               </button>
               <button
                 type="submit"
-                onClick={handlesubmit}
+                onClick={handleReject}
                 className="btn btn-primary"
                 data-bs-dismiss="modal"
               >
@@ -237,6 +254,6 @@ export default function Requests() {
           </div>
         </div>
       </div>
-    </>
+    </React.Fragment>
   );
 }

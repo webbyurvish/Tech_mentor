@@ -1,22 +1,20 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { formatDate } from "../Mentor/MentorServices";
+import { formatDate } from "../../services/MentorServices";
 import { MentorWrapper } from "./MentorWrapper";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Home from "../Layout/Home/Home";
 
-export const Reviews = () => {
+export default function Reviews() {
   const mentor = useSelector((state) => state.mentor.details);
   console.log(mentor);
 
   return (
     <MentorWrapper>
       <ToastContainer />
-      <div className="account-right-side">
-        <div className="accont-home">
-          <h2>Ratings</h2>
-        </div>
-      </div>
+
+      <Home name={"Ratings"} />
 
       <div className="account-profile">
         <div className="accound-cover">
@@ -28,7 +26,7 @@ export const Reviews = () => {
                 {mentor.ratings.length > 0 ? (
                   <div>
                     {mentor.ratings.map((rating) => (
-                      <>
+                      <React.Fragment>
                         <div
                           style={{
                             width: "100%",
@@ -112,7 +110,7 @@ export const Reviews = () => {
                           </div>
                           {/* </div> */}
                         </div>
-                      </>
+                      </React.Fragment>
                     ))}
                   </div>
                 ) : (
@@ -125,4 +123,4 @@ export const Reviews = () => {
       </div>
     </MentorWrapper>
   );
-};
+}

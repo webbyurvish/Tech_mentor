@@ -1,4 +1,4 @@
-import React from "react";
+///// ---- Language svg icon ---- /////
 
 export const Languagesvg = () => (
   <svg
@@ -17,6 +17,8 @@ export const Languagesvg = () => (
   </svg>
 );
 
+///// ---- Mail svg icon ---- /////
+
 export const Mailsvg = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -33,6 +35,8 @@ export const Mailsvg = () => (
     ></path>
   </svg>
 );
+
+///// ---- Country svg icon ---- /////
 
 export const Countrysvg = () => (
   <svg
@@ -51,6 +55,8 @@ export const Countrysvg = () => (
   </svg>
 );
 
+///// ---- Title svg icon ---- /////
+
 export const Titlesvg = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -68,6 +74,8 @@ export const Titlesvg = () => (
   </svg>
 );
 
+///// ---- Skill svg icon ---- /////
+
 export const Skillsvg = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -82,6 +90,8 @@ export const Skillsvg = () => (
   </svg>
 );
 
+///// ---- Available svg icon ---- /////
+
 export const Availablesvg = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -95,6 +105,8 @@ export const Availablesvg = () => (
     ></path>
   </svg>
 );
+
+///// ---- About svg icon ---- /////
 
 export const Aboutsvg = () => (
   <svg

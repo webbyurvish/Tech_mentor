@@ -1,16 +1,14 @@
 import React, { useState } from "react";
 import UserWrapper from "./UserWrapper";
-import { useDispatch, useSelector } from "react-redux";
-import "../MentorPanel/Styles/Account.css";
+import { useSelector } from "react-redux";
+import "../MentorPanel/styles/Account.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loading from "../Layout/Loading/Loading";
-import { changePassword } from "../../redux/slices/authSlice";
 import ChangePasswordModal from "../Layout/ChangePassword/ChangePasswordModal";
+import Home from "../Layout/Home/Home";
 
 export default function UserHome() {
-  const dispatch = useDispatch();
-
   const user = useSelector((state) => state.auth.user);
   const { loading } = useSelector((state) => state.account);
 
@@ -19,13 +17,10 @@ export default function UserHome() {
       {loading ? (
         <Loading />
       ) : (
-        <>
+        <React.Fragment>
           <ToastContainer />
-          <div className="account-right-side">
-            <div className="accont-home">
-              <h2>Home</h2>
-            </div>
-          </div>
+          <Home name={"Home"} />
+
           <div className="account-profile">
             <div className="accound-cover">
               <div className="row justify-content-center">
@@ -56,7 +51,7 @@ export default function UserHome() {
               </div>
             </div>
           </div>
-        </>
+        </React.Fragment>
       )}
 
       {/* Change password Modal */}

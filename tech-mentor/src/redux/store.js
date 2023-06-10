@@ -22,6 +22,7 @@ import {
 import storage from "redux-persist/lib/storage";
 import { combineReducers } from "@reduxjs/toolkit";
 
+// Combine all reducers into a root reducer
 const rootReducer = combineReducers({
   auth: authReducer,
   mentor: mentorReducer,
@@ -34,6 +35,7 @@ const rootReducer = combineReducers({
   video: videoReducer,
 });
 
+// Configuration for Redux Persist
 const persistConfig = {
   key: "root",
   storage,
@@ -46,11 +48,13 @@ const persistConfig = {
     "mentors",
     "likeRating",
     "video",
-  ], // Specify the reducers to persist
+  ],
 };
 
+// Create a persisted reducer with Redux Persist configuration
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
+// Configure the Redux store with persisted reducer and middleware
 const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
@@ -61,6 +65,8 @@ const store = configureStore({
     }),
 });
 
+// Create the Redux persistor for persisting store state
 const persistor = persistStore(store);
 
+// Export the store and persistor
 export { store, persistor };

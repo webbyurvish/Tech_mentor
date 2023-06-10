@@ -1,5 +1,5 @@
 import React from "react";
-import "../MentorPanel/Styles/Account.css";
+import "../MentorPanel/styles/Account.css";
 import LogoutLink from "../Layout/Dashboardlinks/LogoutLink";
 import HomeLink from "../Layout/Dashboardlinks/HomeLink";
 import MentorspageLink from "../Layout/Dashboardlinks/MentorspageLink";

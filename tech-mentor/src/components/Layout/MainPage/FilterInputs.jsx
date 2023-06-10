@@ -6,7 +6,9 @@ import {
   handleTechnologyChange,
   handleCountryChangeLayout,
   handleSpokenLanguageChange,
-} from "../../Filters/OnChangeHandlers";
+} from "../../../services/OnChangeHandlers";
+
+//////////////////// ---- Filter Inputs component ---- ////////////////////
 
 export default function FilterInputs() {
   const dispatch = useDispatch();
@@ -14,11 +16,12 @@ export default function FilterInputs() {
 
   const filters = useSelector((state) => state.filters);
   const result = useSelector((state) => state.result);
-
   const { skills, countries, languages } = useSelector((state) => state.data);
 
   return (
     <div>
+      {/* //////////////////// ---- Technology Filter Input ---- //////////////////// */}
+
       <div className="filter-input">
         <label htmlFor="text">TECHNOLOGY</label>
         <input
@@ -33,6 +36,9 @@ export default function FilterInputs() {
           })}
         </datalist>
       </div>
+
+      {/* //////////////////// ---- Country Filter Input ---- //////////////////// */}
+
       <div className="filter-input">
         <label htmlFor="text">COUNTRY</label>
         <input
@@ -47,6 +53,9 @@ export default function FilterInputs() {
           })}
         </datalist>
       </div>
+
+      {/* //////////////////// ---- Name Filter Input ---- //////////////////// */}
+
       <div className="filter-input">
         <label htmlFor="text">NAME</label>
         <input
@@ -61,6 +70,9 @@ export default function FilterInputs() {
           })}
         </datalist>
       </div>
+
+      {/* //////////////////// ---- Language Filter Input ---- //////////////////// */}
+
       <div className="filter-input">
         <label htmlFor="text">LANGUAGE </label>
         <input

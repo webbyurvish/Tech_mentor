@@ -1,10 +1,11 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
+////////// ---- chat interface with admin link ---- //////////
+
 export default function ConnectWithAdminLink() {
   const location = useLocation();
 
-  // chat with admin link
   return (
     <div>
       <Link

@@ -1,9 +1,9 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./Layout.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Header } from "./Header";
+import Header from "./Header";
 import { fetchData } from "../../redux/slices/resultSlice";
 import Loading from "./Loading/Loading";
 import {
@@ -11,14 +11,16 @@ import {
   fetchSkills,
   fetchLanguages,
 } from "../../redux/slices/dataSlice";
+
 import Social from "./MainPage/Social";
 import FilterInputs from "./MainPage/FilterInputs";
 import ToggleFilter from "./MainPage/ToggleFilter";
 
+//////////////////// ---- Layout component with header and sidebar ---- ////////////////////
+
 export const Layout = ({ children }) => {
   const dispatch = useDispatch();
 
-  //redux store data
   const result = useSelector((state) => state.result);
   const user = useSelector((state) => state.auth.user);
   const {
@@ -36,6 +38,8 @@ export const Layout = ({ children }) => {
 
   const userId = user !== null ? Number(user.id) : null;
 
+  //////////////////// ---- Fetch Data whenever any filters field is change including toggle filters ---- ////////////////////
+
   useEffect(() => {
     dispatch(
       fetchData({
@@ -52,6 +56,8 @@ export const Layout = ({ children }) => {
     );
   }, [filters, currentPage, dispatch]);
 
+  //////////////////// ---- Fetch countries , languages and skills for dropdown ---- ////////////////////
+
   useEffect(() => {
     dispatch(fetchCountries());
     dispatch(fetchLanguages());
@@ -64,7 +70,7 @@ export const Layout = ({ children }) => {
       {!result.mentors ? (
         <Loading />
       ) : (
-        <>
+        <React.Fragment>
           <Header />
           <div className="main-cover">
             <div className="container-fluid">
@@ -75,17 +81,19 @@ export const Layout = ({ children }) => {
                 </div>
                 <form>
                   <div className="fillter-cover">
-                    {/* Filter inputs */}
+                    {/* ----- Filter inputs ----- */}
                     <FilterInputs />
                   </div>
                 </form>
 
-                {/* Toggle filters */}
+                {/* ----- Toggle filters ----- */}
                 <ToggleFilter />
 
-                {/* Social links */}
+                {/* ----- Social links ----- */}
                 <Social />
               </div>
+
+              {/* ----- Children components ----- */}
               <div className="right-side-section">
                 <div className="row">
                   <div className="col-lg-12">
@@ -97,7 +105,7 @@ export const Layout = ({ children }) => {
               </div>
             </div>
           </div>
-        </>
+        </React.Fragment>
       )}
     </div>
   );

@@ -3,12 +3,13 @@ import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
 
+////////// ---- chat interface link ---- //////////
+
 export default function ConnectLink() {
   const location = useLocation();
 
   const user = useSelector((state) => state.auth.user);
 
-  // chat link
   return (
     <div>
       <Link

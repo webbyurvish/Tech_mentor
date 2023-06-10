@@ -3,12 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./Styles/Login.css";
+import "./styles/Login.css";
 import { CometChat } from "@cometchat-pro/chat";
 
-import { extractUsername } from "../Mentor/MentorServices";
+import { extractUsername } from "../../services/MentorServices";
 import { loginUser, signupUser } from "../../redux/slices/authSlice";
 import Loading from "../Layout/Loading/Loading";
+
+//////////////////// ----- Login signup Component ----- ////////////////////
 
 export default function Login() {
   const navigate = useNavigate();
@@ -26,10 +28,14 @@ export default function Login() {
 
   const [isRightPanelActive, setRightPanelActive] = useState(false);
 
+  ////////// ---- Right panel toggler ---- //////////
   const toggleRightPanel = () => {
     setRightPanelActive((prevState) => !prevState);
   };
 
+  //////////////////// Check for user is registered in cometchat or not ,
+  // if user not registered then register user and then logging in
+  // and if user is already registered then logging in user ////////////////////
   useEffect(() => {
     if (user) {
       const authKey = process.env.REACT_APP_COMETCHAT_AUTH_KEY;
@@ -39,17 +45,17 @@ export default function Login() {
       const name = user.name;
       const role = "user";
 
-      // check weather the user is exist in cometchat or not
+      // ----- check weather the user is exist in cometchat or not ----- //
       CometChat.getUser(uid)
         .then(
           (existingUser) => {
             console.log("User already exists:", existingUser);
-            // if User already exists, proceed with login
+            // ----- if User already exists, proceed with login ----- //
             loginCometChatUser(uid, authKey);
           },
           (error) => {
             console.log("User does not exist:", error);
-            // User does not exist, create a new user
+            // ----- User does not exist, create a new user ----- //
             const options = {
               method: "POST",
               headers: {
@@ -69,7 +75,7 @@ export default function Login() {
               .then((response) => response.json())
               .then((response) => {
                 console.log("User created:", response);
-                // Proceed with login
+                // ----- Proceed with login ----- //
                 loginCometChatUser(uid, authKey);
               })
               .catch((error) => {
@@ -87,19 +93,23 @@ export default function Login() {
     CometChat.login(uid, authKey)
       .then((user) => {
         console.log("Login Successful:", { user });
-        navigate("/"); // Redirect to the desired page after successful login
+        navigate("/"); // ----- Redirect to the desired page after successful login ----- //
       })
       .catch((error) => {
         console.log("Login failed with exception:", { error });
-        // Handle login error
+        // ----- Handle login error ----- //
       });
   }
+
+  ////////// ---- Message toast ---- //////////
 
   useEffect(() => {
     if (location.state && location.state.successMessage) {
       toast.success(location.state.successMessage);
     }
   }, [location.state]);
+
+  ////////// ---- Login Handler ---- //////////
 
   const handleLogin = (event) => {
     event.preventDefault();
@@ -109,6 +119,8 @@ export default function Login() {
     };
     dispatch(loginUser({ credentials, navigate }));
   };
+
+  ////////// ---- Sign Up Handler ---- //////////
 
   const handleSignup = (event) => {
     event.preventDefault();
@@ -133,6 +145,8 @@ export default function Login() {
           }`}
           id="container"
         >
+          {/* ////////// ---- Sign Up container ---- ////////// */}
+
           <div className="form-container sign-up-container">
             <form className="form" onSubmit={handleSignup}>
               <h1 className="h1">Create Account</h1>
@@ -177,6 +191,9 @@ export default function Login() {
               </button>
             </form>
           </div>
+
+          {/* ////////// ---- Login container ---- ////////// */}
+
           <div className="form-container sign-in-container">
             <form className="form" onSubmit={handleLogin}>
               <h1 className="h1">Sign in</h1>
@@ -205,6 +222,9 @@ export default function Login() {
               </Link>
             </form>
           </div>
+
+          {/* ////////// ---- overlay container ---- ////////// */}
+
           <div className="overlay-container">
             <div className="overlay">
               <div className="overlay-panel overlay-left">

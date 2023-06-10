@@ -34,6 +34,7 @@ p {
 .login-register a img {
   width: 100%;
   max-width: 80px;
+  border-radius: 15px;
 }
 .login-register {
   text-align: end;

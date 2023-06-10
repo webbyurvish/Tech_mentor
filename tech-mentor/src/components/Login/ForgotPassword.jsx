@@ -2,15 +2,18 @@ import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./Styles/Login.css";
-import { handleResetPasswordrequest } from "./AuthServices";
+import { handleResetPasswordrequest } from "../../services/AuthServices";
 import Loading from "../Layout/Loading/Loading";
+
+import "./styles/Login.css";
+
+//////////////////// ----- Forgot password Component ----- ////////////////////
 
 export default function ForgotPassword() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
 
-  // Get token and email from query
+  //////////////////// ----- Get token and email from query ----- ////////////////////
   const token = queryParams.get("token");
   const email = queryParams.get("email");
   const navigate = useNavigate();
@@ -24,6 +27,8 @@ export default function ForgotPassword() {
 
   const credentials = { email: email, token: token, newPassword: password };
 
+  //////////////////// ----- Form submit handler ----- ////////////////////
+
   const handleResetPassword = async (event) => {
     event.preventDefault();
 
@@ -33,7 +38,6 @@ export default function ForgotPassword() {
     }
 
     try {
-      // Send a POST request to the backend API endpoint
       setLoading(true);
 
       const response = await handleResetPasswordrequest(credentials);
@@ -52,9 +56,13 @@ export default function ForgotPassword() {
     }
   };
 
+  //////////////////// ----- password change handler----- ////////////////////
+
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
+
+  //////////////////// ----- confirm password change handler----- ////////////////////
 
   const handleConfirmPasswordChange = (event) => {
     setConfirmPassword(event.target.value);

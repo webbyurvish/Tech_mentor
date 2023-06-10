@@ -3,6 +3,8 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { logoutUser } from "../../../redux/slices/authSlice";
 
+////////// ---- logout link ---- //////////
+
 export default function LogoutLink() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -12,7 +14,6 @@ export default function LogoutLink() {
     navigate("/");
   };
 
-  // log out link
   return (
     <a
       onClick={handleLogout}

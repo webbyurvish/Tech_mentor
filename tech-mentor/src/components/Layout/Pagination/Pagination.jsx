@@ -5,10 +5,12 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#222555", // Replace the primary color with the provided color
+      main: "#222555",
     },
   },
 });
+
+//////////////////// ---- Pagination component ---- ////////////////////
 
 const CustomPagination = ({ totalPages, currentPage, handlePageChange }) => {
   return (

@@ -5,13 +5,14 @@ import { MentorWrapper } from "../MentorPanel/MentorWrapper";
 import { useSelector } from "react-redux";
 import UserWrapper from "../user/UserWrapper";
 
-// Component to direct chat with mentor
+//////////////////// ---- Component to direct chat with mentor ---- ////////////////////
+
 export default function ChatWithMentor() {
   const { uid } = useParams();
   const user = useSelector((state) => state.auth.user);
 
   return (
-    <>
+    <React.Fragment>
       {user.role == "user" ? (
         <UserWrapper>
           <div
@@ -29,6 +30,6 @@ export default function ChatWithMentor() {
           </div>
         </MentorWrapper>
       )}
-    </>
+    </React.Fragment>
   );
 }

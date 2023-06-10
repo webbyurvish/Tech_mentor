@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./Styles/Login.css";
+import "./styles/Login.css";
 
-import { sendMail } from "./AuthServices";
+import { sendMail } from "../../services/AuthServices";
 import Loading from "../Layout/Loading/Loading";
+
+//////////// ---- Send Mail request component for forgot password ---- //////////
 
 export default function MailRequest() {
   const [email, setEmail] = useState("");
@@ -13,11 +15,12 @@ export default function MailRequest() {
   const [emailSent, setEmailSent] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
+  //////////// ---- Send Mail handler ---- //////////
+
   const handleSendMail = async (event) => {
     event.preventDefault();
 
     try {
-      // Send a POST request to the backend API endpoint
       setLoading(true);
 
       const response = await sendMail(email);
@@ -44,6 +47,8 @@ export default function MailRequest() {
       ) : (
         <div className="passwordcontainer" id="container">
           <div className="form-container passwordsign-in-container">
+            {/* ---------- success Message ---------- */}
+
             {successMessage.length > 0 && (
               <body className="bodyformail">
                 <div className="cardformail">
@@ -58,6 +63,7 @@ export default function MailRequest() {
               </body>
             )}
 
+            {/* ---------- Mail send form ---------- */}
             {!emailSent && (
               <form className="formmail" onSubmit={handleSendMail}>
                 <h1 className="h1mail">Forgot Password</h1>

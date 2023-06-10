@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import "./Mentor.css";
+import "./styles/Mentor.css";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -8,7 +8,7 @@ import { fetchData } from "../../redux/slices/resultSlice";
 import { setTechnology } from "../../redux/slices/filterSlice";
 import { addLike } from "../../redux/slices/likeratingSlice";
 import { setCurrentPage } from "../../redux/slices/dataSlice";
-import { handleCountryChange } from "../Filters/OnChangeHandlers";
+import { handleCountryChange } from "../../services/OnChangeHandlers";
 
 export default function Mentor({ mentor }) {
   const navigate = useNavigate();

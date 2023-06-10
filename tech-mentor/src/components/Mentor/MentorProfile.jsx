@@ -15,10 +15,10 @@ import {
   calculateAverageRating,
   extractUsername,
   fetchMentorData,
-} from "./MentorServices";
+} from "../../services/MentorServices";
 import Ratings from "../Layout/Rating/Ratings";
 import { submitRating } from "../../redux/slices/likeratingSlice";
-import { handleCountryChange } from "../Filters/OnChangeHandlers";
+import { handleCountryChange } from "../../services/OnChangeHandlers";
 import { DeleteMentorPermanent } from "../../redux/slices/mentorsSlice";
 
 export default function MentorProfile() {
@@ -112,7 +112,7 @@ export default function MentorProfile() {
       {!mentor || !user || loading ? (
         <Loading />
       ) : (
-        <>
+        <React.Fragment>
           <div className="row justify-content-center">
             <Link style={{ marginTop: "40px" }} to="/">
               Back to mentors list
@@ -197,13 +197,13 @@ export default function MentorProfile() {
 
                 <div className="go-to-profile">
                   {user.role === "admin" ? (
-                    <>
+                    <React.Fragment>
                       <a onClick={handleDelete}>
                         <i class="fa-solid fa-trash"></i>
                         <p>Delete mentor</p>
                       </a>
                       &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    </>
+                    </React.Fragment>
                   ) : null}
                   {/* Link for rating mentor ( on click its open a modal ) */}
                   <a
@@ -278,7 +278,7 @@ export default function MentorProfile() {
                   !mentor.ratings.some(
                     (obj) => obj.userId === Number(user.id)
                   ) && (
-                    <>
+                    <React.Fragment>
                       <div className="modal-header">
                         <h5 className="modal-title" id="exampleModalLabel">
                           Add Rating
@@ -321,12 +321,12 @@ export default function MentorProfile() {
                           Submit
                         </button>
                       </div>
-                    </>
+                    </React.Fragment>
                   )}
               </div>
             </div>
           </div>
-        </>
+        </React.Fragment>
       )}
     </Layout>
   );

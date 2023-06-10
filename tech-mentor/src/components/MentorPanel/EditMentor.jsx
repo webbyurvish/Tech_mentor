@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./Styles/EditMentor.css";
+import "./styles/EditMentor.css";
 import Multiselect from "multiselect-react-dropdown";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";

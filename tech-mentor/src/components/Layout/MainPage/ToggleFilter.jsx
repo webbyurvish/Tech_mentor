@@ -3,9 +3,11 @@ import {
   handleLikedChange,
   handleMostLikedChange,
   handleTopRatedChange,
-} from "../../Filters/OnChangeHandlers";
+} from "../../../services/OnChangeHandlers";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+
+//////////////////// ---- Toggle Filters component ---- ////////////////////
 
 export default function ToggleFilter() {
   const dispatch = useDispatch();
@@ -15,6 +17,8 @@ export default function ToggleFilter() {
 
   return (
     <div>
+      {/* //////////////////// ---- Favourites Filter ---- //////////////////// */}
+
       <div className="myfavourits">
         <p>MY FAVORITES</p>
         <label className="switch">
@@ -26,6 +30,9 @@ export default function ToggleFilter() {
           <span className="slider round"></span>
         </label>
       </div>
+
+      {/* //////////////////// ---- Most Liked Filter ---- //////////////////// */}
+
       <div className="myfavourits">
         <p>MOST LIKED</p>
         <label className="switch">
@@ -37,6 +44,9 @@ export default function ToggleFilter() {
           <span className="slider round"></span>
         </label>
       </div>
+
+      {/* //////////////////// ---- Top Rated Filter ---- //////////////////// */}
+
       <div className="myfavourits">
         <p>TOP RATED</p>
         <label className="switch">

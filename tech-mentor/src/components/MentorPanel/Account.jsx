@@ -3,12 +3,13 @@ import { useSelector } from "react-redux";
 import { MentorWrapper } from "./MentorWrapper";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./Styles/Ratings.css";
-import "./Styles/Account.css";
-import "./Styles/EditMentor.css";
+import "./styles/Ratings.css";
+import "./styles/Account.css";
+import "./styles/EditMentor.css";
 import ChangePasswordModal from "../Layout/ChangePassword/ChangePasswordModal";
 import { RatingCard } from "./RatingCard";
 import { MentorDetailsCard } from "./MentorDetailsCard";
+import Home from "../Layout/Home/Home";
 
 // Mentor Home page
 export default function Account() {
@@ -17,18 +18,14 @@ export default function Account() {
   return (
     <MentorWrapper>
       <ToastContainer />
-      <div className="account-right-side">
-        <div className="accont-home">
-          <h2>Home</h2>
-        </div>
-      </div>
+      <Home name={"Home"} />
 
       {/* Main details */}
       {mentor && (
         <div className="account-profile">
           <div className="accound-cover">
             <div className="row justify-content-center">
-              <div className="col-lg-4">
+              <div className="col-lg-4" style={{ marginBottom: "30px" }}>
                 <div className="profile-details">
                   <img src="img/navlogo.jpg" alt="" />
                   <h2>{mentor.name}</h2>

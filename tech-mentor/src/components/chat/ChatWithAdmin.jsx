@@ -3,7 +3,8 @@ import { CometChatUserListWithMessages } from "../../cometchat-pro-react-ui-kit/
 import { useParams } from "react-router";
 import { MentorWrapper } from "../MentorPanel/MentorWrapper";
 
-// Component to direct chat with Admin
+//////////////////// ---- Component to direct chat with Admin ---- ////////////////////
+
 export default function ChatWithAdmin() {
   const { uid } = useParams();
   return (

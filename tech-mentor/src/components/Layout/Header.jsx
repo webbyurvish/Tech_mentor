@@ -3,16 +3,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logoutUser } from "../../redux/slices/authSlice";
 
-export const Header = () => {
+//////////////////// ---- Header component ---- ////////////////////
+
+export default function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
 
   const [menu, setmenu] = useState(false);
 
+  /////////// ---- Profile menu show handler ---- ///////////
+
   const handleShowMenu = () => {
     setmenu((prevstate) => !prevstate);
   };
+
+  /////////// ---- Logout handler ---- ///////////
 
   const handleLogout = () => {
     dispatch(logoutUser());
@@ -27,25 +33,33 @@ export const Header = () => {
           <div className="row align-items-center justify-content-between">
             <div className="col-lg-8">
               <div className="logo-and-navbar">
+                {/* ------ Navbar Logo ------ */}
                 <div className="logo">
                   <Link to={"/"}>
                     <img
                       src="/images/Tech-mentor.png"
                       width={120}
                       height={40}
+                      style={{ borderRadius: "10px" }}
                       alt=""
                     />
                   </Link>
                 </div>
                 <div className="nav-bar">
                   <ul>
+                    {/* ------ About page Link ------ */}
+
                     <li>
                       <Link to={"/about"}>About</Link>
                     </li>
 
+                    {/* ------ Leader Board page Link ------ */}
+
                     <li>
                       <Link to={"/leaderboard"}>Mentors Leaderboard</Link>
                     </li>
+
+                    {/* ------ Become a mentor form Link ------ */}
 
                     {user && user.role == "user" && (
                       <li>
@@ -54,6 +68,9 @@ export const Header = () => {
                         </Link>
                       </li>
                     )}
+
+                    {/* ------ Videos page Link ------ */}
+
                     <li>
                       <Link to={"/videos"}>Find Videos</Link>
                     </li>
@@ -61,6 +78,9 @@ export const Header = () => {
                 </div>
               </div>
             </div>
+
+            {/* ------ Menu ------ */}
+
             <div className="col-lg-4">
               <div className="login-register">
                 {user && (
@@ -76,6 +96,7 @@ export const Header = () => {
                 )}
 
                 {menu && (
+                  ///// ------ Dashboard Links ------ /////
                   <div className="manageandlogin">
                     {user && user.role == "mentor" && (
                       <Link to={`/mentor/${Number(user.id)}`}>Dashboard</Link>
@@ -83,7 +104,6 @@ export const Header = () => {
                     {user && user.role == "admin" && (
                       <Link to={`/admin/${Number(user.id)}`}>Dashboard</Link>
                     )}
-
                     {user && user.role == "user" && (
                       <Link to={`/user/${Number(user.id)}`}>Dashboard</Link>
                     )}
@@ -91,6 +111,8 @@ export const Header = () => {
                     <a onClick={handleLogout}>Logout</a>
                   </div>
                 )}
+
+                {/* ------ Login - Register Link ------ */}
 
                 {!user && <a href="/login"> "Login / Register"</a>}
               </div>
@@ -100,4 +122,4 @@ export const Header = () => {
       </header>
     </div>
   );
-};
+}

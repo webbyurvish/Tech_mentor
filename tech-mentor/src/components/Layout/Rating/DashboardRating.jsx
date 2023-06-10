@@ -1,20 +1,15 @@
-import React from "react";
+import {
+  calculatePercentage,
+  countObjectsWithStars,
+} from "../../../services/MentorServices";
+
+//////////////////// ----- Rating overview component for dashboard ----- ////////////////////
 
 export const DashboardRating = ({ mentor }) => {
+  ////////// classes of rating //////////
   const classes = ["Excellent", "Good", "Average", "Poor", "Terrible"];
 
   const totalCount = mentor && mentor.ratings.length;
-
-  const calculatePercentage = (count) => {
-    if (totalCount === 0) return 0;
-    return (count / totalCount) * 100;
-  };
-
-  const countObjectsWithStars = (stars) => {
-    return (
-      mentor && mentor.ratings.filter((rating) => rating.stars === stars).length
-    );
-  };
 
   return (
     <div>
@@ -27,7 +22,8 @@ export const DashboardRating = ({ mentor }) => {
                 <div
                   style={{
                     width: `${calculatePercentage(
-                      countObjectsWithStars(5 - index)
+                      countObjectsWithStars(5 - index, mentor),
+                      totalCount
                     )}%`,
                     height: "13px",
                     backgroundColor: "#fbc02d",
@@ -37,7 +33,10 @@ export const DashboardRating = ({ mentor }) => {
               </div>
             </td>
             <td className="text-right td">
-              {calculatePercentage(countObjectsWithStars(5 - index)).toFixed(1)}
+              {calculatePercentage(
+                countObjectsWithStars(5 - index, mentor),
+                totalCount
+              ).toFixed(1)}
               %
             </td>
           </tr>

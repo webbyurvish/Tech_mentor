@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import SearchBar from "./Searchbar";
 import VideoList from "./VideoList";
-import { Header } from "../../components/Layout/Header";
-import "../style/youtube.css";
+import Header from "../Layout/Header";
+import "./style/youtube.css";
 import { useSelector } from "react-redux";
 
 function Yt() {
   const videos = useSelector((state) => state.video.videos);
 
   return (
-    <>
+    <React.Fragment>
       <Header />
       <div className="ytbody">
         <nav className="flex-div ytnav">
@@ -33,12 +33,7 @@ function Yt() {
           </div>
         </div>
       </div>
-      {/* <footer>
-        <div className="container">
-          <p>&copy; 2023 Your Website Name. All rights reserved.</p>
-        </div>
-      </footer> */}
-    </>
+    </React.Fragment>
   );
 }
 

@@ -2,8 +2,8 @@ import axios from "axios";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
+///////////////////////// -- Create an Axios instance -- /////////////////////////
 const createAxiosInstance = () => {
-  // Create an Axios instance
   const axiosInstance = axios.create({
     baseURL: API_URL,
     headers: {
@@ -11,13 +11,12 @@ const createAxiosInstance = () => {
     },
   });
 
-  // Adding an interceptor to add authorization header
+  ///////////////////////// -- Adding an interceptor to add authorization header -- /////////////////////////
+
   axiosInstance.interceptors.request.use(
     (config) => {
       const token = localStorage.getItem("token");
-      //   if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      //   }
       return config;
     },
     (error) => {
@@ -25,7 +24,8 @@ const createAxiosInstance = () => {
     }
   );
 
-  // an interceptor to handle errors
+  ///////////////////////// -- An interceptor to handle errors -- /////////////////////////
+
   axiosInstance.interceptors.response.use(
     (response) => {
       return response;

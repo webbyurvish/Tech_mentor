@@ -5,11 +5,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { CometChat } from "@cometchat-pro/chat";
 import createAxiosInstance from "../../Axios/axiosInstance";
 
-// // Create an instance of axios with interceptor
-
+// Create an instance of axios with interceptor
 const axiosInstance = createAxiosInstance();
 
-// async thunk for login
+// Async thunk for user login
 export const loginUser = createAsyncThunk(
   "loginuser",
   async ({ credentials, navigate }, { rejectWithValue }) => {
@@ -23,7 +22,7 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-// async thunk for sign up
+// Async thunk for user sign up
 export const signupUser = createAsyncThunk(
   "signupUser",
   async ({ userData, navigate }, { rejectWithValue }) => {
@@ -47,6 +46,7 @@ export const signupUser = createAsyncThunk(
   }
 );
 
+// Async thunk for changing password
 export const changePassword = createAsyncThunk(
   "changePassword",
   async (data, { rejectWithValue }) => {
@@ -67,6 +67,7 @@ export const changePassword = createAsyncThunk(
   }
 );
 
+// Initial state for user data
 const initialState = {
   error: null,
   loading: false,
@@ -74,21 +75,24 @@ const initialState = {
   isAuthenticated: false,
 };
 
+// Retrieve token from localStorage
 const token =
   typeof localStorage !== "undefined" ? localStorage.getItem("token") : null;
 
-//  if token is exist then decode it and store data in user
+// If token exists, decode it and store the data in the user
 if (token) {
   const decodedToken = jwtDecode(token);
   initialState.user = decodedToken;
   initialState.isAuthenticated = true;
 }
 
+// Create a slice for user data management
 const dataSlice = createSlice({
   name: "data",
   initialState,
   reducers: {
     logout: (state) => {
+      // Clear user data, set loading and error to default values, remove token from localStorage
       state.user = null;
       state.loading = false;
       state.error = null;
@@ -99,51 +103,60 @@ const dataSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
+        // Set loading to true and clear any previous errors
         state.loading = true;
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
+        // Set loading to false, clear error, set user data, store token in localStorage, and display success toast
         state.loading = false;
         state.error = null;
         state.isAuthenticated = true;
         state.user = jwtDecode(action.payload.token);
         localStorage.setItem("token", action.payload.token);
-        toast.success("login successful");
+        toast.success("Login successful");
       })
       .addCase(loginUser.rejected, (state, action) => {
+        // Set loading to false, set error message, set isAuthenticated to false, and display error toast
         state.loading = false;
         state.error = action.payload;
         state.isAuthenticated = false;
         toast.error(action.payload.message);
       })
       .addCase(signupUser.pending, (state) => {
+        // Set loading to true and clear any previous errors
         state.loading = true;
         state.error = null;
       })
       .addCase(signupUser.fulfilled, (state, action) => {
+        // Set loading to false, clear error, set user data, store token in localStorage, and display success toast
         state.loading = false;
         state.error = null;
         state.isAuthenticated = true;
         state.user = jwtDecode(action.payload.token);
         localStorage.setItem("token", action.payload.token);
-        toast.success("signup successful");
+        toast.success("Signup successful");
       })
       .addCase(signupUser.rejected, (state, action) => {
+        // Set loading to false, set error message, set isAuthenticated to false, and display error toast
         state.loading = false;
         state.error = action.payload;
         state.isAuthenticated = false;
         toast.error(action.payload.message);
       })
       .addCase(changePassword.pending, (state) => {
+        // Set loading to true and clear any previous errors
         state.loading = true;
         state.error = null;
       })
       .addCase(changePassword.fulfilled, (state, action) => {
+        // Set loading to false, clear error, and display success toast
         state.loading = false;
         state.error = null;
-        toast.success("password changed successfully");
+        toast.success("Password changed successfully");
       })
       .addCase(changePassword.rejected, (state, action) => {
+        // Set loading to false, set error message, and display error toast
         state.loading = false;
         state.error = action.payload;
         toast.error(action.payload.message);
@@ -151,17 +164,13 @@ const dataSlice = createSlice({
   },
 });
 
-export const {
-  setCurrentPage,
-  setSelectedStars,
-  setOldPassword,
-  setNewPassword,
-  logout,
-} = dataSlice.actions;
+export const { logout } = dataSlice.actions;
 
 export const logoutUser = () => (dispatch) => {
+  // Dispatch logout action to clear user data
   dispatch(logout());
 
+  // Perform logout from CometChat if needed
   CometChat.logout().then(
     () => {
       console.log("Logout completed successfully");

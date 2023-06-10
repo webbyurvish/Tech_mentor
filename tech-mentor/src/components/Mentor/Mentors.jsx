@@ -26,7 +26,7 @@ export default function Mentors() {
       {!mentors ? (
         <Loading />
       ) : (
-        <>
+        <React.Fragment>
           {/* If result have no mentors */}
           {mentors.length === 0 && (
             <h3 className="nomentors">There are no mentors to show.</h3>
@@ -51,7 +51,7 @@ export default function Mentors() {
               handlePageChange={(page) => handlePageChange(page)}
             />
           </div>
-        </>
+        </React.Fragment>
       )}
     </Layout>
   );

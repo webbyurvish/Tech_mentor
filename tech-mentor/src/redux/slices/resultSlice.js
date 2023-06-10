@@ -1,10 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import qs from "qs";
 import createAxiosInstance from "../../Axios/axiosInstance";
-import { calculateAverageRating } from "../../components/Mentor/MentorServices";
+import { calculateAverageRating } from "../../services/MentorServices";
 
 const axiosInstance = createAxiosInstance();
 
+// Async thunk action to fetch mentor data
 export const fetchData = createAsyncThunk(
   "results/fetchData",
   async (
@@ -114,16 +115,19 @@ const resultSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchData.pending, (state) => {
+        // Set loading state when fetching mentor data
         state.loading = true;
         state.error = null;
       })
       .addCase(fetchData.fulfilled, (state, action) => {
+        // Reset loading state and store fetched mentor data
         state.loading = false;
         state.error = null;
         state.mentors = action.payload.mentors;
         state.totalPages = action.payload.totalPageCount;
       })
       .addCase(fetchData.rejected, (state, action) => {
+        // Reset loading state and display error message when fetching mentor data fails
         state.loading = false;
         state.error = action.error.message;
       });

@@ -1,7 +1,8 @@
 import axios from "axios";
-import { API_URL } from "../../config";
 
-// count active stars based on average rating
+const API_URL = process.env.REACT_APP_API_URL;
+
+//////////////////// ----- count active stars based on average rating ---- ////////////////////
 
 export const getActiveStars = (averageRating) => {
   const maxStars = 5;
@@ -21,7 +22,7 @@ export const getActiveStars = (averageRating) => {
   return stars;
 };
 
-// function to extract username from email
+//////////////////// ---- function to extract username from email ---- ////////////////////
 
 export const extractUsername = (email) => {
   const atIndex = email.indexOf("@");
@@ -32,14 +33,15 @@ export const extractUsername = (email) => {
   return null; // Return null if the email format is invalid
 };
 
-// function for formatting datetime to date (10 sep)
+//////////////////// ---- function for formatting datetime to date (10 sep) ---- ////////////////////
+
 export const formatDate = (dateString) => {
   const date = new Date(dateString);
   const options = { day: "numeric", month: "short" };
   return date.toLocaleDateString("en-US", options);
 };
 
-// fetch mentor data by id
+//////////////////// ---- fetch mentor data by mentor id ---- ////////////////////
 
 export const fetchMentorData = async (id, navigate) => {
   try {
@@ -59,14 +61,16 @@ export const fetchMentorData = async (id, navigate) => {
   }
 };
 
-// Function to calculate the average rating
+//////////////////// ---- Function to calculate the average rating ---- ////////////////////
+
 export function calculateAverageRating(ratings) {
   const sum = ratings?.reduce((total, rating) => total + rating.stars, 0);
   const average = sum / ratings?.length;
   return average;
 }
 
-// sort mentors by likes and ratings
+//////////////////// ---- sort mentors by likes and ratings ---- ////////////////////
+
 export function getSortedMentors(mentors) {
   const sortedMentors = [...mentors].sort((a, b) => {
     const likesA = a.likes.length;
@@ -88,8 +92,24 @@ export function getSortedMentors(mentors) {
     } else if (averageRatingA < averageRatingB) {
       return 1;
     }
+
     // If both criteria are equal, maintain the original order
     return 0;
   });
   return sortedMentors;
 }
+
+///// ----- Function to calculate percentage ----- /////
+
+export const calculatePercentage = (count, totalCount) => {
+  if (totalCount === 0) return 0;
+  return (count / totalCount) * 100;
+};
+
+///// ----- Function to calculate Number of particular stars ----- /////
+
+export const countObjectsWithStars = (stars, mentor) => {
+  return (
+    mentor && mentor.ratings.filter((rating) => rating.stars === stars).length
+  );
+};

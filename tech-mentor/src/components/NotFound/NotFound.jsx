@@ -1,8 +1,10 @@
 import React from "react";
 
+//////////////////// ---- Not Found Page ---- ////////////////////
+
 export default function NotFound() {
   return (
-    <>
+    <React.Fragment>
       <div style={{ display: "flex", paddingTop: "14rem", marginLeft: "2rem" }}>
         <div>
           <img style={{ width: "35vw" }} src="/images/NotFound.png" />
@@ -27,6 +29,6 @@ export default function NotFound() {
           </p>
         </div>
       </div>
-    </>
+    </React.Fragment>
   );
 }

@@ -1,19 +1,4 @@
-import { CometChat } from "@cometchat-pro/chat";
-
-// cometchat logout
-
-export function cometchatlogout() {
-  CometChat.logout().then(
-    () => {
-      console.log("Logout completed successfully");
-    },
-    (error) => {
-      console.log("Logout failed with exception:", { error });
-    }
-  );
-}
-
-// update user role in cometchat
+//////////////////// ---- update role from user to mentor in cometchat  ---- ////////////////////
 
 export function changeRole(uid) {
   const authKey = process.env.REACT_APP_COMETCHAT_API_KEY;

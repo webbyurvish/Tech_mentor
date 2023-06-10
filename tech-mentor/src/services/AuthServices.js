@@ -1,10 +1,11 @@
-import createAxiosInstance from "../../Axios/axiosInstance";
+import createAxiosInstance from "../Axios/axiosInstance";
 
 const axiosInstance = createAxiosInstance();
 
 export const handleResetPasswordrequest = async (credentials) => {
   try {
-    // Send a POST request to the backend API endpoint
+    //////////////////// ---- send request to reset password ---- ////////////////////
+
     const response = await axiosInstance.post(
       "/account/resetpassword",
       credentials,
@@ -21,7 +22,8 @@ export const handleResetPasswordrequest = async (credentials) => {
   }
 };
 
-//  send mail for forgot password
+//////////////////// ---- send mail for forgot password ---- ////////////////////
+
 export const sendMail = async (email) => {
   try {
     const response = await axiosInstance.post(

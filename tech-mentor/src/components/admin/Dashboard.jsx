@@ -1,25 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import "../MentorPanel/Styles/Account.css";
-import { useNavigate } from "react-router";
-import AdminWrapper from "./AdminWrapper";
+
+import "../MentorPanel/styles/Account.css";
+
 import { fetchAllMentors } from "../../redux/slices/dataSlice";
-import Loading from "../Layout/Loading/Loading";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+import Loading from "../Layout/Loading/Loading";
+import AdminWrapper from "./AdminWrapper";
 import ChangePasswordModal from "../Layout/ChangePassword/ChangePasswordModal";
+import Home from "../Layout/Home/Home";
+
+//////////////////// ---- Home component for admin Dashboard ---- ////////////////////
 
 export default function Admin() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
 
   const { mentors, loading } = useSelector((state) => state.data);
   const { paswordloading } = useSelector((state) => state.account);
-
-  if (!user) {
-    navigate("/login");
-  }
 
   useEffect(() => {
     dispatch(fetchAllMentors());
@@ -31,12 +31,8 @@ export default function Admin() {
       {loading || paswordloading ? (
         <Loading />
       ) : (
-        <>
-          <div className="account-right-side">
-            <div className="accont-home">
-              <h2>Home</h2>
-            </div>
-          </div>
+        <React.Fragment>
+          <Home name={"Home"} />
 
           <div className="account-profile">
             <div className="accound-cover">
@@ -44,7 +40,8 @@ export default function Admin() {
                 <div className="col-lg-4">
                   <div className="profile-details">
                     <img src="img/navlogo.jpg" alt="" />
-                    {/* Name of admin */}
+
+                    {/* ----- Name of admin ----- */}
                     <h2> {user.name}</h2>
                     <p>Admin of Tech-mentor</p>
                     <img
@@ -52,6 +49,8 @@ export default function Admin() {
                       alt="admin profile"
                       src={user.imageUrl}
                     />
+
+                    {/* ----- Total mentors card ----- */}
                     <div className="likes-card">
                       <h3>Total Mentors</h3>
                       <p style={{ border: "none" }} className="likes-count">
@@ -59,6 +58,7 @@ export default function Admin() {
                       </p>
                     </div>
 
+                    {/* ----- Change Password Link ----- */}
                     <a data-bs-toggle="modal" data-bs-target="#exampleModal">
                       <div className="saveorclose-btn">
                         <button>change password</button>
@@ -69,10 +69,10 @@ export default function Admin() {
               </div>
             </div>
           </div>
-        </>
+        </React.Fragment>
       )}
 
-      {/* Change password Model */}
+      {/* -------------------- Change password Modal -------------------- */}
 
       <ChangePasswordModal />
     </AdminWrapper>

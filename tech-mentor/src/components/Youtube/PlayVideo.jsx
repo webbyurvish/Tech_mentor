@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import YouTube from "react-youtube";
-import { Header } from "../../components/Layout/Header";
+import Header from "../Layout/Header";
 import axios from "axios";
 
 export default function PlayVideo() {

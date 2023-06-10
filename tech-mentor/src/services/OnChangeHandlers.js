@@ -1,4 +1,4 @@
-import { setCurrentPage } from "../../redux/slices/dataSlice";
+import { setCurrentPage } from "../redux/slices/dataSlice";
 import {
   setCountry,
   setLiked,
@@ -7,16 +7,18 @@ import {
   setSpokenLanguage,
   setTechnology,
   setTopRated,
-} from "../../redux/slices/filterSlice";
+} from "../redux/slices/filterSlice";
 
-// country change handler
+//////////////////// ---- country change handler ---- ////////////////////
+
 export const handleCountryChange = (dispatch, country, navigate) => {
   dispatch(setCurrentPage(1));
   navigate("/");
   dispatch(setCountry(country));
 };
 
-// name change handler
+//////////////////// ---- name change handler ---- ////////////////////
+
 export const handleNameChange = (dispatch, navigate) => (e) => {
   const selectedName = e.target.value;
   dispatch(setCurrentPage(1));
@@ -24,7 +26,8 @@ export const handleNameChange = (dispatch, navigate) => (e) => {
   dispatch(setName(selectedName !== "" ? selectedName : null));
 };
 
-// technology change handler
+//////////////////// ---- technology change handler ---- ////////////////////
+
 export const handleTechnologyChange = (dispatch, navigate) => (e) => {
   const selectedTechnology = e.target.value;
   dispatch(setCurrentPage(1));
@@ -34,7 +37,8 @@ export const handleTechnologyChange = (dispatch, navigate) => (e) => {
   );
 };
 
-// country change handler layout
+//////////////////// ---- country change handler for filter ---- ////////////////////
+
 export const handleCountryChangeLayout = (dispatch, navigate) => (e) => {
   const selectedCountry = e.target.value;
   dispatch(setCurrentPage(1));
@@ -42,7 +46,7 @@ export const handleCountryChangeLayout = (dispatch, navigate) => (e) => {
   dispatch(setCountry(selectedCountry !== "" ? selectedCountry : null));
 };
 
-// is liked change handler
+//////////////////// ---- favourites / liked change handler ---- ////////////////////
 
 export const handleLikedChange = (dispatch, navigate) => (e) => {
   const checked = e.target.checked; // Use checked instead of value
@@ -53,7 +57,8 @@ export const handleLikedChange = (dispatch, navigate) => (e) => {
   dispatch(setTopRated(false));
 };
 
-// most liked change handler
+//////////////////// ---- most liked change handler ---- ////////////////////
+
 export const handleMostLikedChange = (dispatch, navigate) => (e) => {
   const checked = e.target.checked; // Use checked instead of value
   navigate("/");
@@ -63,7 +68,8 @@ export const handleMostLikedChange = (dispatch, navigate) => (e) => {
   dispatch(setTopRated(false));
 };
 
-// top rated change handler
+//////////////////// ---- top rated change handler ---- ////////////////////
+
 export const handleTopRatedChange = (dispatch, navigate) => (e) => {
   const checked = e.target.checked; // Use checked instead of value
   navigate("/");
@@ -73,7 +79,8 @@ export const handleTopRatedChange = (dispatch, navigate) => (e) => {
   dispatch(setLiked(false));
 };
 
-// spoken language change handler
+//////////////////// ---- spoken language change handler ---- ////////////////////
+
 export const handleSpokenLanguageChange = (dispatch, navigate) => (e) => {
   const selectedSpokenLanguage = e.target.value;
   dispatch(setCurrentPage(1));

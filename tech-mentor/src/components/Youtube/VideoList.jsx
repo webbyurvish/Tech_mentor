@@ -8,13 +8,13 @@ const VideoList = ({ handleVideoSelect }) => {
     <div className="list_content">
       {videos.map((video) => {
         return (
-          <>
+          <React.Fragment>
             <VideoItem
               key={video.id.videoId}
               video={video}
               handleVideoSelect={handleVideoSelect}
             />
-          </>
+          </React.Fragment>
         );
       })}
     </div>

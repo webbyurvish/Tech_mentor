@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { changePassword } from "../../../redux/slices/authSlice";
 
-const ChangePasswordModal = () => {
+export default function ChangePasswordModal() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
 
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+
+  //////////////////// ---- Change password submit handler ---- ////////////////////
 
   const handleResetPasswordSubmit = async (e) => {
     e.preventDefault();
@@ -32,7 +34,7 @@ const ChangePasswordModal = () => {
       <div className="modal-dialog">
         <div style={{ width: "75%" }} className="modal-content">
           {user && (
-            <>
+            <React.Fragment>
               <div className="modal-header">
                 <h5 className="modal-title" id="exampleModalLabel">
                   Change Password
@@ -101,12 +103,10 @@ const ChangePasswordModal = () => {
                   Submit
                 </button>
               </div>
-            </>
+            </React.Fragment>
           )}
         </div>
       </div>
     </div>
   );
-};
-
-export default ChangePasswordModal;
+}

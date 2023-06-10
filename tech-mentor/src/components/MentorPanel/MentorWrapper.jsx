@@ -1,10 +1,13 @@
 import React from "react";
+
 import HomeLink from "../Layout/Dashboardlinks/HomeLink";
 import ConnectLink from "../Layout/Dashboardlinks/ConnectLink";
 import MentorspageLink from "../Layout/Dashboardlinks/MentorspageLink";
 import LogoutLink from "../Layout/Dashboardlinks/LogoutLink";
 import ConnectWithAdminLink from "../Layout/Dashboardlinks/ConnectWithAdminLink";
-import ReviewsLink from "../Layout/Dashboardlinks/ReviewsLink";
+import RatingsLink from "../Layout/Dashboardlinks/RatingsLink";
+
+//////////////////// ---- Mentor Wrapper component ---- ////////////////////
 
 export const MentorWrapper = ({ children }) => {
   return (
@@ -27,14 +30,14 @@ export const MentorWrapper = ({ children }) => {
             {/* Dashboard Chat and video call with mentors and users */}
             <ConnectLink />
 
+            {/* Reviews */}
+            <RatingsLink />
+
             {/* Main mentors list page */}
             <MentorspageLink />
 
             {/* logout */}
             <LogoutLink />
-
-            {/* Reviews */}
-            <ReviewsLink />
           </nav>
           <div>{children}</div>
         </div>

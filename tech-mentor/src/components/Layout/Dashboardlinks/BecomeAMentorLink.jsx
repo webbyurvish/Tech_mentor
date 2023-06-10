@@ -3,12 +3,13 @@ import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
 
+////////// ---- become a mentor page link ---- //////////
+
 export default function BecomeAMentorLink() {
   const location = useLocation();
 
   const user = useSelector((state) => state.auth.user);
 
-  // become a mentor link
   return (
     <div>
       <Link
