@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import UserWrapper from "./UserWrapper";
 import { useSelector } from "react-redux";
 import "../MentorPanel/styles/Account.css";
@@ -36,11 +36,7 @@ export default function UserHome() {
                     <img src={user.imageUrl} alt="" />
                     {/* change password button ( on click its open a modal ) */}
                     <div>
-                      <a
-                        href="javascript:vid(0)"
-                        data-bs-toggle="modal"
-                        data-bs-target="#exampleModal"
-                      >
+                      <a data-bs-toggle="modal" data-bs-target="#exampleModal">
                         <div className="saveorclose-btn">
                           <button>change password</button>
                         </div>

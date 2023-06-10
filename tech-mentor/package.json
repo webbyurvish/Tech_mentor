@@ -25,6 +25,7 @@
     "html-react-parser": "^1.4.5",
     "jsonwebtoken": "^9.0.0",
     "jwt-decode": "^3.1.2",
+    "mdb-react-ui-kit": "^6.1.0",
     "multiselect-react-dropdown": "^2.0.25",
     "natural": "^6.5.0",
     "qs": "^6.11.2",

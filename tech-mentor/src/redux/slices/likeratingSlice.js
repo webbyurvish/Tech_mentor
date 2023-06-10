@@ -8,7 +8,10 @@ const axiosInstance = createAxiosInstance();
 // Thunk for submitting a rating
 export const submitRating = createAsyncThunk(
   "ratings/submit",
-  async ({ userId, mentorId, comment, stars }, { rejectWithValue }) => {
+  async (
+    { userId, mentorId, filters, currentPage, dispatch, comment, stars },
+    { rejectWithValue }
+  ) => {
     const data = {
       userId,
       mentorId,
@@ -22,6 +25,17 @@ export const submitRating = createAsyncThunk(
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
+      dispatch(
+        fetchData({
+          technology: filters.technology,
+          country: filters.country,
+          name: filters.name,
+          spokenLanguage: filters.spokenLanguage,
+          currentPage,
+          isLiked: filters.isLiked,
+          userId,
+        })
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -33,10 +47,10 @@ export const submitRating = createAsyncThunk(
 export const addLike = createAsyncThunk(
   "like/submit",
   async (
-    { userId, mentorId, filters, currentPage, navigate, dispatch },
+    { userId, mentorId, filters, currentPage, dispatch },
     { rejectWithValue }
   ) => {
-    const data = { userId, mentorId, filters, currentPage, navigate, dispatch };
+    const data = { userId, mentorId };
 
     try {
       const response = await axiosInstance.post("/like", data, {

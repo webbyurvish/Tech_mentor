@@ -91,6 +91,10 @@ export default function MentorProfile() {
     const data = {
       userId: Number(user.id),
       mentorId: mentor.id,
+      filters,
+      currentPage,
+      navigate,
+      dispatch,
       comment: feedbackMessage,
       stars: selectedStars,
     };

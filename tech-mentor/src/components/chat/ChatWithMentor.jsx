@@ -13,7 +13,7 @@ export default function ChatWithMentor() {
 
   return (
     <React.Fragment>
-      {user.role == "user" ? (
+      {user.role === "user" ? (
         <UserWrapper>
           <div
             style={{ paddingLeft: "4.2rem", width: "100%", height: "100vh" }}

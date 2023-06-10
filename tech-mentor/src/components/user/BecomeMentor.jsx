@@ -3,7 +3,7 @@ import "../../components/MentorPanel/styles/EditMentor.css";
 import { Link } from "react-router-dom";
 import Multiselect from "multiselect-react-dropdown";
 import { useDispatch, useSelector } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loading from "../Layout/Loading/Loading";
 import UserWrapper from "./UserWrapper";
@@ -21,6 +21,7 @@ export default function BecomeMentor() {
 
   const { skills, countries, languages } = useSelector((state) => state.data);
 
+  // State variables
   const [name, setName] = useState(user.name);
   const [title, setTitle] = useState("");
   const [country, setCountry] = useState("");
@@ -56,7 +57,7 @@ export default function BecomeMentor() {
   };
 
   useEffect(() => {
-    // fetch all data for form ( countries , languages and skills )
+    // Fetch all data for the form (countries, languages, and skills)
     dispatch(fetchCountries());
     dispatch(fetchLanguages());
     dispatch(fetchSkills());
@@ -108,6 +109,7 @@ export default function BecomeMentor() {
       return;
     }
 
+    // Prepare mentor data object
     const mentorData = {
       name,
       title,
@@ -119,8 +121,10 @@ export default function BecomeMentor() {
       available: isChecked,
     };
 
+    // Dispatch the action to add the mentor
     dispatch(addMentor(mentorData));
 
+    // Reset the errors
     setErrors({
       titleError: "",
       countryError: "",
@@ -143,7 +147,7 @@ export default function BecomeMentor() {
                 <h2>Become a Mentor</h2>
                 <form onSubmit={handleSubmit}>
                   <div className="row">
-                    {/* Name input ( disabled ) */}
+                    {/* Name input (disabled) */}
                     <div className="col-lg-6">
                       <div className="profile-input">
                         <label htmlFor="text">
@@ -157,7 +161,7 @@ export default function BecomeMentor() {
                         />
                       </div>
                     </div>
-                    {/* mentor Title input */}
+                    {/* Mentor Title input */}
                     <div className="col-lg-6">
                       <div className="profile-input">
                         <label htmlFor="text">
@@ -196,7 +200,7 @@ export default function BecomeMentor() {
                     </div>
                     <div className="col-lg-6">
                       <div className="profile-input">
-                        {/* country input dropdown */}
+                        {/* Country input dropdown */}
                         <label htmlFor="text">Country</label>
                         <select
                           className="form-select"
@@ -217,7 +221,7 @@ export default function BecomeMentor() {
                       </div>
                     </div>
 
-                    {/* multiselect for languages */}
+                    {/* Multiselect for languages */}
                     <div className="col-lg-6">
                       <div className="multiSelect">
                         <label htmlFor="text">Spoken Languages</label>
@@ -236,7 +240,7 @@ export default function BecomeMentor() {
                       </div>
                     </div>
 
-                    {/* multi select for skills */}
+                    {/* Multiselect for skills */}
                     <div className="col-lg-6">
                       <div className="multiSelect">
                         <label htmlFor="text">Skills (Up to 10)</label>
@@ -271,7 +275,7 @@ export default function BecomeMentor() {
                       and how many mentees you can take.
                     </span>
 
-                    {/* Checkbox for user is available for mentorship or not */}
+                    {/* Checkbox for user availability for mentorship */}
                     <div className="formcheckinput">
                       <label htmlFor="checkbox-text">
                         <input
@@ -285,9 +289,9 @@ export default function BecomeMentor() {
                       </label>
                     </div>
                     <div className="saveorclose-btn">
-                      <button type="submit">send request</button>
+                      <button type="submit">Send Request</button>
                       <Link
-                        to="javascriopt:void(0)"
+                        to="javascript:void(0)"
                         onClick={() => window.history.back()}
                       >
                         Close

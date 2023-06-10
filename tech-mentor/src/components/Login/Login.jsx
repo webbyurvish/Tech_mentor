@@ -113,6 +113,7 @@ export default function Login() {
 
   const handleLogin = (event) => {
     event.preventDefault();
+
     const credentials = {
       email: email,
       password: password,
@@ -172,11 +173,6 @@ export default function Login() {
                 minLength={6}
                 onChange={(event) => setPassword(event.target.value)}
               />
-              {password.length > 0 && password.length < 6 && (
-                <p className="error">
-                  Password must be at least 6 characters long
-                </p>
-              )}
               <input
                 className="input"
                 type="file"
